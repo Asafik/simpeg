@@ -1,0 +1,32 @@
+/* ===== CALENDAR WIDGET STYLES ===== */
+.calendar-grid-cell {
+    padding: 0.25rem 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.calendar-day-active {
+    background-color: #1e40af;
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+}
+
+.calendar-day-event {
+    background-color: rgba(30, 64, 175, 0.1);
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.calendar-day-event:hover {
+    background-color: rgba(30, 64, 175, 0.2);
+}
+
+.calendar-agenda-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.calendar-agenda-item:hover {
+    transform: translateX(3px);
+}

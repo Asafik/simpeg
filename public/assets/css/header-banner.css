@@ -1,0 +1,16 @@
+/* ===== HERO WELCOME BANNER & WAVE OVERLAY STYLES ===== */
+.hero-banner-gradient {
+    background: linear-gradient(135deg, #030712 0%, #0f172a 35%, #1e3a8a 70%, #1e40af 100%);
+}
+
+.hero-announcement-btn {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease-in-out;
+}
+
+.hero-announcement-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
