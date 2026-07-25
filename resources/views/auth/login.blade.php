@@ -108,10 +108,10 @@
             </div>
         </div>
 
-        <!-- RIGHT SIDE: UNSPLASH BUILDING PHOTO WITH BLUE OVERLAY -->
+        <!-- RIGHT SIDE: LOCAL BUILDING PHOTO WITH BLUE OVERLAY -->
         <div class="hidden lg:block relative overflow-hidden bg-blue-950">
-            <!-- Unsplash Building Photo -->
-            <img src="https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&w=1600&q=80" 
+            <!-- Local Building Photo -->
+            <img src="{{ asset('images/dinas_pendidikan.jpg') }}" 
                  alt="Gedung Dinas Pendidikan" 
                  class="w-full h-full object-cover object-center">
 

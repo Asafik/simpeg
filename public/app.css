@@ -37,3 +37,177 @@ body {
 #sidebarOverlay.active {
     display: block;
 }
+
+/* ===== SUBMENU SLIDE-DOWN ANIMATION ===== */
+#settingSubmenuList {
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-in-out;
+    overflow: hidden;
+}
+
+#settingSubmenuList.hidden-submenu {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    pointer-events: none;
+}
+
+#settingSubmenuList.open-submenu {
+    max-height: 300px !important;
+    opacity: 1 !important;
+}
+
+/* ===== HOPE UI MINI SIDEBAR STYLES ===== */
+@media (min-width: 768px) {
+    #sidebar.mini-sidebar {
+        width: 80px !important;
+    }
+
+    #sidebar.mini-sidebar .sidebar-text {
+        display: none !important;
+    }
+
+    #sidebar.mini-sidebar .brand-container {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #sidebar.mini-sidebar nav a {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #sidebar.mini-sidebar .user-footer-container {
+        justify-content: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+/* ================= SYSTEM DYNAMIC THEMES (EXCLUDING LOGIN) ================= */
+
+/* EMERALD EDUCATION THEME OVERRIDES */
+html[data-theme="emerald"] .bg-gradient-to-r.from-blue-950.via-blue-900.to-indigo-950 {
+    background: linear-gradient(to right, #022c22, #064e3b, #134e4a) !important;
+}
+html[data-theme="emerald"] .bg-blue-800 {
+    background-color: #047857 !important;
+}
+html[data-theme="emerald"] .hover\:bg-blue-900:hover {
+    background-color: #065f46 !important;
+}
+html[data-theme="emerald"] .text-blue-800 {
+    color: #047857 !important;
+}
+html[data-theme="emerald"] .bg-blue-100 {
+    background-color: #d1fae5 !important;
+}
+html[data-theme="emerald"] .border-blue-800 {
+    border-color: #047857 !important;
+}
+
+/* ROYAL PURPLE THEME OVERRIDES */
+html[data-theme="purple"] .bg-gradient-to-r.from-blue-950.via-blue-900.to-indigo-950 {
+    background: linear-gradient(to right, #2e1065, #4c1d95, #312e81) !important;
+}
+html[data-theme="purple"] .bg-blue-800 {
+    background-color: #6b21a8 !important;
+}
+html[data-theme="purple"] .hover\:bg-blue-900:hover {
+    background-color: #581c87 !important;
+}
+html[data-theme="purple"] .text-blue-800 {
+    color: #6b21a8 !important;
+}
+html[data-theme="purple"] .bg-blue-100 {
+    background-color: #f3e8ff !important;
+}
+html[data-theme="purple"] .border-blue-800 {
+    border-color: #6b21a8 !important;
+}
+
+/* ================= DARK MODE (MIDNIGHT SLATE) OVERRIDES ================= */
+html[data-theme="dark"] body,
+html[data-theme="dark"] main#mainContent {
+    background-color: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] header,
+html[data-theme="dark"] aside,
+html[data-theme="dark"] .bg-white {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .text-gray-900,
+html[data-theme="dark"] .text-gray-800,
+html[data-theme="dark"] .text-gray-700 {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .text-gray-600,
+html[data-theme="dark"] .text-gray-500,
+html[data-theme="dark"] .text-gray-400 {
+    color: #94a3b8 !important;
+}
+
+html[data-theme="dark"] .bg-gray-50,
+html[data-theme="dark"] .bg-gray-100,
+html[data-theme="dark"] .bg-gray-50\/50,
+html[data-theme="dark"] .bg-gray-50\/80,
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .border-gray-100,
+html[data-theme="dark"] .border-gray-200,
+html[data-theme="dark"] .border-gray-200\/80 {
+    border-color: #334155 !important;
+}
+
+html[data-theme="dark"] .bg-gradient-to-r.from-blue-950.via-blue-900.to-indigo-950 {
+    background: linear-gradient(to right, #020617, #0f172a, #1e293b) !important;
+}
+
+html[data-theme="dark"] .bg-blue-800 {
+    background-color: #2563eb !important;
+}
+
+html[data-theme="dark"] .hover\:bg-blue-900:hover {
+    background-color: #1d4ed8 !important;
+}
+
+html[data-theme="dark"] .text-blue-800 {
+    color: #60a5fa !important;
+}
+
+html[data-theme="dark"] .bg-blue-100 {
+    background-color: #1e3a8a !important;
+    color: #93c5fd !important;
+}
+
+html[data-theme="dark"] thead {
+    background-color: #0f172a !important;
+}
+
+html[data-theme="dark"] .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+    border-color: #334155 !important;
+}
+
+/* Remove Card & Panel Shadows in Dark Mode */
+html[data-theme="dark"] .shadow-sm,
+html[data-theme="dark"] .shadow-md,
+html[data-theme="dark"] .shadow-lg,
+html[data-theme="dark"] .shadow-xl,
+html[data-theme="dark"] .shadow-2xl,
+html[data-theme="dark"] [class*="shadow-"] {
+    box-shadow: none !important;
+}

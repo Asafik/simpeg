@@ -24,6 +24,10 @@ class AuthController extends Controller
      */
     public function login()
     {
+        if (Auth::check()) {
+            return redirect()->route('dashboard');
+        }
+
         return view('auth.login');
     }
 
@@ -54,14 +58,15 @@ class AuthController extends Controller
     /**
      * Logout user session.
      */
-    public function logout(Request $request = null)
+    public function logout(Request $request)
     {
-        if ($request) {
-            Auth::logout();
+        Auth::logout();
+
+        if ($request && method_exists($request, 'session')) {
             $request->session()->invalidate();
             $request->session()->regenerateToken();
         }
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('info', 'Anda telah berhasil keluar dari sistem.');
     }
 }

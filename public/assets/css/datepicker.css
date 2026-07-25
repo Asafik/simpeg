@@ -1,0 +1,104 @@
+/* ===== SIMPEG-SP CUSTOM DATEPICKER COMPONENT CSS ===== */
+
+.custom-datepicker-wrapper {
+    position: relative;
+    user-select: none;
+}
+
+.custom-datepicker-input {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-datepicker-popup {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.12), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.datepicker-day-cell {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+/* VIBRANT (NGJRENG) HOVER & SELECTED STATES - LIKE ACTIVE SIDEBAR */
+.datepicker-day-cell:hover:not(.disabled),
+.datepicker-day-cell.selected {
+    background-color: #1e40af !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.35) !important;
+}
+
+.datepicker-day-cell.today:not(.selected) {
+    border: 2px solid #1e40af;
+    color: #1e40af;
+    font-weight: 700;
+}
+
+.datepicker-day-cell.other-month {
+    color: #cbd5e1;
+}
+
+/* Emerald Theme Adaptations */
+html[data-theme="emerald"] .datepicker-day-cell:hover:not(.disabled),
+html[data-theme="emerald"] .datepicker-day-cell.selected {
+    background-color: #047857 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.35) !important;
+}
+
+html[data-theme="emerald"] .datepicker-day-cell.today:not(.selected) {
+    border-color: #047857 !important;
+    color: #047857 !important;
+}
+
+html[data-theme="emerald"] .datepicker-today {
+    color: #047857 !important;
+}
+
+/* Royal Purple Theme Adaptations */
+html[data-theme="purple"] .datepicker-day-cell:hover:not(.disabled),
+html[data-theme="purple"] .datepicker-day-cell.selected {
+    background-color: #6b21a8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(107, 33, 168, 0.35) !important;
+}
+
+html[data-theme="purple"] .datepicker-day-cell.today:not(.selected) {
+    border-color: #6b21a8 !important;
+    color: #6b21a8 !important;
+}
+
+html[data-theme="purple"] .datepicker-today {
+    color: #6b21a8 !important;
+}
+
+/* Dark Mode Adaptations */
+html[data-theme="dark"] .custom-datepicker-popup {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .datepicker-day-cell:hover:not(.disabled),
+html[data-theme="dark"] .datepicker-day-cell.selected {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+html[data-theme="dark"] .datepicker-title {
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .datepicker-prev:hover,
+html[data-theme="dark"] .datepicker-next:hover {
+    background-color: #334155 !important;
+    color: #f8fafc !important;
+}

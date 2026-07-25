@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'SIMPEG-SP - Dashboard Admin Dinas')</title>
     
+    <!-- System Theme Initializer (Excludes Login & Landing) -->
+    <script>
+        (function() {
+            if (window.location.pathname.includes('/login') || window.location.pathname.includes('/landing')) {
+                document.documentElement.setAttribute('data-theme', 'deep_blue');
+            } else {
+                const savedTheme = localStorage.getItem('simpegTheme') || 'deep_blue';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            }
+        })();
+    </script>
+
     <!-- Favicon Logo -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo/logo.svg') }}">
 
@@ -47,18 +59,20 @@
     <link rel="stylesheet" href="{{ asset('assets/css/header-banner.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/calendar.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/dropdown.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/datepicker.css') }}">
     @stack('styles')
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
 
-    @unless(View::hasSection('hideNav'))
+    @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*'))
         <!-- Mobile Sidebar Overlay -->
         <div class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" id="sidebarOverlay"></div>
     @endunless
 
     <!-- Main Content Wrapper -->
-    <main class="{{ (View::hasSection('hideNav') || Request::is('login')) ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col">
-        @unless(View::hasSection('hideNav') || Request::is('login'))
+    <main class="{{ (View::hasSection('hideNav') || Request::is('login') || Request::is('landing*')) ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
+        @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*'))
             <!-- Top Navbar Partial -->
             @include('layouts.navbar')
         @endunless
@@ -73,6 +87,8 @@
     <!-- Component JS Assets in public/assets/js/ -->
     <script src="{{ asset('assets/js/charts.js') }}"></script>
     <script src="{{ asset('assets/js/calendar.js') }}"></script>
+    <script src="{{ asset('assets/js/dropdown.js') }}"></script>
+    <script src="{{ asset('assets/js/datepicker.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

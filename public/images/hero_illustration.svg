@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 480" fill="none" class="w-full h-auto">
+  <defs>
+    <linearGradient id="mainMonitorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f8fafc"/>
+    </linearGradient>
+
+    <linearGradient id="sidebarGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+
+    <linearGradient id="chartBlueGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#60a5fa"/>
+    </linearGradient>
+
+    <linearGradient id="chartEmeraldGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1d4ed8" stop-opacity="0.0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background Decorative Glowing Aura -->
+  <circle cx="340" cy="220" r="210" fill="url(#glowGrad)"/>
+
+  <!-- Desktop Monitor Base & Stand -->
+  <path d="M 290,410 L 390,410 L 410,460 L 270,460 Z" fill="#cbd5e1"/>
+  <rect x="240" y="456" width="200" height="12" rx="6" fill="#94a3b8"/>
+
+  <!-- Main Glassmorphism Window Screen Frame -->
+  <rect x="40" y="30" width="600" height="380" rx="20" fill="url(#mainMonitorGrad)" stroke="#e2e8f0" stroke-width="4"/>
+
+  <!-- Top App Window Bar -->
+  <path d="M 40,50 C 40,39 49,30 60,30 L 620,30 C 631,30 640,39 640,50 L 640,75 L 40,75 Z" fill="#0f172a"/>
+  <circle cx="68" cy="52" r="5" fill="#ef4444"/>
+  <circle cx="84" cy="52" r="5" fill="#f59e0b"/>
+  <circle cx="100" cy="52" r="5" fill="#10b981"/>
+  
+  <!-- Address Bar Input Badge -->
+  <rect x="130" y="44" width="220" height="16" rx="8" fill="#1e293b"/>
+  <text x="145" y="56" font-family="Plus Jakarta Sans, sans-serif" font-size="9" font-weight="600" fill="#94a3b8">https://simpeg-sp.dinas.go.id</text>
+
+  <!-- Left Sidebar Panel -->
+  <path d="M 40,75 L 150,75 L 150,405 C 150,405 60,405 40,390 Z" fill="url(#sidebarGrad)"/>
+  
+  <!-- Sidebar Brand Logo Placeholder -->
+  <circle cx="65" cy="100" r="10" fill="#3b82f6"/>
+  <rect x="82" y="96" width="50" height="8" rx="4" fill="#ffffff"/>
+  
+  <!-- Sidebar Nav Menu Items -->
+  <rect x="52" y="125" width="86" height="24" rx="6" fill="#2563eb"/>
+  <rect x="62" y="133" width="66" height="8" rx="4" fill="#ffffff"/>
+
+  <rect x="52" y="157" width="86" height="20" rx="5" fill="none"/>
+  <rect x="62" y="163" width="55" height="8" rx="4" fill="#64748b"/>
+
+  <rect x="52" y="185" width="86" height="20" rx="5" fill="none"/>
+  <rect x="62" y="191" width="50" height="8" rx="4" fill="#64748b"/>
+
+  <rect x="52" y="213" width="86" height="20" rx="5" fill="none"/>
+  <rect x="62" y="219" width="60" height="8" rx="4" fill="#64748b"/>
+
+  <!-- Main Content Dashboard View -->
+  <!-- Header Title Bar inside Screen -->
+  <text x="175" y="105" font-family="Plus Jakarta Sans, sans-serif" font-size="14" font-weight="800" fill="#0f172a">Dashboard Pemutakhiran Data PTK</text>
+  <text x="175" y="120" font-family="Plus Jakarta Sans, sans-serif" font-size="9" font-weight="500" fill="#64748b">Monitoring Real-time Dinas Pendidikan 2026</text>
+
+  <!-- Top Stat Cards (3 Cards) -->
+  <!-- Card 1: Total PTK -->
+  <rect x="175" y="135" width="138" height="60" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <circle cx="198" cy="165" r="14" fill="#dbeafe"/>
+  <path d="M 194,165 L 197,168 L 203,161" stroke="#1d4ed8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="220" y="157" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-weight="800" fill="#1e3a8a">1.284+</text>
+  <text x="220" y="171" font-family="Plus Jakarta Sans, sans-serif" font-size="8" font-weight="600" fill="#64748b">Total PTK Terdata</text>
+
+  <!-- Card 2: Serdik -->
+  <rect x="325" y="135" width="138" height="60" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <circle cx="348" cy="165" r="14" fill="#d1fae5"/>
+  <path d="M 344,165 L 347,168 L 353,161" stroke="#047857" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="370" y="157" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-weight="800" fill="#047857">74%</text>
+  <text x="370" y="171" font-family="Plus Jakarta Sans, sans-serif" font-size="8" font-weight="600" fill="#64748b">Pegawai Serdik</text>
+
+  <!-- Card 3: Sekolah -->
+  <rect x="475" y="135" width="140" height="60" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <circle cx="498" cy="165" r="14" fill="#ede9fe"/>
+  <path d="M 494,165 L 497,168 L 503,161" stroke="#6d28d9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="520" y="157" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-weight="800" fill="#6d28d9">48</text>
+  <text x="520" y="171" font-family="Plus Jakarta Sans, sans-serif" font-size="8" font-weight="600" fill="#64748b">Satuan Pendidikan</text>
+
+  <!-- Donut Chart Widget Card -->
+  <rect x="175" y="210" width="215" height="180" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="190" y="232" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#0f172a">Kualifikasi 7 Kriteria</text>
+
+  <!-- Donut Ring Chart Graphic -->
+  <circle cx="255" cy="305" r="46" stroke="#f1f5f9" stroke-width="18" fill="none"/>
+  <circle cx="255" cy="305" r="46" stroke="#1d4ed8" stroke-width="18" stroke-dasharray="160 300" stroke-dashoffset="0" fill="none"/>
+  <circle cx="255" cy="305" r="46" stroke="#10b981" stroke-width="18" stroke-dasharray="75 300" stroke-dashoffset="-160" fill="none"/>
+  <circle cx="255" cy="305" r="46" stroke="#f59e0b" stroke-width="18" stroke-dasharray="40 300" stroke-dashoffset="-235" fill="none"/>
+  
+  <text x="255" y="302" font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="800" text-anchor="middle" fill="#0f172a">PNS</text>
+  <text x="255" y="315" font-family="Plus Jakarta Sans, sans-serif" font-size="8" font-weight="600" text-anchor="middle" fill="#64748b">58%</text>
+
+  <!-- Donut Legend -->
+  <circle cx="320" cy="265" r="4" fill="#1d4ed8"/>
+  <text x="330" y="268" font-family="Plus Jakarta Sans, sans-serif" font-size="8" font-weight="600" fill="#334155">PNS</text>
+
+  <circle cx="320" cy="285" r="4" fill="#10b981"/>
+  <text x="330" y="288" font-family="Plus Jakarta Sans, sans-serif" font-size="8" font-weight="600" fill="#334155">PPPK</text>
+
+  <circle cx="320" cy="305" r="4" fill="#f59e0b"/>
+  <text x="330" y="308" font-family="Plus Jakarta Sans, sans-serif" font-size="8" font-weight="600" fill="#334155">PPPK PW</text>
+
+  <circle cx="320" cy="325" r="4" fill="#64748b"/>
+  <text x="330" y="328" font-family="Plus Jakarta Sans, sans-serif" font-size="8" font-weight="600" fill="#334155">Non-ASN</text>
+
+  <!-- Bar Chart Widget Card -->
+  <rect x="400" y="210" width="215" height="180" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="415" y="232" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#0f172a">Verifikasi Berkas SK &amp; Serdik</text>
+
+  <!-- Spline Bar Columns -->
+  <rect x="425" y="300" width="18" height="60" rx="5" fill="url(#chartBlueGrad)"/>
+  <rect x="455" y="265" width="18" height="95" rx="5" fill="url(#chartEmeraldGrad)"/>
+  <rect x="485" y="245" width="18" height="115" rx="5" fill="url(#chartBlueGrad)"/>
+  <rect x="515" y="280" width="18" height="80" rx="5" fill="url(#chartEmeraldGrad)"/>
+  <rect x="545" y="255" width="18" height="105" rx="5" fill="url(#chartBlueGrad)"/>
+  <rect x="575" y="290" width="18" height="70" rx="5" fill="url(#chartEmeraldGrad)"/>
+
+  <!-- Base Grid Axis -->
+  <line x1="415" y1="362" x2="600" y2="362" stroke="#e2e8f0" stroke-width="1.5"/>
+
+  <!-- Floating Success Verification Pill Badge -->
+  <g>
+    <rect x="260" y="15" width="220" height="34" rx="17" fill="#ffffff" stroke="#10b981" stroke-width="2"/>
+    <circle cx="280" cy="32" r="9" fill="#10b981"/>
+    <path d="M 276,32 L 279,35 L 285,29" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="296" y="36" font-family="Plus Jakarta Sans, sans-serif" font-size="9" font-weight="800" fill="#047857">100% Berkas SK &amp; Serdik Valid</text>
+  </g>
+
+  <!-- Floating Category Tag Badge -->
+  <g>
+    <rect x="15" y="240" width="140" height="36" rx="10" fill="#1e3a8a"/>
+    <text x="30" y="262" font-family="Plus Jakarta Sans, sans-serif" font-size="10" font-weight="700" fill="#ffffff">SIMPEG-SP 2026</text>
+  </g>
+
+  <!-- Vector Character 1 (Male Administrator / Education Official) -->
+  <g>
+    <circle cx="625" cy="330" r="16" fill="#fbd5a5"/>
+    <path d="M 610,325 C 610,310 640,310 640,325 C 635,315 615,315 610,325 Z" fill="#1e293b"/>
+    <path d="M 595,380 C 595,350 655,350 655,380 L 655,420 L 595,420 Z" fill="#1d4ed8"/>
+    <path d="M 622,352 L 628,352 L 626,375 L 622,352 Z" fill="#f59e0b"/>
+  </g>
+
+  <!-- Vector Character 2 (Female Teacher / Operator) -->
+  <g>
+    <circle cx="100" cy="320" r="15" fill="#ffd1a9"/>
+    <path d="M 85,320 C 85,300 115,300 115,320 C 115,335 110,340 100,340 C 90,340 85,335 85,320 Z" fill="#475569"/>
+    <path d="M 75,370 C 75,342 125,342 125,370 L 125,410 L 75,410 Z" fill="#047857"/>
+  </g>
+</svg>
