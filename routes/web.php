@@ -10,10 +10,13 @@ use App\Http\Controllers\UserController;
 
 // 1. Dashboard Utama
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index']);
 
 // 2. Auth Login / Logout
 Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'authenticate']);
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout']);
 
 // 3. Employee Controller (Data Pegawai PTK)
 Route::get('/pegawai', [EmployeeController::class, 'index'])->name('pegawai.index');
