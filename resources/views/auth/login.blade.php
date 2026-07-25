@@ -27,6 +27,21 @@
                     <p class="text-xs text-gray-500 mt-1.5 font-medium leading-relaxed">Login untuk masuk ke Sistem Informasi Manajemen Pegawai Satuan Pendidikan.</p>
                 </div>
 
+                <!-- Alert Messages -->
+                @if ($errors->any())
+                    <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 font-medium">
+                        <i class="fas fa-exclamation-circle mr-1.5 text-red-500"></i>
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                @if (session('info'))
+                    <div class="mb-6 p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-700 font-medium">
+                        <i class="fas fa-info-circle mr-1.5 text-blue-600"></i>
+                        {{ session('info') }}
+                    </div>
+                @endif
+
                 <!-- Role Switcher Tabs -->
                 <div class="grid grid-cols-2 gap-1.5 bg-gray-100 p-1.5 rounded-xl mb-6 text-xs font-bold">
                     <button type="button" id="roleAdminBtn" class="py-2.5 rounded-lg bg-blue-800 text-white shadow-sm transition">
@@ -38,7 +53,8 @@
                 </div>
 
                 <!-- Form -->
-                <form action="{{ url('/') }}" method="GET" class="space-y-4">
+                <form action="{{ route('login') }}" method="POST" class="space-y-4">
+                    @csrf
                     <input type="hidden" id="selectedRole" name="role" value="ADMIN_DINAS">
 
                     <!-- Username / NIP Input -->
@@ -48,7 +64,7 @@
                         </label>
                         <div class="relative">
                             <i class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                            <input type="text" placeholder="Masukkan NIP atau Username" required
+                            <input type="text" name="login" placeholder="Masukkan NIP atau Username" value="{{ old('login') }}" required
                                 class="w-full pl-10 pr-4 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 transition font-medium">
                         </div>
                     </div>
@@ -60,7 +76,7 @@
                         </label>
                         <div class="relative">
                             <i class="fas fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                            <input type="password" placeholder="••••••••" required
+                            <input type="password" name="password" placeholder="••••••••" required
                                 class="w-full pl-10 pr-4 py-2.5 text-xs bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 transition font-medium">
                         </div>
                     </div>
@@ -68,7 +84,7 @@
                     <!-- Remember Me & Forgot Password -->
                     <div class="flex items-center justify-between text-xs text-gray-600 pt-1">
                         <label class="flex items-center gap-2 cursor-pointer font-medium">
-                            <input type="checkbox" class="rounded border-gray-300 text-blue-800 focus:ring-blue-800">
+                            <input type="checkbox" name="remember" class="rounded border-gray-300 text-blue-800 focus:ring-blue-800">
                             <span>Ingat Saya</span>
                         </label>
                         <a href="#" class="text-blue-800 font-bold hover:underline">Lupa Password?</a>

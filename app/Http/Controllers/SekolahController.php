@@ -11,77 +11,58 @@ class SekolahController extends Controller
     public function index(Request $request)
     {
         $search = $request->query('search');
-        $query = Sekolah::withCount('pegawais')->latest();
 
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('nama_sekolah', 'like', "%{$search}%")
-                  ->orWhere('npsn', 'like', "%{$search}%")
-                  ->orWhere('kecamatan', 'like', "%{$search}%")
-                  ->orWhere('nama_kepala_sekolah', 'like', "%{$search}%");
-            });
+        try {
+            if (class_exists(Sekolah::class)) {
+                $query = Sekolah::withCount('pegawais')->latest();
+
+                if ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('nama_sekolah', 'like', "%{$search}%")
+                          ->orWhere('npsn', 'like', "%{$search}%")
+                          ->orWhere('kecamatan', 'like', "%{$search}%")
+                          ->orWhere('nama_kepala_sekolah', 'like', "%{$search}%");
+                    });
+                }
+
+                $sekolahs = $query->paginate(15)->withQueryString();
+
+                return view('sekolah.index', compact('sekolahs', 'search'));
+            }
+        } catch (\Throwable $e) {
+            // UI preview fallback
         }
 
-        $sekolahs = $query->paginate(15)->withQueryString();
-
-        return view('sekolah.index', compact('sekolahs', 'search'));
+        return view('sekolah.index');
     }
 
     public function create()
     {
-        return view('sekolah.create');
+        return view('sekolah.index');
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'npsn' => 'required|string|max:20|unique:sekolahs,npsn',
-            'nama_sekolah' => 'required|string|max:150',
-            'kecamatan' => 'required|string|max:100',
-            'nama_kepala_sekolah' => 'nullable|string|max:150',
-            'nip_kepala_sekolah' => 'nullable|string|max:30',
-            'status_kepala_sekolah' => 'required|in:Definitif,Plt,Plh',
-            'email_sekolah' => 'nullable|email|max:100',
-            'alamat' => 'nullable|string',
-        ]);
-
-        Sekolah::create($validated);
-
-        return redirect()->route('sekolah.index')->with('success', 'Data Sekolah berhasil ditambahkan.');
+        return redirect()->route('sekolah.index');
     }
 
-    public function show(Sekolah $sekolah)
+    public function show($id)
     {
-        $sekolah->load(['pegawais', 'users']);
-        return view('sekolah.show', compact('sekolah'));
+        return view('sekolah.index');
     }
 
-    public function edit(Sekolah $sekolah)
+    public function edit($id)
     {
-        return view('sekolah.edit', compact('sekolah'));
+        return view('sekolah.index');
     }
 
-    public function update(Request $request, Sekolah $sekolah)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'npsn' => ['required', 'string', 'max:20', Rule::unique('sekolahs')->ignore($sekolah->id)],
-            'nama_sekolah' => 'required|string|max:150',
-            'kecamatan' => 'required|string|max:100',
-            'nama_kepala_sekolah' => 'nullable|string|max:150',
-            'nip_kepala_sekolah' => 'nullable|string|max:30',
-            'status_kepala_sekolah' => 'required|in:Definitif,Plt,Plh',
-            'email_sekolah' => 'nullable|email|max:100',
-            'alamat' => 'nullable|string',
-        ]);
-
-        $sekolah->update($validated);
-
-        return redirect()->route('sekolah.index')->with('success', 'Data Sekolah berhasil diperbarui.');
+        return redirect()->route('sekolah.index');
     }
 
-    public function destroy(Sekolah $sekolah)
+    public function destroy($id)
     {
-        $sekolah->delete();
-        return redirect()->route('sekolah.index')->with('success', 'Data Sekolah berhasil dihapus.');
+        return redirect()->route('sekolah.index');
     }
 }
