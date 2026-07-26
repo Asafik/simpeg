@@ -11,7 +11,7 @@
             const path = window.location.pathname;
             const isPublicPage = path === '/' || path === '/login' || path.startsWith('/landing') || 
                                  path.startsWith('/statistik') || path.startsWith('/layanan') || 
-                                 path.startsWith('/cek-ptk') || path.startsWith('/pengumuman');
+                                 path.startsWith('/cek-ptk');
             if (isPublicPage) {
                 document.documentElement.setAttribute('data-theme', 'deep_blue');
             } else {
@@ -71,7 +71,7 @@
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
 
     @php
-        $isPublicPage = View::hasSection('hideNav') || Request::is('/') || Request::is('login') || Request::is('landing*') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || Request::is('pengumuman*');
+        $isPublicPage = View::hasSection('hideNav') || Request::is('/') || Request::is('login') || Request::is('landing*') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*');
     @endphp
 
     @unless($isPublicPage)
@@ -87,7 +87,14 @@
         @endunless
 
         <!-- Dynamic Content Section -->
-        @yield('content')
+        <div class="flex-1 flex flex-col">
+            @yield('content')
+        </div>
+
+        @unless($isPublicPage)
+            <!-- Admin Footer Partial (Full Width Edge-to-Edge & Sticks to Bottom) -->
+            @include('layouts.footer')
+        @endunless
     </main>
 
     <!-- Main System JS in public/ -->

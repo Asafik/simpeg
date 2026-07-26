@@ -11,6 +11,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\AnnouncementController;
 
 // Public Root URL & Landing Page Routes (Managed by LandingController)
 Route::get('/', [LandingController::class, 'index'])->name('landing.home');
@@ -63,7 +64,19 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
     Route::get('/sekolah/{sekolah}/riwayat', [RiwayatController::class, 'sekolah'])->name('sekolah.riwayat');
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
+    Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('pengumuman.index');
+    Route::get('/pengumuman/create', [AnnouncementController::class, 'create'])->name('pengumuman.create');
+    Route::post('/pengumuman', [AnnouncementController::class, 'store'])->name('pengumuman.store');
+    Route::get('/pengumuman/{id}/edit', [AnnouncementController::class, 'edit'])->name('pengumuman.edit');
+    Route::put('/pengumuman/{id}', [AnnouncementController::class, 'update'])->name('pengumuman.update');
+    Route::delete('/pengumuman/{id}', [AnnouncementController::class, 'destroy'])->name('pengumuman.destroy');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
 
     // Setting Submenu Routes
     Route::get('/settings/profile', [SettingController::class, 'profile'])->name('settings.profile');

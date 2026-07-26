@@ -98,8 +98,8 @@ class Pegawai extends Model
             $query->where('jabatan_fungsional', $filters['jabatan_fungsional']);
         }
 
-        if (isset($filters['is_serdik']) && $filters['is_serdik'] !== '') {
-            $query->where('is_serdik', filter_var($filters['is_serdik'], FILTER_VALIDATE_BOOLEAN));
+        if (isset($filters['is_serdik']) && $filters['is_serdik'] !== null && $filters['is_serdik'] !== '') {
+            $query->where('is_serdik', (int) $filters['is_serdik']);
         }
 
         if (!empty($filters['jenis_ptk'])) {
@@ -107,7 +107,12 @@ class Pegawai extends Model
         }
 
         if (!empty($filters['jenis_guru'])) {
-            $query->where('jenis_guru', $filters['jenis_guru']);
+            $jGuru = $filters['jenis_guru'];
+            if ($jGuru === 'Guru Mapel') {
+                $query->whereIn('jenis_guru', ['Guru Mapel', 'Guru Mata Pelajaran']);
+            } else {
+                $query->where('jenis_guru', $jGuru);
+            }
         }
 
         if (!empty($filters['tingkat_pendidikan'])) {
@@ -115,12 +120,13 @@ class Pegawai extends Model
         }
 
         if (!empty($filters['kelompok_usia'])) {
-            $today = Carbon::today();
+            $today = \Carbon\Carbon::today();
             switch ($filters['kelompok_usia']) {
                 case '<30':
                     $query->where('tanggal_lahir', '>', $today->copy()->subYears(30));
                     break;
                 case '30-40':
+                case '31-40':
                     $query->whereBetween('tanggal_lahir', [
                         $today->copy()->subYears(40),
                         $today->copy()->subYears(30)
@@ -133,6 +139,7 @@ class Pegawai extends Model
                     ]);
                     break;
                 case '>50':
+                case '>55':
                     $query->where('tanggal_lahir', '<=', $today->copy()->subYears(50));
                     break;
             }

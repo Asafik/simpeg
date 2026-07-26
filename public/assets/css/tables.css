@@ -1,5 +1,13 @@
 /* ===== TABLES & PAGINATION STYLES (SIMPEG-SP COMPONENT) ===== */
 
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.table-scroll table {
+    min-width: 900px;
+}
+
 /* Table Custom Scrollbar */
 .table-scroll::-webkit-scrollbar {
     height: 6px;

@@ -158,11 +158,6 @@
                     <i class="fas fa-filter"></i>
                     Multi-Filter Kombinasi (7 Kriteria PRD)
                 </h3>
-                @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('is_serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia'))
-                    <a href="{{ route('pegawai.index') }}" onclick="showLoadingOverlay('Mereset Filter...', 'Mengembalikan daftar master data Pegawai...')" class="text-xs text-red-600 hover:underline font-semibold transition flex items-center gap-1">
-                        <i class="fas fa-rotate-left text-[10px]"></i> Reset Filter
-                    </a>
-                @endif
             </div>
 
             <!-- Filter Grid 7 Dropdowns + Search Form -->
@@ -265,6 +260,18 @@
                         <option value="41-50" {{ request('kelompok_usia') == '41-50' ? 'selected' : '' }}>41 - 50 Tahun</option>
                         <option value=">55" {{ request('kelompok_usia') == '>55' ? 'selected' : '' }}>&gt; 55 Tahun (Pensiun)</option>
                     </select>
+                </div>
+                <!-- Filter Action Buttons Bar -->
+                <div class="col-span-1 sm:col-span-2 md:col-span-4 flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                    @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('is_serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia'))
+                        <a href="{{ route('pegawai.index') }}" onclick="showLoadingOverlay('Mereset Filter...', 'Mengembalikan daftar master data Pegawai...')" class="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
+                            <i class="fas fa-rotate-left text-[10px]"></i> Reset Filter
+                        </a>
+                    @endif
+                    <button type="submit" class="px-4 py-2 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold rounded-lg shadow-md hover:shadow-lg transition flex items-center gap-2 cursor-pointer">
+                        <i class="fas fa-filter text-xs"></i>
+                        <span>Terapkan Filter Data</span>
+                    </button>
                 </div>
 
             </form>
@@ -580,6 +587,7 @@
                 </div>
             </form>
         </div>
+        </div>
     </div>
 
     @push('scripts')
@@ -650,6 +658,22 @@
                     updateBulkBar();
                 };
             });
+
+            function triggerPegawaiFilter(elem) {
+                const form = document.getElementById('pegawaiFilterForm');
+                if (form) {
+                    if (typeof showLoadingOverlay === 'function') {
+                        showLoadingOverlay('Memproses Filter Pegawai...', 'Sistem sedang menyaring data pegawai...');
+                    }
+                    form.submit();
+                }
+            }
+
+            function handlePegawaiSubmit(e) {
+                if (typeof showLoadingOverlay === 'function') {
+                    showLoadingOverlay('Memproses Filter Pegawai...', 'Sistem sedang menyaring data pegawai...');
+                }
+            }
         </script>
     @endpush
 @endsection

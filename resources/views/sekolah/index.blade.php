@@ -137,11 +137,6 @@
                     <i class="fas fa-filter"></i>
                     Filter &amp; Pencarian Satuan Pendidikan
                 </h3>
-                @if($search || $kecamatan || $statusKepsek || $jenjang)
-                    <a href="{{ url('/sekolah') }}" onclick="showLoadingOverlay('Mereset Filter...', 'Mengembalikan master data Satuan Pendidikan...')" class="text-xs text-red-600 hover:underline font-semibold transition flex items-center gap-1">
-                        <i class="fas fa-rotate-left text-[10px]"></i> Reset Filter
-                    </a>
-                @endif
             </div>
 
             <!-- Filter Inputs Form -->

@@ -41,79 +41,79 @@
 
     <!-- ===== MAIN CONTENT BODY (With padding & overlapping stat cards) ===== -->
     <div class="px-4 md:px-8 pb-8 flex-1">
-        <!-- ===== OVERLAPPING SUMMARY CARDS ===== -->
+        <!-- ===== OVERLAPPING SUMMARY CARDS (Exact Match to Hope UI Card Style) ===== -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 -mt-12 md:-mt-14 mb-6 relative z-20">
             <!-- Card 1: Total Satuan Pendidikan -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-xl border border-blue-200 flex items-center justify-center text-blue-800 font-bold bg-blue-50 flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full border-2 border-blue-800 flex items-center justify-center text-blue-800 font-bold bg-blue-900/10 flex-shrink-0">
                         <i class="fas fa-school text-base"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] text-gray-400 font-medium uppercase tracking-wider">Satuan Pendidikan</p>
-                        <p class="text-xl md:text-2xl font-black text-gray-900 mt-0.5">{{ number_format($totalSekolah) }}</p>
+                        <p class="text-xs text-gray-400 font-medium">Satuan Pendidikan</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSekolah) }}</p>
                     </div>
                 </div>
                 <a href="{{ route('sekolah.index') }}" class="p-1 hover:text-blue-700 transition">
-                    <i class="fas fa-chevron-right text-xs text-gray-300"></i>
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                 </a>
             </div>
 
             <!-- Card 2: Kepala Sekolah Definitif -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-xl border border-emerald-200 flex items-center justify-center text-emerald-600 font-bold bg-emerald-50 flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full border-2 border-emerald-500 flex items-center justify-center text-emerald-600 font-bold bg-emerald-50/50 flex-shrink-0">
                         <i class="fas fa-user-check text-base"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] text-gray-400 font-medium uppercase tracking-wider">Kepsek Definitif</p>
-                        <p class="text-xl md:text-2xl font-black text-gray-900 mt-0.5">{{ number_format($totalDefinitif) }}</p>
+                        <p class="text-xs text-gray-400 font-medium">Kepsek Definitif</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalDefinitif) }}</p>
                     </div>
                 </div>
-                <i class="fas fa-chevron-right text-xs text-gray-300"></i>
+                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
             </div>
 
             <!-- Card 3: Kepsek Plt / Plh -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-xl border border-amber-200 flex items-center justify-center text-amber-600 font-bold bg-amber-50 flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0">
                         <i class="fas fa-user-clock text-base"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] text-gray-400 font-medium uppercase tracking-wider">Kepsek Plt / Plh</p>
-                        <p class="text-xl md:text-2xl font-black text-gray-900 mt-0.5">{{ number_format($totalPlt + $totalPlh) }}</p>
+                        <p class="text-xs text-gray-400 font-medium">Kepsek Plt / Plh</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPlt + $totalPlh) }}</p>
                     </div>
                 </div>
-                <i class="fas fa-chevron-right text-xs text-gray-300"></i>
+                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
             </div>
 
             <!-- Card 4: Akun Operator Sekolah -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-xl border border-indigo-200 flex items-center justify-center text-indigo-600 font-bold bg-indigo-50 flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full border-2 border-indigo-500 flex items-center justify-center text-indigo-600 font-bold bg-indigo-50/50 flex-shrink-0">
                         <i class="fas fa-id-badge text-base"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] text-gray-400 font-medium uppercase tracking-wider">Akun Operator</p>
-                        <p class="text-xl md:text-2xl font-black text-gray-900 mt-0.5">{{ number_format($totalOperator) }}</p>
+                        <p class="text-xs text-gray-400 font-medium">Akun Operator</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalOperator) }}</p>
                     </div>
                 </div>
-                <i class="fas fa-chevron-right text-xs text-gray-300"></i>
+                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
             </div>
 
             <!-- Card 5: Total Pegawai -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-xl border border-purple-200 flex items-center justify-center text-purple-600 font-bold bg-purple-50 flex-shrink-0">
+                    <div class="w-12 h-12 rounded-full border-2 border-purple-600 flex items-center justify-center text-purple-600 font-bold bg-purple-50/50 flex-shrink-0">
                         <i class="fas fa-users text-base"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] text-gray-400 font-medium uppercase tracking-wider">Total Pegawai</p>
-                        <p class="text-xl md:text-2xl font-black text-gray-900 mt-0.5">{{ number_format($totalPegawai) }}</p>
+                        <p class="text-xs text-gray-400 font-medium">Total Pegawai</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPegawai) }}</p>
                     </div>
                 </div>
                 <a href="{{ route('pegawai.index') }}" class="p-1 hover:text-purple-700 transition">
-                    <i class="fas fa-chevron-right text-xs text-gray-300"></i>
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                 </a>
             </div>
         </div>
@@ -234,10 +234,6 @@
             </div>
         </div>
 
-        <!-- ===== FOOTER ===== -->
-        <footer class="mt-8 text-center text-xs text-gray-400 border-t border-gray-200/70 pt-6">
-            &copy; 2026 <span class="font-bold text-gray-600">SIMPEG-SP</span> — Dinas Pendidikan. All rights reserved.
-        </footer>
     </div>
 @endsection
 
