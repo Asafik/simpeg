@@ -69,14 +69,18 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
 
-    @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*') || Request::is('/') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || Request::is('pengumuman*'))
+    @php
+        $isPublicPage = View::hasSection('hideNav') || Request::is('/') || Request::is('login') || Request::is('landing*') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || Request::is('pengumuman*');
+    @endphp
+
+    @unless($isPublicPage)
         <!-- Mobile Sidebar Overlay -->
         <div class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" id="sidebarOverlay"></div>
     @endunless
 
     <!-- Main Content Wrapper (w-full 100% on public pages) -->
-    <main class="{{ (View::hasSection('hideNav') || Request::is('login') || Request::is('landing*') || Request::is('/') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || Request::is('pengumuman*')) ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
-        @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*') || Request::is('/') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || Request::is('pengumuman*'))
+    <main class="{{ $isPublicPage ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
+        @unless($isPublicPage)
             <!-- Top Navbar Partial -->
             @include('layouts.navbar')
         @endunless

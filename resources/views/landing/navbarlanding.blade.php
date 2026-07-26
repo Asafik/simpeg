@@ -12,7 +12,7 @@
 
         <!-- Desktop Navigation Links -->
         <nav class="hidden md:flex items-center gap-8 text-xs font-semibold text-blue-100/90">
-            <a href="{{ url('/') }}" class="{{ (Request::is('/') || Request::is('landing')) ? 'text-white font-bold border-b-2 border-white pb-1' : 'hover:text-white transition' }}">
+            <a href="{{ url('/') }}" class="{{ (Request::is('/') || Request::is('landing')) && !Request::is('statistik*') && !Request::is('layanan*') && !Request::is('cek-ptk*') && !Request::is('pengumuman*') ? 'text-white font-bold border-b-2 border-white pb-1' : 'hover:text-white transition' }}">
                 Beranda
             </a>
             <a href="{{ url('/statistik') }}" class="{{ Request::is('statistik*') || Request::is('landing/statistik*') ? 'text-white font-bold border-b-2 border-white pb-1' : 'hover:text-white transition' }}">

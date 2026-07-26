@@ -9,6 +9,7 @@ use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ExportController;
 
 // Public Root URL & Landing Page Routes (Managed by LandingController)
 Route::get('/', [LandingController::class, 'index'])->name('landing.home');
@@ -36,9 +37,19 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Pegawai Management & Data Exchange Routes
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
+    Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
+    Route::get('/pegawai/template/download', [PegawaiController::class, 'downloadTemplate'])->name('pegawai.template');
+    Route::post('/pegawai/import', [PegawaiController::class, 'import'])->name('pegawai.import');
+    Route::post('/pegawai/bulk-delete', [PegawaiController::class, 'bulkDestroy'])->name('pegawai.bulk-destroy');
+    Route::get('/pegawai/export/excel', [ExportController::class, 'exportExcel'])->name('pegawai.export.excel');
+    Route::get('/pegawai/export/pdf', [ExportController::class, 'exportPdf'])->name('pegawai.export.pdf');
     Route::get('/pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
+    Route::get('/pegawai/{pegawai}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
+    Route::put('/pegawai/{pegawai}', [PegawaiController::class, 'update'])->name('pegawai.update');
+    Route::delete('/pegawai/{pegawai}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
 
     Route::get('/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
     Route::get('/sekolah/create', [SekolahController::class, 'create'])->name('sekolah.create');
@@ -47,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/sekolah/{sekolah}/edit', [SekolahController::class, 'edit'])->name('sekolah.edit');
     Route::put('/sekolah/{sekolah}', [SekolahController::class, 'update'])->name('sekolah.update');
     Route::delete('/sekolah/{sekolah}', [SekolahController::class, 'destroy'])->name('sekolah.destroy');
+    Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
 

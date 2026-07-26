@@ -87,14 +87,14 @@
                     <div>
                         <p class="text-xs text-gray-400 font-medium">Kepsek Definitif</p>
                         <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">
-                            {{ \App\Models\Sekolah::where('status_kepala_sekolah', 'Definitif')->count() ?: 842 }}
+                            {{ \App\Models\Sekolah::where('status_kepala_sekolah', 'Definitif')->count() }}
                         </p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
             </div>
 
-            <!-- Card 3: Plt. Kepala Sekolah -->
+            <!-- Card 3: Plt. Kepsek -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0">
@@ -103,23 +103,23 @@
                     <div>
                         <p class="text-xs text-gray-400 font-medium">Plt. Kepala Sekolah</p>
                         <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">
-                            {{ \App\Models\Sekolah::where('status_kepala_sekolah', 'Plt')->count() ?: 147 }}
+                            {{ \App\Models\Sekolah::where('status_kepala_sekolah', 'Plt')->count() }}
                         </p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
             </div>
 
-            <!-- Card 4: Akun Operator Aktif -->
+            <!-- Card 4: Operator Terdaftar -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-full border-2 border-indigo-500 flex items-center justify-center text-indigo-600 font-bold bg-indigo-50/50 flex-shrink-0">
-                        <i class="fas fa-users-gear text-base"></i>
+                        <i class="fas fa-laptop-code text-base"></i>
                     </div>
                     <div>
                         <p class="text-xs text-gray-400 font-medium">Operator Terdaftar</p>
                         <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">
-                            {{ \App\Models\Sekolah::count() }}
+                            {{ \App\Models\User::where('role', 'OPERATOR_SEKOLAH')->count() }}
                         </p>
                     </div>
                 </div>
@@ -128,80 +128,70 @@
 
         </div>
 
-        <!-- ===== FILTER BAR PANEL ===== -->
-        <div class="bg-white rounded-xl border border-gray-200/80 shadow-md p-5 space-y-3 relative z-30">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 class="text-xs font-bold text-gray-800 flex items-center gap-2">
-                    <i class="fas fa-filter text-blue-800"></i> Filter &amp; Pencarian Data Satuan Pendidikan
+        <!-- Filter Bar Panel -->
+        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-30">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+                <h3 class="text-xs font-extrabold uppercase tracking-wider text-blue-800 flex items-center gap-2">
+                    <i class="fas fa-filter"></i>
+                    Filter &amp; Pencarian Satuan Pendidikan
                 </h3>
-                <div class="flex items-center gap-3">
-                    @if($search || $kecamatan || $statusKepsek || $jenjang)
-                        <a href="{{ url('/sekolah') }}" class="text-xs text-red-600 font-bold hover:underline flex items-center gap-1">
-                            <i class="fas fa-rotate-left text-[10px]"></i> Reset Filter
-                        </a>
-                    @endif
-                </div>
+                @if($search || $kecamatan || $statusKepsek || $jenjang)
+                    <a href="{{ url('/sekolah') }}" onclick="showLoadingOverlay('Mereset Filter...', 'Mengembalikan master data Satuan Pendidikan...')" class="text-xs text-red-600 hover:underline font-semibold transition flex items-center gap-1">
+                        <i class="fas fa-rotate-left text-[10px]"></i> Reset Filter
+                    </a>
+                @endif
             </div>
 
-            <!-- Clean Base Form Action Without Query String Collisions -->
+            <!-- Filter Inputs Form -->
             <form action="{{ url('/sekolah') }}" method="GET" id="sekolahFilterForm" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-                <!-- Search Input (Laravel Query Search with Embedded Arrow Button) -->
-                <div>
-                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Pencarian Kata Kunci</label>
+                
+                <!-- Search Input -->
+                <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Cari NPSN / Nama / Kepsek</label>
                     <div class="relative flex items-center">
-                        <i class="fas fa-search absolute left-3 text-gray-400 text-xs pointer-events-none"></i>
-                        <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="NPSN, Sekolah, NIP..." 
-                               class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg pl-8 {{ $search ? 'pr-20' : 'pr-12' }} py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-medium">
-                        
-                        <div class="absolute right-1 flex items-center gap-1 z-10">
-                            @if($search)
-                                <a href="{{ url('/sekolah') }}?{{ http_build_query(array_filter(['kecamatan' => $kecamatan, 'status_kepala_sekolah' => $statusKepsek, 'jenjang' => $jenjang])) }}" 
-                                   class="p-1 text-gray-400 hover:text-red-600 text-xs transition" title="Hapus Kata Kunci">
-                                    <i class="fas fa-times-circle"></i>
-                                </a>
-                            @endif
-                            <button type="submit" class="w-7 h-7 bg-blue-800 hover:bg-blue-900 text-white rounded-md transition flex items-center justify-center shadow-sm cursor-pointer" title="Cari Data">
-                                <i class="fas fa-arrow-right text-xs"></i>
-                            </button>
-                        </div>
+                        <input type="text" name="search" value="{{ $search }}" placeholder="Ketik NPSN / Nama Sekolah..." 
+                               class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-medium">
+                        <button type="submit" class="absolute right-1 w-7 h-7 bg-blue-800 hover:bg-blue-900 text-white rounded-md transition flex items-center justify-center shadow-sm cursor-pointer" title="Cari Data">
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Filter Kecamatan -->
+                <!-- Kecamatan Filter -->
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Kecamatan</label>
-                    <select name="kecamatan" onchange="this.form.submit()" class="js-auto-filter w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Filter Kecamatan</label>
+                    <select name="kecamatan" class="js-auto-filter w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Kecamatan</option>
                         @if(isset($listKecamatan))
                             @foreach($listKecamatan as $kec)
-                                <option value="{{ $kec }}" {{ ($kecamatan ?? '') == $kec ? 'selected' : '' }}>{{ $kec }}</option>
+                                <option value="{{ $kec }}" {{ $kecamatan == $kec ? 'selected' : '' }}>{{ $kec }}</option>
                             @endforeach
                         @endif
                     </select>
                 </div>
 
-                <!-- Filter Status Kepsek -->
+                <!-- Status Kepsek Filter -->
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Status Kepsek</label>
-                    <select name="status_kepala_sekolah" onchange="this.form.submit()" class="js-auto-filter w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Status Kepala Sekolah</label>
+                    <select name="status_kepala_sekolah" class="js-auto-filter w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Status Kepsek</option>
-                        <option value="Definitif" {{ ($statusKepsek ?? '') == 'Definitif' ? 'selected' : '' }}>Definitif</option>
-                        <option value="Plt" {{ ($statusKepsek ?? '') == 'Plt' ? 'selected' : '' }}>Plt. Kepala Sekolah</option>
+                        <option value="Definitif" {{ $statusKepsek == 'Definitif' ? 'selected' : '' }}>Definitif</option>
+                        <option value="Plt" {{ $statusKepsek == 'Plt' ? 'selected' : '' }}>Plt. Kepala Sekolah</option>
                     </select>
                 </div>
 
-                <!-- Filter Jenjang -->
+                <!-- Jenjang Filter -->
                 <div>
-                    <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">Jenjang Sekolah</label>
-                    <select name="jenjang" onchange="this.form.submit()" class="js-auto-filter w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
-                        <option value="">Semua Jenjang</option>
-                        <option value="SD" {{ ($jenjang ?? '') == 'SD' ? 'selected' : '' }}>SD Negeri</option>
-                        <option value="SMP" {{ ($jenjang ?? '') == 'SMP' ? 'selected' : '' }}>SMP Negeri</option>
-                        <option value="TK" {{ ($jenjang ?? '') == 'TK' ? 'selected' : '' }}>TK Negeri Pembina</option>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Jenjang Sekolah</label>
+                    <select name="jenjang" class="js-auto-filter w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
+                        <option value="">Semua Jenjang (SD/SMP/TK)</option>
+                        <option value="SD" {{ $jenjang == 'SD' ? 'selected' : '' }}>SD / SDN</option>
+                        <option value="SMP" {{ $jenjang == 'SMP' ? 'selected' : '' }}>SMP / SMPN</option>
+                        <option value="TK" {{ $jenjang == 'TK' ? 'selected' : '' }}>TK / TKN</option>
                     </select>
                 </div>
 
-                <!-- Tombol Filter Uji Coba (Dedicated Submit Button) -->
+                <!-- Filter Submit Button -->
                 <div class="col-span-1 sm:col-span-2 md:col-span-4 flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
                     @if($search || $kecamatan || $statusKepsek || $jenjang)
                         <a href="{{ url('/sekolah') }}" class="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
@@ -254,7 +244,7 @@
                                     <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">
                                         {{ $loop->iteration + ((method_exists($sekolahs, 'firstItem') ? ($sekolahs->firstItem() ?? 1) : 1) - 1) }}
                                     </td>
-                                    <td class="px-6 py-4 font-bold text-blue-800 text-xs">
+                                    <td class="px-6 py-4 font-bold text-blue-800 text-xs font-mono">
                                         {{ $sekolah->npsn }}
                                     </td>
                                     <td class="px-6 py-4">
@@ -307,42 +297,18 @@
                 </table>
             </div>
 
-            <!-- Table Pagination (Matches Pegawai Index UI Styling) -->
-            @if(isset($sekolahs) && method_exists($sekolahs, 'hasPages') && $sekolahs->hasPages())
-                <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
-                    <span class="text-xs text-gray-500 font-medium">
-                        Halaman {{ $sekolahs->currentPage() }} dari {{ $sekolahs->lastPage() }} (Menampilkan {{ $sekolahs->firstItem() }} - {{ $sekolahs->lastItem() }} dari {{ $sekolahs->total() }} Sekolah)
-                    </span>
-                    <div class="flex items-center gap-1">
-                        {{-- Previous Page Link --}}
-                        @if ($sekolahs->onFirstPage())
-                            <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed"><i class="fas fa-chevron-left"></i></span>
-                        @else
-                            <a href="{{ $sekolahs->previousPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition"><i class="fas fa-chevron-left"></i></a>
-                        @endif
-
-                        {{-- Pagination Elements --}}
-                        @foreach ($sekolahs->getUrlRange(max(1, $sekolahs->currentPage() - 2), min($sekolahs->lastPage(), $sekolahs->currentPage() + 2)) as $page => $url)
-                            @if ($page == $sekolahs->currentPage())
-                                <span class="px-3 py-1.5 text-xs bg-blue-800 text-white font-bold rounded-lg shadow-sm">{{ $page }}</span>
-                            @else
-                                <a href="{{ $url }}" class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-lg transition font-medium">{{ $page }}</a>
-                            @endif
-                        @endforeach
-
-                        {{-- Next Page Link --}}
-                        @if ($sekolahs->hasMorePages())
-                            <a href="{{ $sekolahs->nextPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 transition"><i class="fas fa-chevron-right"></i></a>
-                        @else
-                            <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed"><i class="fas fa-chevron-right"></i></span>
-                        @endif
-                    </div>
+            <!-- Table Pagination -->
+            <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+                <span class="text-xs text-gray-500">
+                    Menampilkan {{ method_exists($sekolahs, 'firstItem') ? ($sekolahs->firstItem() ?? 0) : 0 }} - {{ method_exists($sekolahs, 'lastItem') ? ($sekolahs->lastItem() ?? 0) : 0 }} dari {{ method_exists($sekolahs, 'total') ? $sekolahs->total() : count($sekolahs) }} Data
+                </span>
+                <div>
+                    @if(method_exists($sekolahs, 'links'))
+                        {{ $sekolahs->links() }}
+                    @endif
                 </div>
-            @elseif(isset($sekolahs) && method_exists($sekolahs, 'total'))
-                <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-                    <span class="text-xs text-gray-500 font-medium">Menampilkan {{ $sekolahs->total() }} Satuan Pendidikan</span>
-                </div>
-            @endif
+            </div>
+
         </div>
 
     </div>

@@ -26,8 +26,7 @@
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 overflow-y-auto">
         <p class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold px-3 mb-4 sidebar-text">Main Menu</p>
-        
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('dashboard*') || Request::is('/') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Dashboard">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('dashboard*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Dashboard">
             <i class="fas fa-chart-pie w-5 text-center flex-shrink-0"></i>
             <span class="font-medium text-sm sidebar-text">Dashboard</span>
         </a>

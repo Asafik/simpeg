@@ -22,10 +22,10 @@ class SekolahSeeder extends Seeder
                     [
                         'nama_sekolah'          => $data['nama_sekolah'],
                         'kecamatan'             => $data['kecamatan'],
-                        'nama_kepala_sekolah'   => $data['nama_kepala_sekolah'],
-                        'nip_kepala_sekolah'    => $data['nip_kepala_sekolah'],
+                        'nama_kepala_sekolah'   => $data['nama_kepala_sekolah'] ?? null,
+                        'nip_kepala_sekolah'    => $data['nip_kepala_sekolah'] ?? null,
                         'status_kepala_sekolah' => $data['status_kepala_sekolah'] ?? 'Definitif',
-                        'email_sekolah'         => !empty($data['email_sekolah']) ? $data['email_sekolah'] : strtolower(str_replace(' ', '', $data['nama_sekolah'])) . '@dinas.sch.id',
+                        'email_sekolah'         => !empty($data['email_sekolah']) ? $data['email_sekolah'] : null,
                         'alamat'                => $data['alamat'] ?? ('Jl. Pendidikan, Kec. ' . $data['kecamatan']),
                     ]
                 );

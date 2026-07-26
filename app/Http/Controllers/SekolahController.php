@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sekolah;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class SekolahController extends Controller
@@ -37,7 +39,7 @@ class SekolahController extends Controller
         $statusKepsek = $getParam('status_kepala_sekolah');
         $jenjang = $getParam('jenjang');
 
-        $query = Sekolah::withCount('pegawais')->latest();
+        $query = Sekolah::withCount('pegawais')->with('users')->latest();
 
         // 1. Laravel Eloquent Full-Text Search Filter
         if (!empty($search)) {
@@ -119,9 +121,22 @@ class SekolahController extends Controller
             'status_kepala_sekolah' => ['required', 'string', Rule::in(['Definitif', 'Plt'])],
         ]);
 
-        Sekolah::create($validated);
+        $sekolah = Sekolah::create($validated);
 
-        return redirect()->route('sekolah.index')->with('success', 'Satuan Pendidikan baru berhasil ditambahkan!');
+        // Auto-create operator account for this school
+        $username = 'ops_' . $sekolah->npsn;
+        User::updateOrCreate(
+            ['username' => $username],
+            [
+                'name' => 'Operator ' . $sekolah->nama_sekolah,
+                'email' => $sekolah->email_sekolah ?: ($username . '@dinas.sch.id'),
+                'password' => Hash::make('password'),
+                'role' => 'OPERATOR_SEKOLAH',
+                'sekolah_id' => $sekolah->id,
+            ]
+        );
+
+        return redirect()->route('sekolah.index')->with('success', "Satuan Pendidikan '{$sekolah->nama_sekolah}' dan akun Operator (username: {$username}) berhasil ditambahkan!");
     }
 
     /**
@@ -129,7 +144,7 @@ class SekolahController extends Controller
      */
     public function show($id)
     {
-        $sekolah = Sekolah::with('pegawais')->findOrFail($id);
+        $sekolah = Sekolah::with('users', 'pegawais')->findOrFail($id);
         return view('sekolah.show', compact('sekolah'));
     }
 
@@ -162,6 +177,15 @@ class SekolahController extends Controller
 
         $sekolah->update($validated);
 
+        // Sync associated operator username/email if changed
+        $operator = User::where('sekolah_id', $sekolah->id)->first();
+        if ($operator) {
+            $operator->update([
+                'name' => 'Operator ' . $sekolah->nama_sekolah,
+                'email' => $sekolah->email_sekolah ?: $operator->email,
+            ]);
+        }
+
         return redirect()->route('sekolah.show', $sekolah->id)->with('success', 'Data Satuan Pendidikan berhasil diperbarui!');
     }
 
@@ -171,8 +195,41 @@ class SekolahController extends Controller
     public function destroy($id)
     {
         $sekolah = Sekolah::findOrFail($id);
+        $nama = $sekolah->nama_sekolah;
+
+        // Delete associated user operator
+        User::where('sekolah_id', $sekolah->id)->delete();
         $sekolah->delete();
 
-        return redirect()->route('sekolah.index')->with('success', 'Data Satuan Pendidikan berhasil dihapus!');
+        return redirect()->route('sekolah.index')->with('success', "Satuan Pendidikan '{$nama}' dan akun operator terkait berhasil dihapus!");
+    }
+
+    /**
+     * Reset password for operator account associated with school.
+     */
+    public function resetPassword($id)
+    {
+        $sekolah = Sekolah::findOrFail($id);
+        $operator = User::where('sekolah_id', $sekolah->id)->first();
+
+        if (!$operator) {
+            // Create if missing
+            $username = 'ops_' . $sekolah->npsn;
+            $operator = User::create([
+                'username' => $username,
+                'name' => 'Operator ' . $sekolah->nama_sekolah,
+                'email' => $sekolah->email_sekolah ?: ($username . '@dinas.sch.id'),
+                'password' => Hash::make('password'),
+                'role' => 'OPERATOR_SEKOLAH',
+                'sekolah_id' => $sekolah->id,
+            ]);
+        } else {
+            $operator->update([
+                'password' => Hash::make('password'),
+            ]);
+        }
+
+        return redirect()->route('sekolah.index')
+            ->with('success', "Password operator untuk '{$sekolah->nama_sekolah}' (Username: {$operator->username}) berhasil di-reset menjadi 'password'.");
     }
 }

@@ -38,12 +38,20 @@
                     Kelola master data pendidik &amp; tenaga kependidikan berbasis 7 kriteria utama Dinas Pendidikan.
                 </p>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex flex-wrap items-center gap-2.5">
                 <a href="{{ url('/pegawai/create') }}" class="bg-white text-blue-900 hover:bg-blue-50 text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm flex items-center gap-2 transition">
                     <i class="fas fa-plus text-xs"></i>
                     <span>Tambah Pegawai</span>
                 </a>
-                <a href="#" class="bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white text-xs font-bold px-3.5 py-2.5 rounded-lg shadow-sm flex items-center gap-1.5 transition">
+                <button type="button" onclick="openImportModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm flex items-center gap-2 transition cursor-pointer">
+                    <i class="fas fa-file-import text-xs"></i>
+                    <span>Import Data</span>
+                </button>
+                <a href="{{ route('pegawai.template') }}" class="bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white text-xs font-bold px-3.5 py-2.5 rounded-lg shadow-sm flex items-center gap-1.5 transition" title="Unduh Template Excel (.xlsx)">
+                    <i class="fas fa-file-excel text-xs text-blue-200"></i>
+                    <span>Template Excel</span>
+                </a>
+                <a href="{{ route('pegawai.export.excel', request()->query()) }}" class="bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white text-xs font-bold px-3.5 py-2.5 rounded-lg shadow-sm flex items-center gap-1.5 transition">
                     <i class="fas fa-file-excel text-xs text-emerald-400"></i>
                     <span>Export Excel</span>
                 </a>
@@ -54,6 +62,27 @@
     <!-- Main Content Container (With overlapping top margin) -->
     <div class="px-6 md:px-8 pb-8 flex-1 space-y-6 -mt-8 relative z-20">
 
+        <!-- Flash Messages Alert -->
+        @if(session('success'))
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-circle-check text-emerald-600 text-sm"></i>
+                    <span>{{ session('success') }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-800"><i class="fas fa-xmark"></i></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-triangle-exclamation text-rose-600 text-sm"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-800"><i class="fas fa-xmark"></i></button>
+            </div>
+        @endif
+
         <!-- 7 KRITERIA MULTI-FILTER BAR -->
         <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-30">
             <div class="flex items-center justify-between pb-3 border-b border-gray-100">
@@ -61,8 +90,8 @@
                     <i class="fas fa-filter"></i>
                     Multi-Filter Kombinasi (7 Kriteria PRD)
                 </h3>
-                @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia'))
-                    <a href="{{ url('/pegawai') }}" onclick="showLoadingOverlay('Mereset Filter...', 'Mengembalikan daftar master data Pegawai...')" class="text-xs text-red-600 hover:underline font-semibold transition flex items-center gap-1">
+                @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('is_serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia'))
+                    <a href="{{ route('pegawai.index') }}" onclick="showLoadingOverlay('Mereset Filter...', 'Mengembalikan daftar master data Pegawai...')" class="text-xs text-red-600 hover:underline font-semibold transition flex items-center gap-1">
                         <i class="fas fa-rotate-left text-[10px]"></i> Reset Filter
                     </a>
                 @endif
@@ -101,10 +130,16 @@
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">2. Jabatan Fungsional</label>
                     <select name="jabatan_fungsional" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Jabatan</option>
-                        <option value="Guru Ahli Pertama" {{ request('jabatan_fungsional') == 'Guru Ahli Pertama' ? 'selected' : '' }}>Guru Ahli Pertama</option>
-                        <option value="Guru Ahli Muda" {{ request('jabatan_fungsional') == 'Guru Ahli Muda' ? 'selected' : '' }}>Guru Ahli Muda</option>
-                        <option value="Kepala Sekolah" {{ request('jabatan_fungsional') == 'Kepala Sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
-                        <option value="Penilik" {{ request('jabatan_fungsional') == 'Penilik' ? 'selected' : '' }}>Penilik</option>
+                        @if(isset($jabatanList))
+                            @foreach($jabatanList as $jbt)
+                                <option value="{{ $jbt }}" {{ request('jabatan_fungsional') == $jbt ? 'selected' : '' }}>{{ $jbt }}</option>
+                            @endforeach
+                        @else
+                            <option value="Guru Ahli Pertama" {{ request('jabatan_fungsional') == 'Guru Ahli Pertama' ? 'selected' : '' }}>Guru Ahli Pertama</option>
+                            <option value="Guru Ahli Muda" {{ request('jabatan_fungsional') == 'Guru Ahli Muda' ? 'selected' : '' }}>Guru Ahli Muda</option>
+                            <option value="Kepala Sekolah" {{ request('jabatan_fungsional') == 'Kepala Sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                            <option value="Penilik" {{ request('jabatan_fungsional') == 'Penilik' ? 'selected' : '' }}>Penilik</option>
+                        @endif
                     </select>
                 </div>
 
@@ -113,8 +148,8 @@
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">3. Sertifikasi (Serdik)</label>
                     <select name="serdik" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Status Serdik</option>
-                        <option value="1" {{ request('serdik') === '1' ? 'selected' : '' }}>Sudah Serdik</option>
-                        <option value="0" {{ request('serdik') === '0' ? 'selected' : '' }}>Belum Serdik</option>
+                        <option value="1" {{ (request('serdik') === '1' || request('is_serdik') === '1') ? 'selected' : '' }}>Sudah Serdik</option>
+                        <option value="0" {{ (request('serdik') === '0' || request('is_serdik') === '0') ? 'selected' : '' }}>Belum Serdik</option>
                     </select>
                 </div>
 
@@ -134,7 +169,7 @@
                     <select name="jenis_guru" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Jenis Guru</option>
                         <option value="Guru Kelas" {{ request('jenis_guru') == 'Guru Kelas' ? 'selected' : '' }}>Guru Kelas</option>
-                        <option value="Guru Mapel" {{ request('jenis_guru') == 'Guru Mapel' ? 'selected' : '' }}>Guru Mata Pelajaran</option>
+                        <option value="Guru Mapel" {{ (request('jenis_guru') == 'Guru Mapel' || request('jenis_guru') == 'Guru Mata Pelajaran') ? 'selected' : '' }}>Guru Mata Pelajaran</option>
                         <option value="Guru BK" {{ request('jenis_guru') == 'Guru BK' ? 'selected' : '' }}>Guru BK</option>
                     </select>
                 </div>
@@ -326,10 +361,207 @@
                     <button class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-lg">2</button>
                     <button class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-lg">3</button>
                     <button class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100"><i class="fas fa-chevron-right"></i></button>
+=======
+                    <select name="kelompok_usia" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
+                        <option value="">Semua Kelompok Usia</option>
+                        <option value="<30" {{ request('kelompok_usia') == '<30' ? 'selected' : '' }}>&lt; 30 Tahun</option>
+                        <option value="30-40" {{ request('kelompok_usia') == '30-40' ? 'selected' : '' }}>30 - 40 Tahun</option>
+                        <option value="41-50" {{ request('kelompok_usia') == '41-50' ? 'selected' : '' }}>41 - 50 Tahun</option>
+                        <option value=">50" {{ request('kelompok_usia') == '>50' ? 'selected' : '' }}>&gt; 50 Tahun</option>
+                    </select>
+                </div>
+
+            </div>
+        </form>
+
+        <!-- BULK DELETE FLOATING ACTION BAR -->
+        <form id="bulkDeleteForm" method="POST" action="{{ route('pegawai.bulk-destroy') }}">
+            @csrf
+            <div id="bulkActionBar" class="hidden bg-slate-900 text-white rounded-xl px-5 py-3 shadow-xl flex items-center justify-between border border-slate-700 animate-fade-in">
+                <div class="flex items-center gap-3 text-xs font-semibold">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold" id="selectedCountBadge">0</span>
+                    <span>Pegawai terpilih untuk dihapus</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="unselectAllCheckboxes()" class="text-xs text-gray-400 hover:text-white px-3 py-1.5 transition">
+                        Batal
+                    </button>
+                    <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus seluruh data pegawai terpilih?')" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-md transition flex items-center gap-1.5">
+                        <i class="fas fa-trash-can text-xs"></i>
+                        <span>Hapus Terpilih</span>
+                    </button>
                 </div>
             </div>
 
-        </div>
+            <!-- PEGAWAI DATA TABLE -->
+            <div class="bg-white rounded-xl border border-gray-200/80 shadow-sm overflow-hidden mt-4">
+                
+                <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+                    <span class="text-xs font-bold text-gray-700">
+                        @if(isset($pegawais) && method_exists($pegawais, 'total'))
+                            Menampilkan {{ $pegawais->firstItem() ?? 0 }} - {{ $pegawais->lastItem() ?? 0 }} dari {{ $pegawais->total() }} Data Pegawai
+                        @else
+                            Menampilkan Data Pegawai
+                        @endif
+                    </span>
+                    <div class="text-xs text-gray-400">
+                        <span class="font-medium text-gray-600">Urutkan:</span> Terbaru Dibuat
+                    </div>
+>>>>>>> ab5e309be74ed7d06ae5cbb8fdd76093e7d77cbe
+                </div>
+
+                <!-- Table Wrapper -->
+                <div class="table-scroll overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-50/80 border-b border-gray-100 text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
+                            <tr>
+                                <th class="px-4 py-3.5 w-10 text-center">
+                                    <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-blue-800 focus:ring-blue-800 cursor-pointer">
+                                </th>
+                                <th class="px-4 py-3.5">NIP / NIK</th>
+                                <th class="px-4 py-3.5">Nama & Profil</th>
+                                <th class="px-4 py-3.5">Satuan Pendidikan</th>
+                                <th class="px-4 py-3.5">Status</th>
+                                <th class="px-4 py-3.5">Jabatan & Jenis</th>
+                                <th class="px-4 py-3.5">Serdik</th>
+                                <th class="px-4 py-3.5">Pendidikan</th>
+                                <th class="px-4 py-3.5">Usia</th>
+                                <th class="px-4 py-3.5">Berkas (PDF)</th>
+                                <th class="px-4 py-3.5 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @if(isset($pegawais) && count($pegawais) > 0)
+                                @foreach($pegawais as $pegawai)
+                                    <tr class="hover:bg-blue-50/30 transition">
+                                        <td class="px-4 py-3.5 text-center">
+                                            <input type="checkbox" name="ids[]" value="{{ $pegawai->id }}" class="pegawai-checkbox rounded border-gray-300 text-blue-800 focus:ring-blue-800 cursor-pointer">
+                                        </td>
+                                        <td class="px-4 py-3.5">
+                                            <p class="font-bold text-gray-800 text-xs">{{ $pegawai->nip_nik ?: '-' }}</p>
+                                            @if($pegawai->nik && $pegawai->nik !== $pegawai->nip_nik)
+                                                <p class="text-[10px] text-gray-400 font-mono">NIK: {{ $pegawai->nik }}</p>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                @php
+                                                    $words = explode(' ', $pegawai->nama_lengkap);
+                                                    $initials = strtoupper(substr($words[0] ?? 'P', 0, 1) . substr($words[1] ?? 'T', 0, 1));
+                                                @endphp
+                                                <div class="w-8 h-8 rounded-full bg-blue-800 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">
+                                                    {{ $initials }}
+                                                </div>
+                                                <div>
+                                                    <p class="font-bold text-gray-900 text-xs">{{ $pegawai->nama_lengkap }}</p>
+                                                    <div class="flex items-center gap-1.5 mt-0.5">
+                                                        <span class="text-[10px] text-gray-500 font-medium">{{ $pegawai->jenis_ptk }}</span>
+                                                        @if($pegawai->pangkat_golongan && $pegawai->pangkat_golongan !== '-')
+                                                            <span class="text-[9px] bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded font-semibold">Gol: {{ $pegawai->pangkat_golongan }}</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">
+                                            {{ $pegawai->sekolah->nama_sekolah ?? '-' }}
+                                        </td>
+                                        <td class="px-4 py-3.5">
+                                            @php
+                                                $badgeClasses = match($pegawai->status_kepegawaian) {
+                                                    'PNS' => 'bg-blue-100 text-blue-800',
+                                                    'PPPK' => 'bg-emerald-100 text-emerald-800',
+                                                    'PPPK PW' => 'bg-amber-100 text-amber-800',
+                                                    default => 'bg-gray-100 text-gray-800',
+                                                };
+                                            @endphp
+                                            <span class="badge-custom px-2.5 py-1 rounded-full text-[10px] font-bold {{ $badgeClasses }}">
+                                                {{ $pegawai->status_kepegawaian }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3.5">
+                                            <p class="text-xs text-gray-800 font-medium">{{ $pegawai->jabatan_fungsional ?: '-' }}</p>
+                                            <p class="text-[10px] text-gray-400">{{ $pegawai->jenis_guru ?: '-' }}</p>
+                                            @if($pegawai->jumlah_jp)
+                                                <p class="text-[9px] text-blue-600 font-semibold">{{ $pegawai->jumlah_jp }}</p>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3.5">
+                                            @if($pegawai->is_serdik)
+                                                <span class="badge-custom px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                                    <i class="fas fa-check-circle mr-1"></i>Serdik
+                                                </span>
+                                                @if($pegawai->no_serdik)
+                                                    <p class="text-[9px] text-gray-400 mt-1 font-mono truncate max-w-[120px]" title="No Serdik: {{ $pegawai->no_serdik }}">No: {{ $pegawai->no_serdik }}</p>
+                                                @endif
+                                            @else
+                                                <span class="badge-custom px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-100 text-red-800">
+                                                    <i class="fas fa-times-circle mr-1"></i>Non-Serdik
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3.5">
+                                            <p class="text-xs text-gray-700 font-medium">{{ $pegawai->tingkat_pendidikan }}</p>
+                                            @if($pegawai->jurusan_prodi)
+                                                <p class="text-[10px] text-gray-400 truncate max-w-[110px]" title="{{ $pegawai->jurusan_prodi }}">{{ $pegawai->jurusan_prodi }}</p>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3.5 text-xs text-gray-700">
+                                            {{ $pegawai->usia }} thn
+                                        </td>
+                                        <td class="px-4 py-3.5">
+                                            <div class="flex items-center gap-1.5 text-xs">
+                                                @if($pegawai->file_sk)
+                                                    <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" class="text-red-500 hover:text-red-700" title="SK Kepegawaian"><i class="fas fa-file-pdf"></i></a>
+                                                @endif
+                                                @if($pegawai->file_serdik)
+                                                    <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" class="text-emerald-600 hover:text-emerald-800" title="Sertifikat Pendidik"><i class="fas fa-file-pdf"></i></a>
+                                                @endif
+                                                @if($pegawai->file_ijazah)
+                                                    <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" class="text-blue-600 hover:text-blue-800" title="Ijazah Terakhir"><i class="fas fa-file-pdf"></i></a>
+                                                @endif
+                                                @if(!$pegawai->file_sk && !$pegawai->file_serdik && !$pegawai->file_ijazah)
+                                                    <span class="text-gray-300 text-[10px] italic">Tidak ada</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3.5 text-right">
+                                            <div class="flex items-center justify-end gap-1">
+                                                <a href="{{ route('pegawai.show', $pegawai->id) }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-800 hover:text-white flex items-center justify-center transition text-xs" title="Detail">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('pegawai.edit', $pegawai->id) }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-amber-500 hover:text-white flex items-center justify-center transition text-xs" title="Edit">
+                                                    <i class="fas fa-pen"></i>
+                                                </a>
+                                                <button type="button" onclick="confirmDeletePegawai({{ $pegawai->id }}, '{{ addslashes($pegawai->nama_lengkap) }}')" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-rose-600 hover:text-white flex items-center justify-center transition text-xs text-gray-500" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="11" class="px-6 py-12 text-center text-gray-400">
+                                        <i class="fas fa-users-slash text-3xl mb-2 text-gray-300 block"></i>
+                                        <p class="font-semibold text-xs text-gray-500">Belum ada data pegawai terdaftar.</p>
+                                        <p class="text-[11px] text-gray-400 mt-1">Klik <a href="{{ url('/pegawai/create') }}" class="text-blue-800 font-bold hover:underline">Tambah Pegawai</a> atau gunakan tombol <button type="button" onclick="openImportModal()" class="text-emerald-600 font-bold hover:underline">Import Data</button> untuk mengunggah file Excel/CSV.</p>
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table Pagination -->
+                <div class="px-6 py-4 border-t border-gray-100">
+                    @if(isset($pegawais) && method_exists($pegawais, 'links'))
+                        {{ $pegawais->links() }}
+                    @endif
+                </div>
+
+            </div>
+        </form>
 
     </div>
 
@@ -349,4 +581,143 @@
             showLoadingOverlay('Mencari Data Pegawai...', 'Sistem sedang melakukan pencarian kata kunci...');
         }
     </script>
+
+    <!-- Hidden Single Delete Form -->
+    <form id="singleDeleteForm" method="POST" action="" class="hidden">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    <!-- ===== IMPORT DATA MODAL (POPUP) ===== -->
+    <div id="importModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-all duration-300">
+        <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-gray-100 overflow-hidden transform transition-all duration-300 scale-95" id="importModalCard">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-blue-950 to-indigo-900 text-white px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-emerald-400 border border-white/15">
+                        <i class="fas fa-file-import text-base"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm text-white">Import Data Pegawai</h3>
+                        <p class="text-[11px] text-blue-200 opacity-80">Upload File Excel (.xlsx, .xls) atau CSV (.csv)</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeImportModal()" class="text-blue-200 hover:text-white text-lg w-7 h-7 rounded-lg hover:bg-white/10 flex items-center justify-center transition">
+                    <i class="fas fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Modal Form Body -->
+            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+                @csrf
+                
+                <div class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 space-y-1">
+                    <p class="font-bold flex items-center gap-1.5">
+                        <i class="fas fa-info-circle text-blue-600"></i> Petunjuk Import Data:
+                    </p>
+                    <ul class="list-disc list-inside text-[11px] space-y-0.5 text-blue-800">
+                        <li>Gunakan template resmi untuk menyesuaikan kolom data.</li>
+                        <li>Kolom <strong>NIP_NIK</strong> &amp; <strong>Nama_Lengkap</strong> wajib diisi.</li>
+                        <li>Jika NPSN diisi, sistem akan mencocokkan sekolah secara otomatis.</li>
+                    </ul>
+                </div>
+
+                <!-- Template Download Banner inside Modal -->
+                <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-200 text-xs">
+                    <span class="text-gray-600 font-medium">Belum punya format template?</span>
+                    <a href="{{ route('pegawai.template') }}" class="text-xs font-bold text-blue-800 hover:text-blue-950 flex items-center gap-1">
+                        <i class="fas fa-download text-[10px]"></i> Unduh Template
+                    </a>
+                </div>
+
+                <!-- File Upload Box -->
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Pilih File Import (.xlsx, .xls, .csv)</label>
+                    <input type="file" name="file" accept=".csv,.xlsx,.xls,.txt" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-800/20 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-800 hover:file:bg-blue-200 cursor-pointer">
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                    <button type="button" onclick="closeImportModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-100 transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition flex items-center gap-2">
+                        <i class="fas fa-cloud-arrow-up text-xs"></i>
+                        <span>Upload &amp; Proses Import</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            function openImportModal() {
+                const modal = document.getElementById('importModal');
+                const card = document.getElementById('importModalCard');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    card.classList.remove('scale-95');
+                    card.classList.add('scale-100');
+                }, 10);
+            }
+
+            function closeImportModal() {
+                const modal = document.getElementById('importModal');
+                const card = document.getElementById('importModalCard');
+                card.classList.remove('scale-100');
+                card.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 150);
+            }
+
+            function confirmDeletePegawai(id, name) {
+                if (confirm(`Apakah Anda yakin ingin menghapus data pegawai "${name}"?`)) {
+                    const form = document.getElementById('singleDeleteForm');
+                    form.action = `/pegawai/${id}`;
+                    form.submit();
+                }
+            }
+
+            // Checkbox selection handler for Bulk Delete
+            document.addEventListener('DOMContentLoaded', function() {
+                const selectAll = document.getElementById('selectAll');
+                const checkboxes = document.querySelectorAll('.pegawai-checkbox');
+                const bulkActionBar = document.getElementById('bulkActionBar');
+                const selectedCountBadge = document.getElementById('selectedCountBadge');
+
+                function updateBulkBar() {
+                    const checked = document.querySelectorAll('.pegawai-checkbox:checked');
+                    const count = checked.length;
+                    if (count > 0) {
+                        bulkActionBar.classList.remove('hidden');
+                        selectedCountBadge.textContent = count;
+                    } else {
+                        bulkActionBar.classList.add('hidden');
+                    }
+                    if (selectAll) {
+                        selectAll.checked = (checkboxes.length > 0 && checked.length === checkboxes.length);
+                    }
+                }
+
+                if (selectAll) {
+                    selectAll.addEventListener('change', function() {
+                        checkboxes.forEach(cb => cb.checked = this.checked);
+                        updateBulkBar();
+                    });
+                }
+
+                checkboxes.forEach(cb => {
+                    cb.addEventListener('change', updateBulkBar);
+                });
+
+                window.unselectAllCheckboxes = function() {
+                    if (selectAll) selectAll.checked = false;
+                    checkboxes.forEach(cb => cb.checked = false);
+                    updateBulkBar();
+                };
+            });
+        </script>
+    @endpush
 @endsection
