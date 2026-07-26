@@ -24,22 +24,23 @@
         </svg>
         
         <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <a href="{{ url('/pegawai') }}" class="w-9 h-9 rounded-lg bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white flex items-center justify-center transition text-xs">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <div>
-                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-1">Form Input Data Pegawai (PTK)</h2>
-                    <p class="text-blue-100 text-xs md:text-sm font-normal leading-relaxed opacity-90">
-                        Lengkapi identitas diri, 7 kriteria kepegawaian, serta unggah berkas pendukung dalam format PDF.
-                    </p>
-                </div>
+            <div class="max-w-2xl">
+                <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-1">Form Input Data Pegawai (PTK)</h2>
+                <p class="text-blue-100 text-xs md:text-sm font-normal leading-relaxed opacity-90">
+                    Lengkapi identitas diri, 7 kriteria kepegawaian, serta unggah berkas pendukung dalam format PDF.
+                </p>
             </div>
+            
+            <!-- Kembali Button (Placed on Right Side) -->
+            <a href="{{ url('/pegawai') }}" class="bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm flex items-center gap-2 transition">
+                <i class="fas fa-arrow-left text-xs"></i>
+                <span>Kembali ke Data Pegawai</span>
+            </a>
         </div>
     </div>
 
-    <!-- Form Container (With overlapping top margin) -->
-    <div class="px-6 md:px-8 pb-8 flex-1 max-w-5xl -mt-8 relative z-20">
+    <!-- Page Content Container -->
+    <div class="px-6 md:px-8 pb-8 flex-1 w-full -mt-8 relative z-20">
         <form action="{{ url('/pegawai') }}" method="GET" class="space-y-6">
             
             <!-- SECTION 1: IDENTITAS DIRI & SEKOLAH -->
@@ -49,15 +50,28 @@
                 </h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Satuan Pendidikan / Sekolah -->
+                    <!-- Satuan Pendidikan / Sekolah (Custom Select Dropdown) -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Satuan Pendidikan / Sekolah <span class="text-red-500">*</span></label>
-                        <select required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
-                            <option value="">-- Pilih Satuan Pendidikan --</option>
-                            <option value="1">SMA Negeri 1 Jakarta</option>
-                            <option value="2">SMP Negeri 3 Bandung</option>
-                            <option value="3">SMK Negeri 2 Surabaya</option>
-                        </select>
+                        <div class="custom-select-wrapper relative">
+                            <button type="button" class="custom-select-trigger w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-xs text-left flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-blue-800/20">
+                                <span class="custom-select-label font-medium text-gray-700">-- Pilih Satuan Pendidikan --</span>
+                                <i class="fas fa-angle-down text-gray-400 text-xs transition-transform duration-200"></i>
+                            </button>
+                            
+                            <div class="custom-select-options hidden absolute left-0 right-0 mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden text-xs py-1.5">
+                                <div class="px-2 pb-1.5 border-b border-gray-100">
+                                    <input type="text" placeholder="Cari sekolah..." class="custom-select-search w-full bg-gray-50 border border-gray-200 rounded-md px-2.5 py-1.5 text-xs focus:outline-none">
+                                </div>
+                                <div class="max-h-48 overflow-y-auto">
+                                    <div class="custom-option px-3 py-2 hover:bg-blue-50/70 hover:text-blue-800 cursor-pointer font-medium transition" data-value="1">SMA Negeri 1 Jakarta</div>
+                                    <div class="custom-option px-3 py-2 hover:bg-blue-50/70 hover:text-blue-800 cursor-pointer font-medium transition" data-value="2">SMP Negeri 3 Bandung</div>
+                                    <div class="custom-option px-3 py-2 hover:bg-blue-50/70 hover:text-blue-800 cursor-pointer font-medium transition" data-value="3">SMK Negeri 2 Surabaya</div>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" name="sekolah_id" class="custom-select-input" value="">
+                        </div>
                     </div>
 
                     <!-- NIP / NIK -->

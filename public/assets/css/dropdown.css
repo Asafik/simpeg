@@ -1,0 +1,64 @@
+/* ===== SIMPEG-SP CUSTOM DROPDOWN COMPONENT CSS ===== */
+
+.custom-select-wrapper {
+    position: relative;
+    user-select: none;
+}
+
+.custom-select-trigger {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.custom-select-trigger:hover {
+    border-color: #94a3b8;
+}
+
+.custom-select-options {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+/* VIBRANT (NGJRENG) HOVER & SELECTED STATES - LIKE ACTIVE SIDEBAR */
+.custom-option {
+    border-radius: 6px;
+    margin: 2px 4px;
+}
+
+.custom-option:hover,
+.custom-option.selected {
+    background-color: #1e40af !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.35) !important;
+}
+
+/* Emerald Theme Adaptations */
+html[data-theme="emerald"] .custom-option:hover,
+html[data-theme="emerald"] .custom-option.selected {
+    background-color: #047857 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.35) !important;
+}
+
+/* Royal Purple Theme Adaptations */
+html[data-theme="purple"] .custom-option:hover,
+html[data-theme="purple"] .custom-option.selected {
+    background-color: #6b21a8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(107, 33, 168, 0.35) !important;
+}
+
+/* Dark Mode Adaptations */
+html[data-theme="dark"] .custom-select-options {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+html[data-theme="dark"] .custom-option:hover,
+html[data-theme="dark"] .custom-option.selected {
+    background-color: #2563eb !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}

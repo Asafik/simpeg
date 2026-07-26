@@ -1,12 +1,45 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SettingController;
+
+// Public Root URL & Landing Page Sub-Routes
+Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('landing.index');
+})->name('landing.home');
+
+Route::get('/landing', function () {
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('landing.index');
+})->name('landing');
+
+Route::get('/landing/statistik', function () {
+    return view('landing.statistik');
+})->name('landing.statistik');
+
+Route::get('/landing/layanan', function () {
+    return view('landing.layanan');
+})->name('landing.layanan');
+
+Route::get('/landing/cek-ptk', function () {
+    return view('landing.cek-ptk');
+})->name('landing.cek-ptk');
+
+Route::get('/landing/pengumuman', function () {
+    return view('landing.pengumuman');
+})->name('landing.pengumuman');
 
 // Guest / Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -16,8 +49,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 // Protected System Routes (Must Be Logged In)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
@@ -31,4 +63,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    // Setting Submenu Routes
+    Route::get('/settings/profile', [SettingController::class, 'profile'])->name('settings.profile');
+    Route::get('/settings/app', [SettingController::class, 'app'])->name('settings.app');
+    Route::get('/settings/logs', [SettingController::class, 'logs'])->name('settings.logs');
+    Route::get('/settings', [SettingController::class, 'app']);
 });

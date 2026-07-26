@@ -24,18 +24,16 @@
         </svg>
         
         <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <a href="{{ url('/pegawai') }}" class="w-9 h-9 rounded-lg bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white flex items-center justify-center transition text-xs">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <div>
-                    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-1">Profil & Berkas Pegawai</h2>
-                    <p class="text-blue-100 text-xs md:text-sm font-normal leading-relaxed opacity-90">
-                        Rincian profil 7 kriteria utama dan dokumen terverifikasi Dinas Pendidikan.
-                    </p>
-                </div>
+            <div class="max-w-2xl">
+                <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-1">Profil & Berkas Pegawai</h2>
+                <p class="text-blue-100 text-xs md:text-sm font-normal leading-relaxed opacity-90">
+                    Rincian profil 7 kriteria utama dan dokumen terverifikasi Dinas Pendidikan.
+                </p>
             </div>
             <div class="flex items-center gap-2">
+                <a href="{{ url('/pegawai') }}" class="bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white text-xs font-bold px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </a>
                 <button onclick="window.print()" class="bg-white/15 backdrop-blur-md hover:bg-white/25 border border-white/20 text-white text-xs font-bold px-3.5 py-2.5 rounded-lg transition flex items-center gap-1.5">
                     <i class="fas fa-print"></i> Cetak Profil
                 </button>
@@ -46,8 +44,8 @@
         </div>
     </div>
 
-    <!-- Page Content Container (With overlapping top margin) -->
-    <div class="px-6 md:px-8 pb-8 flex-1 space-y-6 max-w-6xl -mt-8 relative z-20">
+    <!-- Page Content Container -->
+    <div class="px-6 md:px-8 pb-8 flex-1 space-y-6 w-full -mt-8 relative z-20">
         
         <!-- PROFILE SUMMARY CARD -->
         <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-xl shadow-gray-200/50 flex flex-wrap items-center justify-between gap-6">
