@@ -37,10 +37,12 @@
                     Master data 980+ Satuan Pendidikan, Kepala Sekolah, dan pemetaan akun Operator Sekolah se-Kabupaten.
                 </p>
             </div>
-            <a href="{{ route('sekolah.create') }}" class="bg-white text-blue-900 hover:bg-blue-50 text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm flex items-center gap-2 transition">
-                <i class="fas fa-plus text-xs"></i>
-                <span>Tambah Sekolah</span>
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('sekolah.create') }}" class="bg-white text-blue-900 hover:bg-blue-50 text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm flex items-center gap-2 transition">
+                    <i class="fas fa-plus text-xs"></i>
+                    <span>Tambah Sekolah</span>
+                </a>
+            </div>
         </div>
     </div>
 
@@ -232,6 +234,7 @@
                             <th class="px-6 py-3.5">NPSN</th>
                             <th class="px-6 py-3.5">Nama Sekolah</th>
                             <th class="px-6 py-3.5">Kecamatan</th>
+                            <th class="px-6 py-3.5 text-center">Jumlah Pegawai</th>
                             <th class="px-6 py-3.5">Kepala Sekolah</th>
                             <th class="px-6 py-3.5">Status Kepsek</th>
                             <th class="px-6 py-3.5 text-right">Aksi</th>
@@ -256,6 +259,19 @@
                                             <i class="fas fa-location-dot text-[9px] mr-1 text-gray-400"></i>{{ $sekolah->kecamatan }}
                                         </span>
                                     </td>
+                                    <td class="px-6 py-4 text-center">
+                                        @if(($sekolah->pegawais_count ?? 0) > 0)
+                                            <span class="px-2.5 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-[11px] font-extrabold inline-flex items-center gap-1">
+                                                <i class="fas fa-users text-[10px] text-blue-600"></i>
+                                                {{ $sekolah->pegawais_count }} Pegawai
+                                            </span>
+                                        @else
+                                            <span class="px-2.5 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-700 text-[11px] font-bold inline-flex items-center gap-1" title="Sekolah ini belum memiliki data pegawai terdaftar">
+                                                <i class="fas fa-user-slash text-[10px] text-rose-500"></i>
+                                                Tidak Ada
+                                            </span>
+                                        @endif
+                                    </td>
                                     <td class="px-6 py-4">
                                         <p class="font-bold text-gray-800 text-xs">{{ $sekolah->nama_kepala_sekolah ?? '-' }}</p>
                                         <p class="text-[10px] text-gray-500 font-mono">NIP: {{ $sekolah->nip_kepala_sekolah ?? '-' }}</p>
@@ -275,6 +291,9 @@
                                             <a href="{{ route('sekolah.edit', $sekolah->id) }}" class="w-7 h-7 bg-gray-100 hover:bg-amber-500 hover:text-white text-xs font-semibold rounded-lg transition text-gray-700 flex items-center justify-center" title="Edit Data Sekolah">
                                                 <i class="fas fa-pen"></i>
                                             </a>
+                                            <a href="{{ route('sekolah.riwayat', $sekolah->id) }}" class="w-7 h-7 bg-gray-100 hover:bg-indigo-600 hover:text-white text-xs font-semibold rounded-lg transition text-gray-700 flex items-center justify-center" title="Riwayat Perubahan">
+                                                <i class="fas fa-clock-rotate-left"></i>
+                                            </a>
                                             <form action="{{ route('sekolah.destroy', $sekolah->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data sekolah {{ $sekolah->nama_sekolah }}?')" class="inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -288,7 +307,7 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="7" class="px-6 py-8 text-center text-xs text-gray-400 font-medium">
+                                <td colspan="8" class="px-6 py-8 text-center text-xs text-gray-400 font-medium">
                                     Tidak ada data sekolah yang ditemukan.
                                 </td>
                             </tr>
@@ -359,6 +378,4 @@
                     form.submit();
                 });
             });
-        });
-    </script>
 @endsection

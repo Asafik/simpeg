@@ -59,13 +59,12 @@
         </div>
     </div>
 
-    <!-- Main Content Container (With overlapping top margin) -->
-    <div class="px-6 md:px-8 pb-8 flex-1 space-y-6 -mt-8 relative z-20">
+    <!-- Page Content Container (With overlapping top margin) -->
+    <div class="px-6 md:px-8 pb-8 flex-1 space-y-6">
 
-        <!-- Flash Messages Alert -->
         @if(session('success'))
-            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
-                <div class="flex items-center gap-2">
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl p-4 shadow-md flex items-center justify-between relative z-30">
+                <div class="flex items-center gap-2 font-bold">
                     <i class="fas fa-circle-check text-emerald-600 text-sm"></i>
                     <span>{{ session('success') }}</span>
                 </div>
@@ -74,14 +73,83 @@
         @endif
 
         @if(session('error'))
-            <div class="bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold px-4 py-3 rounded-xl flex items-center justify-between shadow-sm">
-                <div class="flex items-center gap-2">
+            <div class="bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl p-4 shadow-md flex items-center justify-between relative z-30">
+                <div class="flex items-center gap-2 font-bold">
                     <i class="fas fa-triangle-exclamation text-rose-600 text-sm"></i>
                     <span>{{ session('error') }}</span>
                 </div>
                 <button onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-800"><i class="fas fa-xmark"></i></button>
             </div>
         @endif
+
+        <!-- SUMMARY METRIC CARDS (Exact Match to Sekolah Index UI) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 -mt-12 md:-mt-14 mb-6 relative z-10">
+            
+            <!-- Card 1: Total Pegawai -->
+            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-blue-800 flex items-center justify-center text-blue-800 font-bold bg-blue-900/10 flex-shrink-0">
+                        <i class="fas fa-users text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Total Pegawai</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">
+                            {{ number_format($totalPegawaiCount ?? 0, 0, ',', '.') }}
+                        </p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+            </div>
+
+            <!-- Card 2: Pegawai PNS -->
+            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-emerald-500 flex items-center justify-center text-emerald-600 font-bold bg-emerald-50/50 flex-shrink-0">
+                        <i class="fas fa-user-tie text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Pegawai PNS</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">
+                            {{ number_format($totalPnsCount ?? 0, 0, ',', '.') }}
+                        </p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+            </div>
+
+            <!-- Card 3: Pegawai PPPK & PW -->
+            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0">
+                        <i class="fas fa-id-badge text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Pegawai PPPK & PW</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">
+                            {{ number_format($totalPppkCount ?? 0, 0, ',', '.') }}
+                        </p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+            </div>
+
+            <!-- Card 4: Pegawai Serdik -->
+            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-indigo-500 flex items-center justify-center text-indigo-600 font-bold bg-indigo-50/50 flex-shrink-0">
+                        <i class="fas fa-award text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">Pegawai Serdik</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">
+                            {{ number_format($totalSerdikCount ?? 0, 0, ',', '.') }}
+                        </p>
+                    </div>
+                </div>
+                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+            </div>
+
+        </div>
 
         <!-- 7 KRITERIA MULTI-FILTER BAR -->
         <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-30">
@@ -363,6 +431,9 @@
                                                 </a>
                                                 <a href="{{ route('pegawai.edit', $pegawai->id) }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-amber-500 hover:text-white flex items-center justify-center transition text-xs" title="Edit">
                                                     <i class="fas fa-pen"></i>
+                                                </a>
+                                                <a href="{{ route('pegawai.riwayat', $pegawai->id) }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition text-xs" title="Riwayat Perubahan">
+                                                    <i class="fas fa-clock-rotate-left"></i>
                                                 </a>
                                                 <button type="button" onclick="confirmDeletePegawai({{ $pegawai->id }}, '{{ addslashes($pegawai->nama_lengkap) }}')" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-rose-600 hover:text-white flex items-center justify-center transition text-xs text-gray-500" title="Hapus">
                                                     <i class="fas fa-trash"></i>

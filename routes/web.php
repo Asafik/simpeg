@@ -10,6 +10,7 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\RiwayatController;
 
 // Public Root URL & Landing Page Routes (Managed by LandingController)
 Route::get('/', [LandingController::class, 'index'])->name('landing.home');
@@ -50,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pegawai/{pegawai}/edit', [PegawaiController::class, 'edit'])->name('pegawai.edit');
     Route::put('/pegawai/{pegawai}', [PegawaiController::class, 'update'])->name('pegawai.update');
     Route::delete('/pegawai/{pegawai}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
+    Route::get('/pegawai/{pegawai}/riwayat', [RiwayatController::class, 'pegawai'])->name('pegawai.riwayat');
 
     Route::get('/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
     Route::get('/sekolah/create', [SekolahController::class, 'create'])->name('sekolah.create');
@@ -59,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/sekolah/{sekolah}', [SekolahController::class, 'update'])->name('sekolah.update');
     Route::delete('/sekolah/{sekolah}', [SekolahController::class, 'destroy'])->name('sekolah.destroy');
     Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
+    Route::get('/sekolah/{sekolah}/riwayat', [RiwayatController::class, 'sekolah'])->name('sekolah.riwayat');
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
 

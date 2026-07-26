@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Pegawai extends Model
 {
@@ -56,16 +57,24 @@ class Pegawai extends Model
         return $this->tanggal_lahir ? Carbon::parse($this->tanggal_lahir)->age : 0;
     }
 
+    public function activityLogs(): MorphMany
+    {
+        return $this->morphMany(ActivityLog::class, 'loggable')->latest();
+    }
+
     // Filter Scope for 7 Criteria
     public function scopeFilterKriteria($query, array $filters)
     {
         if (!empty($filters['search'])) {
             $search = $filters['search'];
-            $query->where(function ($q) use ($search) {
+            $cleanSearch = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($search));
+            $query->where(function ($q) use ($search, $cleanSearch) {
                 $q->where('nama_lengkap', 'like', "%{$search}%")
+                  ->orWhereRaw("REPLACE(LOWER(nama_lengkap), ' ', '') LIKE ?", ["%{$cleanSearch}%"])
                   ->orWhere('nip_nik', 'like', "%{$search}%")
-                  ->orWhereHas('sekolah', function ($qSekolah) use ($search) {
+                  ->orWhereHas('sekolah', function ($qSekolah) use ($search, $cleanSearch) {
                       $qSekolah->where('nama_sekolah', 'like', "%{$search}%")
+                               ->orWhereRaw("REPLACE(LOWER(nama_sekolah), ' ', '') LIKE ?", ["%{$cleanSearch}%"])
                                ->orWhere('npsn', 'like', "%{$search}%");
                   });
             });

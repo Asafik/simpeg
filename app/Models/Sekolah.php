@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Sekolah extends Model
 {
@@ -29,5 +30,10 @@ class Sekolah extends Model
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'sekolah_id');
+    }
+
+    public function activityLogs(): MorphMany
+    {
+        return $this->morphMany(ActivityLog::class, 'loggable')->latest();
     }
 }

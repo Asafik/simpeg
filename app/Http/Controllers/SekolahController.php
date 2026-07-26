@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Sekolah;
 use App\Models\User;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -41,13 +42,17 @@ class SekolahController extends Controller
 
         $query = Sekolah::withCount('pegawais')->with('users')->latest();
 
-        // 1. Laravel Eloquent Full-Text Search Filter
+        // 1. Laravel Eloquent Full-Text Search Filter (Smart Space-Insensitive Search)
         if (!empty($search)) {
-            $query->where(function ($q) use ($search) {
+            $cleanSearch = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($search));
+            $query->where(function ($q) use ($search, $cleanSearch) {
                 $q->where('nama_sekolah', 'like', "%{$search}%")
+                  ->orWhereRaw("REPLACE(LOWER(nama_sekolah), ' ', '') LIKE ?", ["%{$cleanSearch}%"])
                   ->orWhere('npsn', 'like', "%{$search}%")
                   ->orWhere('kecamatan', 'like', "%{$search}%")
+                  ->orWhereRaw("REPLACE(LOWER(kecamatan), ' ', '') LIKE ?", ["%{$cleanSearch}%"])
                   ->orWhere('nama_kepala_sekolah', 'like', "%{$search}%")
+                  ->orWhereRaw("REPLACE(LOWER(nama_kepala_sekolah), ' ', '') LIKE ?", ["%{$cleanSearch}%"])
                   ->orWhere('nip_kepala_sekolah', 'like', "%{$search}%");
             });
         }
@@ -123,13 +128,28 @@ class SekolahController extends Controller
 
         $sekolah = Sekolah::create($validated);
 
+        // Capture all field values for initial created log
+        $allFields = [];
+        foreach (['nama_sekolah','npsn','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'] as $f) {
+            $val = $sekolah->$f;
+            if (!is_null($val) && $val !== '') {
+                $allFields[$f] = ['data' => (string)$val];
+            }
+        }
+        ActivityLog::record($sekolah, 'created', $allFields, 'Satuan Pendidikan Pertama Kali Ditambahkan ke Sistem');
+
         // Auto-create operator account for this school
         $username = 'ops_' . $sekolah->npsn;
+        $email = $sekolah->email_sekolah ?: ($username . '@dinas.sch.id');
+        if (User::where('email', $email)->where('username', '!=', $username)->exists()) {
+            $email = $username . '@dinas.sch.id';
+        }
+
         User::updateOrCreate(
             ['username' => $username],
             [
                 'name' => 'Operator ' . $sekolah->nama_sekolah,
-                'email' => $sekolah->email_sekolah ?: ($username . '@dinas.sch.id'),
+                'email' => $email,
                 'password' => Hash::make('password'),
                 'role' => 'OPERATOR_SEKOLAH',
                 'sekolah_id' => $sekolah->id,
@@ -175,7 +195,22 @@ class SekolahController extends Controller
             'status_kepala_sekolah' => ['required', 'string', Rule::in(['Definitif', 'Plt'])],
         ]);
 
+        // Capture changes before update
+        $trackableFields = ['npsn','nama_sekolah','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'];
+        $changes = [];
+        foreach ($trackableFields as $field) {
+            $oldVal = $sekolah->getOriginal($field);
+            $newVal = $validated[$field] ?? $sekolah->$field;
+            if ((string)$oldVal !== (string)$newVal) {
+                $changes[$field] = ['old' => $oldVal, 'new' => $newVal];
+            }
+        }
+
         $sekolah->update($validated);
+
+        if (!empty($changes)) {
+            ActivityLog::record($sekolah, 'updated', $changes, 'Edit Data Satuan Pendidikan');
+        }
 
         // Sync associated operator username/email if changed
         $operator = User::where('sekolah_id', $sekolah->id)->first();
