@@ -6,13 +6,18 @@
     <!-- Include Sidebar Per-Page -->
     @include('layouts.sidebar')
 
+    <!-- Reusable Loading Overlay Component -->
+    @include('components.loading-overlay', [
+        'id' => 'pegawaiLoadingOverlay',
+        'title' => 'Memuat & Menyaring Data Pegawai...',
+        'subtitle' => 'Mohon tunggu sebentar, sistem sedang memproses data Pendidik & Tenaga Kependidikan.'
+    ])
+
     <!-- ===== HERO BLUE BANNER (Exact Hope UI 2-Wave Design - Deep Blue) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">
         <!-- Exact Hope UI 2 Diagonal Wave Shapes Overlay -->
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">
-            <!-- Wave Shape 1 -->
             <path d="M 200,300 C 360,160 520,30 750,0 L 1000,0 L 1000,300 Z" fill="url(#hopeWaveGrad1)"></path>
-            <!-- Wave Shape 2 -->
             <path d="M 450,300 C 600,150 780,70 1000,15 L 1000,300 Z" fill="url(#hopeWaveGrad2)"></path>
             <defs>
                 <linearGradient id="hopeWaveGrad1" x1="0%" y1="100%" x2="100%" y2="0%">
@@ -30,7 +35,7 @@
             <div class="max-w-2xl">
                 <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-2">Kelola Data Pegawai (PTK)</h2>
                 <p class="text-blue-100 text-xs md:text-sm font-normal leading-relaxed opacity-90">
-                    Kelola master data pendidik & tenaga kependidikan berbasis 7 kriteria utama Dinas Pendidikan.
+                    Kelola master data pendidik &amp; tenaga kependidikan berbasis 7 kriteria utama Dinas Pendidikan.
                 </p>
             </div>
             <div class="flex items-center gap-3">
@@ -50,117 +55,123 @@
     <div class="px-6 md:px-8 pb-8 flex-1 space-y-6 -mt-8 relative z-20">
 
         <!-- 7 KRITERIA MULTI-FILTER BAR -->
-        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4">
+        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-30">
             <div class="flex items-center justify-between pb-3 border-b border-gray-100">
                 <h3 class="text-xs font-extrabold uppercase tracking-wider text-blue-800 flex items-center gap-2">
                     <i class="fas fa-filter"></i>
                     Multi-Filter Kombinasi (7 Kriteria PRD)
                 </h3>
-                <button class="text-xs text-gray-400 hover:text-red-500 font-semibold transition">
-                    <i class="fas fa-rotate-right mr-1"></i> Reset Filter
-                </button>
+                @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia'))
+                    <a href="{{ url('/pegawai') }}" onclick="showLoadingOverlay('Mereset Filter...', 'Mengembalikan daftar master data Pegawai...')" class="text-xs text-red-600 hover:underline font-semibold transition flex items-center gap-1">
+                        <i class="fas fa-rotate-left text-[10px]"></i> Reset Filter
+                    </a>
+                @endif
             </div>
 
-            <!-- Filter Grid 7 Dropdowns + Search -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3">
+            <!-- Filter Grid 7 Dropdowns + Search Form -->
+            <form action="{{ url('/pegawai') }}" method="GET" id="pegawaiFilterForm" onsubmit="handlePegawaiSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3">
                 
                 <!-- Search Keyword -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">Cari NIP / Nama / Sekolah</label>
-                    <div class="relative">
-                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                        <input type="text" placeholder="Ketik kata kunci..." class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg pl-8 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20">
+                    <div class="relative flex items-center">
+                        <i class="fas fa-search absolute left-3 text-gray-400 text-xs pointer-events-none"></i>
+                        <input type="text" id="pegawaiSearchInput" name="search" value="{{ request('search') }}" placeholder="Ketik kata kunci..." 
+                               class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg pl-8 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-medium">
+                        <button type="submit" class="absolute right-1 w-7 h-7 bg-blue-800 hover:bg-blue-900 text-white rounded-md transition flex items-center justify-center shadow-sm cursor-pointer" title="Cari Data">
+                            <i class="fas fa-arrow-right text-xs"></i>
+                        </button>
                     </div>
                 </div>
 
                 <!-- 1. Status Kepegawaian -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">1. Status Kepegawaian</label>
-                    <select class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
+                    <select name="status_kepegawaian" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Status (PNS, PPPK, dll)</option>
-                        <option value="PNS">PNS</option>
-                        <option value="PPPK">PPPK</option>
-                        <option value="PPPK PW">PPPK PW (Paruh Waktu)</option>
-                        <option value="Non-ASN">Non-ASN</option>
+                        <option value="PNS" {{ request('status_kepegawaian') == 'PNS' ? 'selected' : '' }}>PNS</option>
+                        <option value="PPPK" {{ request('status_kepegawaian') == 'PPPK' ? 'selected' : '' }}>PPPK</option>
+                        <option value="PPPK PW" {{ request('status_kepegawaian') == 'PPPK PW' ? 'selected' : '' }}>PPPK PW (Paruh Waktu)</option>
+                        <option value="Non-ASN" {{ request('status_kepegawaian') == 'Non-ASN' ? 'selected' : '' }}>Non-ASN</option>
                     </select>
                 </div>
 
                 <!-- 2. Jabatan Fungsional -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">2. Jabatan Fungsional</label>
-                    <select class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
+                    <select name="jabatan_fungsional" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Jabatan</option>
-                        <option value="Guru Ahli Pertama">Guru Ahli Pertama</option>
-                        <option value="Guru Ahli Muda">Guru Ahli Muda</option>
-                        <option value="Kepala Sekolah">Kepala Sekolah</option>
-                        <option value="Penilik">Penilik</option>
+                        <option value="Guru Ahli Pertama" {{ request('jabatan_fungsional') == 'Guru Ahli Pertama' ? 'selected' : '' }}>Guru Ahli Pertama</option>
+                        <option value="Guru Ahli Muda" {{ request('jabatan_fungsional') == 'Guru Ahli Muda' ? 'selected' : '' }}>Guru Ahli Muda</option>
+                        <option value="Kepala Sekolah" {{ request('jabatan_fungsional') == 'Kepala Sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                        <option value="Penilik" {{ request('jabatan_fungsional') == 'Penilik' ? 'selected' : '' }}>Penilik</option>
                     </select>
                 </div>
 
                 <!-- 3. Sertifikasi Pendidik (Serdik) -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">3. Sertifikasi (Serdik)</label>
-                    <select class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
+                    <select name="serdik" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Status Serdik</option>
-                        <option value="1">Sudah Serdik</option>
-                        <option value="0">Belum Serdik</option>
+                        <option value="1" {{ request('serdik') === '1' ? 'selected' : '' }}>Sudah Serdik</option>
+                        <option value="0" {{ request('serdik') === '0' ? 'selected' : '' }}>Belum Serdik</option>
                     </select>
                 </div>
 
                 <!-- 4. Jenis PTK -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">4. Jenis PTK</label>
-                    <select class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
+                    <select name="jenis_ptk" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua PTK</option>
-                        <option value="Pendidik">Pendidik (Guru)</option>
-                        <option value="Tenaga Kependidikan">Tenaga Kependidikan (TU/Laboran)</option>
+                        <option value="Pendidik" {{ request('jenis_ptk') == 'Pendidik' ? 'selected' : '' }}>Pendidik (Guru)</option>
+                        <option value="Tenaga Kependidikan" {{ request('jenis_ptk') == 'Tenaga Kependidikan' ? 'selected' : '' }}>Tenaga Kependidikan (TU/Laboran)</option>
                     </select>
                 </div>
 
                 <!-- 5. Jenis Guru -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">5. Jenis Guru</label>
-                    <select class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
+                    <select name="jenis_guru" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Jenis Guru</option>
-                        <option value="Guru Kelas">Guru Kelas</option>
-                        <option value="Guru Mapel">Guru Mata Pelajaran</option>
-                        <option value="Guru BK">Guru BK</option>
+                        <option value="Guru Kelas" {{ request('jenis_guru') == 'Guru Kelas' ? 'selected' : '' }}>Guru Kelas</option>
+                        <option value="Guru Mapel" {{ request('jenis_guru') == 'Guru Mapel' ? 'selected' : '' }}>Guru Mata Pelajaran</option>
+                        <option value="Guru BK" {{ request('jenis_guru') == 'Guru BK' ? 'selected' : '' }}>Guru BK</option>
                     </select>
                 </div>
 
                 <!-- 6. Tingkat Pendidikan -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">6. Tingkat Pendidikan</label>
-                    <select class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
+                    <select name="tingkat_pendidikan" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Tingkat (SMA/S1/S2)</option>
-                        <option value="SMA/K">SMA/K</option>
-                        <option value="D3">D3</option>
-                        <option value="S1/D4">S1 / D4</option>
-                        <option value="S2">S2</option>
-                        <option value="S3">S3</option>
+                        <option value="SMA/K" {{ request('tingkat_pendidikan') == 'SMA/K' ? 'selected' : '' }}>SMA/K</option>
+                        <option value="D3" {{ request('tingkat_pendidikan') == 'D3' ? 'selected' : '' }}>D3</option>
+                        <option value="S1/D4" {{ request('tingkat_pendidikan') == 'S1/D4' ? 'selected' : '' }}>S1 / D4</option>
+                        <option value="S2" {{ request('tingkat_pendidikan') == 'S2' ? 'selected' : '' }}>S2</option>
+                        <option value="S3" {{ request('tingkat_pendidikan') == 'S3' ? 'selected' : '' }}>S3</option>
                     </select>
                 </div>
 
                 <!-- 7. Kelompok Usia -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">7. Kelompok Usia</label>
-                    <select class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
+                    <select name="kelompok_usia" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Kelompok Usia</option>
-                        <option value="<30">&lt; 30 Tahun</option>
-                        <option value="31-40">31 - 40 Tahun</option>
-                        <option value="41-50">41 - 50 Tahun</option>
-                        <option value=">55">&gt; 55 Tahun (Pensiun)</option>
+                        <option value="<30" {{ request('kelompok_usia') == '<30' ? 'selected' : '' }}>&lt; 30 Tahun</option>
+                        <option value="31-40" {{ request('kelompok_usia') == '31-40' ? 'selected' : '' }}>31 - 40 Tahun</option>
+                        <option value="41-50" {{ request('kelompok_usia') == '41-50' ? 'selected' : '' }}>41 - 50 Tahun</option>
+                        <option value=">55" {{ request('kelompok_usia') == '>55' ? 'selected' : '' }}>&gt; 55 Tahun (Pensiun)</option>
                     </select>
                 </div>
 
-            </div>
+            </form>
         </div>
 
         <!-- PEGAWAI DATA TABLE -->
-        <div class="bg-white rounded-xl border border-gray-200/80 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-xl border border-gray-200/80 shadow-sm overflow-hidden relative z-10">
             
             <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
-                <span class="text-xs font-bold text-gray-700">Menampilkan 1.284 Data Pegawai</span>
+                <span class="text-xs font-bold text-gray-700">Menampilkan Data Master Pegawai (PTK)</span>
                 <div class="text-xs text-gray-400">
                     <span class="font-medium text-gray-600">Urutkan:</span> Terbaru Dibuat
                 </div>
@@ -172,10 +183,10 @@
                     <thead class="bg-gray-50/80 border-b border-gray-100 text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
                         <tr>
                             <th class="px-4 py-3.5">NIP / NIK</th>
-                            <th class="px-4 py-3.5">Nama & Profil</th>
+                            <th class="px-4 py-3.5">Nama &amp; Profil</th>
                             <th class="px-4 py-3.5">Satuan Pendidikan</th>
                             <th class="px-4 py-3.5">Status</th>
-                            <th class="px-4 py-3.5">Jabatan & Jenis</th>
+                            <th class="px-4 py-3.5">Jabatan &amp; Jenis</th>
                             <th class="px-4 py-3.5">Serdik</th>
                             <th class="px-4 py-3.5">Pendidikan</th>
                             <th class="px-4 py-3.5">Usia</th>
@@ -321,4 +332,21 @@
         </div>
 
     </div>
+
+    <!-- Script triggers for Loading Overlay -->
+    <script>
+        function triggerPegawaiFilter(el) {
+            showLoadingOverlay('Memproses Filter Pegawai...', 'Menyaring master data Pendidik & Tenaga Kependidikan berdasarkan kriteria...');
+            if (el && el.form) {
+                el.form.submit();
+            } else {
+                const form = document.getElementById('pegawaiFilterForm');
+                if (form) form.submit();
+            }
+        }
+
+        function handlePegawaiSubmit(e) {
+            showLoadingOverlay('Mencari Data Pegawai...', 'Sistem sedang melakukan pencarian kata kunci...');
+        }
+    </script>
 @endsection

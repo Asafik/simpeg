@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'SIMPEG-SP - Dashboard Admin Dinas')</title>
     
-    <!-- System Theme Initializer (Excludes Login & Landing) -->
+    <!-- System Theme Initializer (Excludes Login, /, and Public Landing Pages) -->
     <script>
         (function() {
-            if (window.location.pathname.includes('/login') || window.location.pathname.includes('/landing')) {
+            const path = window.location.pathname;
+            const isPublicPage = path === '/' || path === '/login' || path.startsWith('/landing') || 
+                                 path.startsWith('/statistik') || path.startsWith('/layanan') || 
+                                 path.startsWith('/cek-ptk') || path.startsWith('/pengumuman');
+            if (isPublicPage) {
                 document.documentElement.setAttribute('data-theme', 'deep_blue');
             } else {
                 const savedTheme = localStorage.getItem('simpegTheme') || 'deep_blue';
@@ -65,14 +69,14 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
 
-    @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*'))
+    @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*') || Request::is('/') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || Request::is('pengumuman*'))
         <!-- Mobile Sidebar Overlay -->
         <div class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" id="sidebarOverlay"></div>
     @endunless
 
-    <!-- Main Content Wrapper -->
-    <main class="{{ (View::hasSection('hideNav') || Request::is('login') || Request::is('landing*')) ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
-        @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*'))
+    <!-- Main Content Wrapper (w-full 100% on public pages) -->
+    <main class="{{ (View::hasSection('hideNav') || Request::is('login') || Request::is('landing*') || Request::is('/') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || Request::is('pengumuman*')) ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
+        @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*') || Request::is('/') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || Request::is('pengumuman*'))
             <!-- Top Navbar Partial -->
             @include('layouts.navbar')
         @endunless

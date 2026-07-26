@@ -43,16 +43,15 @@
             <i class="fas fa-check-circle w-5 text-center flex-shrink-0"></i>
             <span class="font-medium text-sm sidebar-text">Verifikasi Data</span>
             <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full sidebar-text">12</span>
-        </a>
-        <a href="{{ url('/users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('users*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Kelola User">
-            <i class="fas fa-user-gear w-5 text-center flex-shrink-0"></i>
-            <span class="font-medium text-sm sidebar-text">Kelola User</span>
-        </a>
-
         <!-- System Settings Accordion Menu -->
-        <div class="mt-4 pt-4 border-t border-gray-100">
+        <div class="mt-4 pt-4 border-t border-gray-100 space-y-1">
             <p class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold px-3 mb-2 sidebar-text">Pengaturan</p>
             
+            <a href="{{ url('/users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('users*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Kelola User">
+                <i class="fas fa-user-gear w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Kelola User</span>
+            </a>
+
             <div class="relative">
                 <button type="button" 
                         id="settingMenuBtn" 
@@ -64,19 +63,19 @@
                     <i class="fas fa-arrow-right text-[10px] transition-transform duration-300 {{ Request::is('settings*') ? 'rotate-90' : '' }} sidebar-text" id="settingArrow"></i>
                 </button>
 
-                <!-- Accordion Submenu Links -->
-                <div id="settingSubmenu" class="{{ Request::is('settings*') ? 'block' : 'hidden' }} pl-9 pr-2 py-2 space-y-1">
+                <!-- Accordion Submenu Links (With Smooth Slide-down Animation) -->
+                <div id="settingSubmenu" class="sidebar-accordion-submenu {{ Request::is('settings*') ? 'accordion-expanded' : '' }} pl-9 pr-2 py-2 space-y-1">
                     <a href="{{ route('settings.profile') }}" 
                        class="block px-3 py-2 rounded-md text-xs font-semibold {{ Request::is('settings/profile') ? 'text-blue-800 bg-blue-50' : 'text-gray-500 hover:text-blue-800 hover:bg-gray-50' }} transition">
-                        <i class="fas fa-user-gear text-[10px] mr-2"></i> Profile Saya
+                        <i class="fas fa-arrow-right text-[10px] mr-2"></i> Profile Saya
                     </a>
                     <a href="{{ route('settings.app') }}" 
                        class="block px-3 py-2 rounded-md text-xs font-semibold {{ Request::is('settings/app') ? 'text-blue-800 bg-blue-50' : 'text-gray-500 hover:text-blue-800 hover:bg-gray-50' }} transition">
-                        <i class="fas fa-sliders text-[10px] mr-2"></i> Pengaturan Aplikasi
+                        <i class="fas fa-arrow-right text-[10px] mr-2"></i> Pengaturan Aplikasi
                     </a>
                     <a href="{{ route('settings.logs') }}" 
                        class="block px-3 py-2 rounded-md text-xs font-semibold {{ Request::is('settings/logs') ? 'text-blue-800 bg-blue-50' : 'text-gray-500 hover:text-blue-800 hover:bg-gray-50' }} transition">
-                        <i class="fas fa-receipt text-[10px] mr-2"></i> Log Aktivitas
+                        <i class="fas fa-arrow-right text-[10px] mr-2"></i> Log Aktivitas
                     </a>
                 </div>
             </div>

@@ -50,26 +50,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // === SETTING ACCORDION SUBMENU TOGGLE (WITH SLIDE-DOWN ANIMATION) ===
-    const settingSubmenuToggleBtn = document.getElementById('settingSubmenuToggleBtn');
-    const settingSubmenuList = document.getElementById('settingSubmenuList');
-    const settingSubmenuArrow = document.getElementById('settingSubmenuArrow');
+    // === SETTING ACCORDION SUBMENU TOGGLE (WITH SMOOTH SLIDE ANIMATION) ===
+    const settingMenuBtn = document.getElementById('settingMenuBtn') || document.getElementById('settingSubmenuToggleBtn');
+    const settingSubmenu = document.getElementById('settingSubmenu') || document.getElementById('settingSubmenuList');
+    const settingArrow = document.getElementById('settingArrow') || document.getElementById('settingSubmenuArrow');
 
-    if (settingSubmenuToggleBtn && settingSubmenuList) {
-        settingSubmenuToggleBtn.addEventListener('click', function(e) {
+    if (settingMenuBtn && settingSubmenu) {
+        settingMenuBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            const isOpen = settingSubmenuList.classList.contains('open-submenu');
-            if (isOpen) {
-                settingSubmenuList.classList.remove('open-submenu');
-                settingSubmenuList.classList.add('hidden-submenu');
-                if (settingSubmenuArrow) {
-                    settingSubmenuArrow.classList.remove('rotate-180');
+            const isExpanded = settingSubmenu.classList.contains('accordion-expanded') || settingSubmenu.classList.contains('open-submenu');
+            
+            if (isExpanded) {
+                settingSubmenu.classList.remove('accordion-expanded', 'open-submenu');
+                if (settingArrow) {
+                    settingArrow.classList.remove('rotate-90');
                 }
             } else {
-                settingSubmenuList.classList.remove('hidden-submenu');
-                settingSubmenuList.classList.add('open-submenu');
-                if (settingSubmenuArrow) {
-                    settingSubmenuArrow.classList.add('rotate-180');
+                settingSubmenu.classList.add('accordion-expanded');
+                if (settingArrow) {
+                    settingArrow.classList.add('rotate-90');
                 }
             }
         });

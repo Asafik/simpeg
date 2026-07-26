@@ -42,25 +42,14 @@
                     </div>
                 @endif
 
-                <!-- Role Switcher Tabs -->
-                <div class="grid grid-cols-2 gap-1.5 bg-gray-100 p-1.5 rounded-xl mb-6 text-xs font-bold">
-                    <button type="button" id="roleAdminBtn" class="py-2.5 rounded-lg bg-blue-800 text-white shadow-sm transition">
-                        <i class="fas fa-building-columns mr-1.5"></i> Admin Dinas
-                    </button>
-                    <button type="button" id="roleOperatorBtn" class="py-2.5 rounded-lg text-gray-600 hover:text-gray-900 transition">
-                        <i class="fas fa-school mr-1.5"></i> Operator Sekolah
-                    </button>
-                </div>
-
                 <!-- Form -->
                 <form action="{{ route('login') }}" method="POST" class="space-y-4">
                     @csrf
-                    <input type="hidden" id="selectedRole" name="role" value="ADMIN_DINAS">
 
                     <!-- Username / NIP Input -->
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5" id="usernameLabel">
-                            Username / NIP Admin
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">
+                            Username / NIP
                         </label>
                         <div class="relative">
                             <i class="fas fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
@@ -98,7 +87,7 @@
                 </form>
 
                 <p class="text-xs text-gray-400 text-center mt-6 font-medium">
-                    Operator belum punya akun? <a href="#" class="text-blue-800 font-bold hover:underline">Hubungi Admin Dinas</a>
+                    Belum punya akun? <a href="#" class="text-blue-800 font-bold hover:underline">Hubungi Admin Dinas</a>
                 </p>
             </div>
 
@@ -149,28 +138,4 @@
         </div>
 
     </div>
-
-    <!-- Tab Switching Script -->
-    <script>
-        const roleAdminBtn = document.getElementById('roleAdminBtn');
-        const roleOperatorBtn = document.getElementById('roleOperatorBtn');
-        const selectedRoleInput = document.getElementById('selectedRole');
-        const usernameLabel = document.getElementById('usernameLabel');
-
-        if (roleAdminBtn && roleOperatorBtn) {
-            roleAdminBtn.addEventListener('click', () => {
-                roleAdminBtn.className = 'py-2.5 rounded-lg bg-blue-800 text-white shadow-sm transition';
-                roleOperatorBtn.className = 'py-2.5 rounded-lg text-gray-600 hover:text-gray-900 transition';
-                selectedRoleInput.value = 'ADMIN_DINAS';
-                usernameLabel.textContent = 'Username / NIP Admin';
-            });
-
-            roleOperatorBtn.addEventListener('click', () => {
-                roleOperatorBtn.className = 'py-2.5 rounded-lg bg-blue-800 text-white shadow-sm transition';
-                roleAdminBtn.className = 'py-2.5 rounded-lg text-gray-600 hover:text-gray-900 transition';
-                selectedRoleInput.value = 'OPERATOR_SEKOLAH';
-                usernameLabel.textContent = 'NPSN / Username Operator Sekolah';
-            });
-        }
-    </script>
 @endsection
