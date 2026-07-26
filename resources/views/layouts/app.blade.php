@@ -63,6 +63,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/header-banner.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/calendar.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/tables.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/dropdown.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker.css') }}">
     @stack('styles')
@@ -97,6 +98,7 @@
     <script src="{{ asset('assets/js/calendar.js') }}"></script>
     <script src="{{ asset('assets/js/dropdown.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker.js') }}"></script>
+    <script src="{{ asset('assets/js/tables.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

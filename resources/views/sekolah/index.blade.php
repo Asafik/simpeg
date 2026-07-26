@@ -297,17 +297,42 @@
                 </table>
             </div>
 
-            <!-- Table Pagination -->
-            <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
-                <span class="text-xs text-gray-500">
-                    Menampilkan {{ method_exists($sekolahs, 'firstItem') ? ($sekolahs->firstItem() ?? 0) : 0 }} - {{ method_exists($sekolahs, 'lastItem') ? ($sekolahs->lastItem() ?? 0) : 0 }} dari {{ method_exists($sekolahs, 'total') ? $sekolahs->total() : count($sekolahs) }} Data
-                </span>
-                <div>
-                    @if(method_exists($sekolahs, 'links'))
-                        {{ $sekolahs->links() }}
-                    @endif
+            <!-- Table Pagination (Matches Custom SIMPEG-SP UI Styling) -->
+            @if(isset($sekolahs) && method_exists($sekolahs, 'hasPages') && $sekolahs->hasPages())
+                <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 bg-gray-50/50">
+                    <span class="text-xs text-gray-500 font-medium">
+                        Halaman <span class="font-bold text-gray-800">{{ $sekolahs->currentPage() }}</span> dari <span class="font-bold text-gray-800">{{ $sekolahs->lastPage() }}</span> (Menampilkan {{ $sekolahs->firstItem() }} - {{ $sekolahs->lastItem() }} dari {{ $sekolahs->total() }} Sekolah)
+                    </span>
+                    <div class="flex items-center gap-1">
+                        {{-- Previous Page Link --}}
+                        @if ($sekolahs->onFirstPage())
+                            <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-left"></i></span>
+                        @else
+                            <a href="{{ $sekolahs->previousPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 bg-white transition"><i class="fas fa-chevron-left"></i></a>
+                        @endif
+
+                        {{-- Pagination Elements --}}
+                        @foreach ($sekolahs->getUrlRange(max(1, $sekolahs->currentPage() - 2), min($sekolahs->lastPage(), $sekolahs->currentPage() + 2)) as $page => $url)
+                            @if ($page == $sekolahs->currentPage())
+                                <span class="px-3 py-1.5 text-xs bg-blue-800 text-white font-bold rounded-lg shadow-sm">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}" class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 bg-white rounded-lg transition font-medium border border-gray-200">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        {{-- Next Page Link --}}
+                        @if ($sekolahs->hasMorePages())
+                            <a href="{{ $sekolahs->nextPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 bg-white transition"><i class="fas fa-chevron-right"></i></a>
+                        @else
+                            <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-right"></i></span>
+                        @endif
+                    </div>
                 </div>
-            </div>
+            @elseif(isset($sekolahs) && method_exists($sekolahs, 'total'))
+                <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+                    <span class="text-xs text-gray-500 font-medium">Menampilkan {{ $sekolahs->total() }} Satuan Pendidikan</span>
+                </div>
+            @endif
 
         </div>
 

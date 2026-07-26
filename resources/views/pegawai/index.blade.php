@@ -202,179 +202,7 @@
             </form>
         </div>
 
-        <!-- PEGAWAI DATA TABLE -->
-        <div class="bg-white rounded-xl border border-gray-200/80 shadow-sm overflow-hidden relative z-10">
-            
-            <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
-                <span class="text-xs font-bold text-gray-700">Menampilkan Data Master Pegawai (PTK)</span>
-                <div class="text-xs text-gray-400">
-                    <span class="font-medium text-gray-600">Urutkan:</span> Terbaru Dibuat
-                </div>
-            </div>
-
-            <!-- Table Wrapper -->
-            <div class="table-scroll overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="bg-gray-50/80 border-b border-gray-100 text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
-                        <tr>
-                            <th class="px-4 py-3.5">NIP / NIK</th>
-                            <th class="px-4 py-3.5">Nama &amp; Profil</th>
-                            <th class="px-4 py-3.5">Satuan Pendidikan</th>
-                            <th class="px-4 py-3.5">Status</th>
-                            <th class="px-4 py-3.5">Jabatan &amp; Jenis</th>
-                            <th class="px-4 py-3.5">Serdik</th>
-                            <th class="px-4 py-3.5">Pendidikan</th>
-                            <th class="px-4 py-3.5">Usia</th>
-                            <th class="px-4 py-3.5">Berkas (PDF)</th>
-                            <th class="px-4 py-3.5 text-right">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        
-                        <!-- Row 1 -->
-                        <tr class="hover:bg-blue-50/30 transition">
-                            <td class="px-4 py-3.5 font-bold text-gray-800 text-xs">197503212005011002</td>
-                            <td class="px-4 py-3.5">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="w-8 h-8 rounded-full bg-blue-800 text-white font-bold text-xs flex items-center justify-center">AF</div>
-                                    <div>
-                                        <p class="font-bold text-gray-900 text-xs">Dr. Ahmad Fauzi, M.Pd.</p>
-                                        <p class="text-[10px] text-gray-400">Laki-laki • Pendidik</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">SMA Negeri 1 Jakarta</td>
-                            <td class="px-4 py-3.5"><span class="badge-custom bg-blue-100 text-blue-800">PNS</span></td>
-                            <td class="px-4 py-3.5">
-                                <p class="text-xs text-gray-800 font-medium">Guru Ahli Muda</p>
-                                <p class="text-[10px] text-gray-400">Guru Mapel Matematika</p>
-                            </td>
-                            <td class="px-4 py-3.5"><span class="badge-custom bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i>Serdik</span></td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">S2</td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700">51 thn</td>
-                            <td class="px-4 py-3.5">
-                                <div class="flex items-center gap-1.5 text-xs">
-                                    <span class="text-red-500 hover:text-red-700 cursor-pointer" title="SK Kepegawaian"><i class="fas fa-file-pdf"></i></span>
-                                    <span class="text-red-500 hover:text-red-700 cursor-pointer" title="Sertifikat Pendidik"><i class="fas fa-file-pdf"></i></span>
-                                    <span class="text-red-500 hover:text-red-700 cursor-pointer" title="Ijazah Terakhir"><i class="fas fa-file-pdf"></i></span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3.5 text-right">
-                                <div class="flex items-center justify-end gap-1">
-                                    <a href="{{ url('/pegawai/1') }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-800 hover:text-white flex items-center justify-center transition text-xs" title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ url('/pegawai/create') }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-amber-500 hover:text-white flex items-center justify-center transition text-xs" title="Edit">
-                                        <i class="fas fa-pen"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 2 -->
-                        <tr class="hover:bg-blue-50/30 transition">
-                            <td class="px-4 py-3.5 font-bold text-gray-800 text-xs">198705152010012034</td>
-                            <td class="px-4 py-3.5">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center">SR</div>
-                                    <div>
-                                        <p class="font-bold text-gray-900 text-xs">Siti Rahmawati, S.Pd.</p>
-                                        <p class="text-[10px] text-gray-400">Perempuan • Pendidik</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">SMP Negeri 3 Bandung</td>
-                            <td class="px-4 py-3.5"><span class="badge-custom bg-emerald-100 text-emerald-800">PPPK</span></td>
-                            <td class="px-4 py-3.5">
-                                <p class="text-xs text-gray-800 font-medium">Guru Ahli Pertama</p>
-                                <p class="text-[10px] text-gray-400">Guru Kelas</p>
-                            </td>
-                            <td class="px-4 py-3.5"><span class="badge-custom bg-emerald-100 text-emerald-800"><i class="fas fa-check-circle mr-1"></i>Serdik</span></td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">S1/D4</td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700">39 thn</td>
-                            <td class="px-4 py-3.5">
-                                <div class="flex items-center gap-1.5 text-xs">
-                                    <span class="text-red-500 hover:text-red-700 cursor-pointer" title="SK Kepegawaian"><i class="fas fa-file-pdf"></i></span>
-                                    <span class="text-red-500 hover:text-red-700 cursor-pointer" title="Sertifikat Pendidik"><i class="fas fa-file-pdf"></i></span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3.5 text-right">
-                                <div class="flex items-center justify-end gap-1">
-                                    <a href="{{ url('/pegawai/1') }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-800 hover:text-white flex items-center justify-center transition text-xs" title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ url('/pegawai/create') }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-amber-500 hover:text-white flex items-center justify-center transition text-xs" title="Edit">
-                                        <i class="fas fa-pen"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 3 -->
-                        <tr class="hover:bg-blue-50/30 transition">
-                            <td class="px-4 py-3.5 font-bold text-gray-800 text-xs">199203102016072045</td>
-                            <td class="px-4 py-3.5">
-                                <div class="flex items-center gap-2.5">
-                                    <div class="w-8 h-8 rounded-full bg-pink-600 text-white font-bold text-xs flex items-center justify-center">BS</div>
-                                    <div>
-                                        <p class="font-bold text-gray-900 text-xs">Budi Santoso, S.Kom.</p>
-                                        <p class="text-[10px] text-gray-400">Laki-laki • Tenaga Kependidikan</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">SMK Negeri 2 Surabaya</td>
-                            <td class="px-4 py-3.5"><span class="badge-custom bg-pink-100 text-pink-800">Non-ASN</span></td>
-                            <td class="px-4 py-3.5">
-                                <p class="text-xs text-gray-800 font-medium">Tenaga Laboran</p>
-                                <p class="text-[10px] text-gray-400">Laboratorium IT</p>
-                            </td>
-                            <td class="px-4 py-3.5"><span class="badge-custom bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i>Non-Serdik</span></td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">S1/D4</td>
-                            <td class="px-4 py-3.5 text-xs text-gray-700">34 thn</td>
-                            <td class="px-4 py-3.5">
-                                <div class="flex items-center gap-1.5 text-xs">
-                                    <span class="text-red-500 hover:text-red-700 cursor-pointer" title="Ijazah Terakhir"><i class="fas fa-file-pdf"></i></span>
-                                </div>
-                            </td>
-                            <td class="px-4 py-3.5 text-right">
-                                <div class="flex items-center justify-end gap-1">
-                                    <a href="{{ url('/pegawai/1') }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-blue-800 hover:text-white flex items-center justify-center transition text-xs" title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ url('/pegawai/create') }}" class="w-7 h-7 rounded-lg bg-gray-100 hover:bg-amber-500 hover:text-white flex items-center justify-center transition text-xs" title="Edit">
-                                        <i class="fas fa-pen"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Table Pagination -->
-            <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
-                <span class="text-xs text-gray-500">Halaman 1 dari 128</span>
-                <div class="flex items-center gap-1">
-                    <button class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-400" disabled><i class="fas fa-chevron-left"></i></button>
-                    <button class="px-3 py-1.5 text-xs bg-blue-800 text-white font-bold rounded-lg">1</button>
-                    <button class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-lg">2</button>
-                    <button class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-lg">3</button>
-                    <button class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100"><i class="fas fa-chevron-right"></i></button>
-=======
-                    <select name="kelompok_usia" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer">
-                        <option value="">Semua Kelompok Usia</option>
-                        <option value="<30" {{ request('kelompok_usia') == '<30' ? 'selected' : '' }}>&lt; 30 Tahun</option>
-                        <option value="30-40" {{ request('kelompok_usia') == '30-40' ? 'selected' : '' }}>30 - 40 Tahun</option>
-                        <option value="41-50" {{ request('kelompok_usia') == '41-50' ? 'selected' : '' }}>41 - 50 Tahun</option>
-                        <option value=">50" {{ request('kelompok_usia') == '>50' ? 'selected' : '' }}>&gt; 50 Tahun</option>
-                    </select>
-                </div>
-
-            </div>
-        </form>
-
-        <!-- BULK DELETE FLOATING ACTION BAR -->
+        <!-- BULK DELETE FLOATING ACTION BAR & DYNAMIC DATA TABLE -->
         <form id="bulkDeleteForm" method="POST" action="{{ route('pegawai.bulk-destroy') }}">
             @csrf
             <div id="bulkActionBar" class="hidden bg-slate-900 text-white rounded-xl px-5 py-3 shadow-xl flex items-center justify-between border border-slate-700 animate-fade-in">
@@ -397,17 +225,20 @@
             <div class="bg-white rounded-xl border border-gray-200/80 shadow-sm overflow-hidden mt-4">
                 
                 <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
-                    <span class="text-xs font-bold text-gray-700">
-                        @if(isset($pegawais) && method_exists($pegawais, 'total'))
-                            Menampilkan {{ $pegawais->firstItem() ?? 0 }} - {{ $pegawais->lastItem() ?? 0 }} dari {{ $pegawais->total() }} Data Pegawai
-                        @else
-                            Menampilkan Data Pegawai
-                        @endif
+                    <span class="text-xs text-gray-500 font-bold">
+                        Menampilkan {{ isset($pegawais) && method_exists($pegawais, 'total') ? $pegawais->total() : (\App\Models\Pegawai::count()) }} Master Data Pegawai (PTK)
                     </span>
-                    <div class="text-xs text-gray-400">
-                        <span class="font-medium text-gray-600">Urutkan:</span> Terbaru Dibuat
-                    </div>
->>>>>>> ab5e309be74ed7d06ae5cbb8fdd76093e7d77cbe
+                    @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('is_serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia'))
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full font-bold">
+                                <i class="fas fa-check-circle mr-1"></i> Filter Aktif: 
+                                @if(request('status_kepegawaian')) Status: {{ request('status_kepegawaian') }} @endif
+                                @if(request('jabatan_fungsional')) | Jabatan: {{ request('jabatan_fungsional') }} @endif
+                                @if(request('jenis_ptk')) | PTK: {{ request('jenis_ptk') }} @endif
+                                @if(request('jenis_guru')) | Guru: {{ request('jenis_guru') }} @endif
+                            </span>
+                        </div>
+                    @endif
                 </div>
 
                 <!-- Table Wrapper -->
@@ -553,12 +384,42 @@
                     </table>
                 </div>
 
-                <!-- Table Pagination -->
-                <div class="px-6 py-4 border-t border-gray-100">
-                    @if(isset($pegawais) && method_exists($pegawais, 'links'))
-                        {{ $pegawais->links() }}
-                    @endif
-                </div>
+                <!-- Table Pagination (Matches Custom SIMPEG-SP UI Styling) -->
+                @if(isset($pegawais) && method_exists($pegawais, 'hasPages') && $pegawais->hasPages())
+                    <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 bg-gray-50/50">
+                        <span class="text-xs text-gray-500 font-medium">
+                            Halaman <span class="font-bold text-gray-800">{{ $pegawais->currentPage() }}</span> dari <span class="font-bold text-gray-800">{{ $pegawais->lastPage() }}</span> (Menampilkan {{ $pegawais->firstItem() }} - {{ $pegawais->lastItem() }} dari {{ $pegawais->total() }} Data Pegawai)
+                        </span>
+                        <div class="flex items-center gap-1">
+                            {{-- Previous Page Link --}}
+                            @if ($pegawais->onFirstPage())
+                                <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-left"></i></span>
+                            @else
+                                <a href="{{ $pegawais->previousPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 bg-white transition"><i class="fas fa-chevron-left"></i></a>
+                            @endif
+
+                            {{-- Pagination Elements --}}
+                            @foreach ($pegawais->getUrlRange(max(1, $pegawais->currentPage() - 2), min($pegawais->lastPage(), $pegawais->currentPage() + 2)) as $page => $url)
+                                @if ($page == $pegawais->currentPage())
+                                    <span class="px-3 py-1.5 text-xs bg-blue-800 text-white font-bold rounded-lg shadow-sm">{{ $page }}</span>
+                                @else
+                                    <a href="{{ $url }}" class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 bg-white rounded-lg transition font-medium border border-gray-200">{{ $page }}</a>
+                                @endif
+                            @endforeach
+
+                            {{-- Next Page Link --}}
+                            @if ($pegawais->hasMorePages())
+                                <a href="{{ $pegawais->nextPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 bg-white transition"><i class="fas fa-chevron-right"></i></a>
+                            @else
+                                <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-right"></i></span>
+                            @endif
+                        </div>
+                    </div>
+                @elseif(isset($pegawais) && method_exists($pegawais, 'total'))
+                    <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
+                        <span class="text-xs text-gray-500 font-medium">Menampilkan {{ $pegawais->total() }} Data Pegawai</span>
+                    </div>
+                @endif
 
             </div>
         </form>

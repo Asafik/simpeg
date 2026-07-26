@@ -1,4 +1,4 @@
-/* ===== COMPONENT STYLES (CARDS, BADGES, TABLES) ===== */
+/* ===== GENERAL UI COMPONENT STYLES ===== */
 
 /* Stat Card Hover animation */
 .stat-card {
@@ -9,29 +9,16 @@
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* Custom Badges */
-.badge-custom {
-    padding: 3px 12px;
-    border-radius: 9999px;
-    font-size: 11px;
-    font-weight: 600;
-    display: inline-block;
+/* Filter & Search Bar Cards */
+.filter-panel {
+    border-radius: 0.75rem;
+    background-color: #ffffff;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
 }
 
 /* Chart Canvas container */
 .chart-container {
     position: relative;
     width: 100%;
-}
-
-/* Table Custom Scrollbar */
-.table-scroll::-webkit-scrollbar {
-    height: 5px;
-}
-.table-scroll::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-.table-scroll::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
 }

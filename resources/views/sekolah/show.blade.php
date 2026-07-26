@@ -205,40 +205,63 @@
                     <table class="w-full text-sm text-left">
                         <thead class="bg-gray-50/80 border-b border-gray-100 text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
                             <tr>
-                                <th class="px-4 py-3.5">NIP</th>
-                                <th class="px-4 py-3.5">Nama Pegawai</th>
+                                <th class="px-4 py-3.5">NIP / NIK</th>
+                                <th class="px-4 py-3.5">Nama Pegawai &amp; Profil</th>
                                 <th class="px-4 py-3.5">Status</th>
-                                <th class="px-4 py-3.5">Jabatan</th>
+                                <th class="px-4 py-3.5">Jabatan &amp; Jenis</th>
+                                <th class="px-4 py-3.5">Serdik</th>
                                 <th class="px-4 py-3.5 text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @if($sekolah->pegawais && $sekolah->pegawais->count() > 0)
                                 @foreach($sekolah->pegawais as $pegawai)
-                                    <tr class="hover:bg-gray-50/50 transition">
+                                    <tr class="hover:bg-blue-50/30 transition">
                                         <td class="px-4 py-3.5 font-bold text-blue-800 text-xs font-mono">
-                                            {{ $pegawai->nip ?? '-' }}
+                                            {{ $pegawai->nip_nik ?: ($pegawai->nik ?: '-') }}
                                         </td>
                                         <td class="px-4 py-3.5">
-                                            <p class="font-bold text-gray-900 text-xs">{{ $pegawai->nama }}</p>
-                                            <p class="text-[10px] text-gray-400">{{ $pegawai->jenis_ptk ?? 'Pendidik' }}</p>
+                                            <p class="font-bold text-gray-900 text-xs">{{ $pegawai->nama_lengkap }}</p>
+                                            <p class="text-[10px] text-gray-400">{{ $pegawai->jenis_ptk ?? 'Pendidik' }} @if($pegawai->pangkat_golongan && $pegawai->pangkat_golongan !== '-') • Gol: {{ $pegawai->pangkat_golongan }} @endif</p>
                                         </td>
                                         <td class="px-4 py-3.5 text-xs">
-                                            <span class="badge-custom bg-blue-100 text-blue-800 font-semibold">{{ $pegawai->status_kepegawaian ?? 'PNS' }}</span>
+                                            @php
+                                                $badgeClasses = match($pegawai->status_kepegawaian) {
+                                                    'PNS' => 'bg-blue-100 text-blue-800',
+                                                    'PPPK' => 'bg-emerald-100 text-emerald-800',
+                                                    'PPPK PW' => 'bg-amber-100 text-amber-800',
+                                                    default => 'bg-gray-100 text-gray-800',
+                                                };
+                                            @endphp
+                                            <span class="badge-custom px-2.5 py-1 rounded-full text-[10px] font-bold {{ $badgeClasses }}">
+                                                {{ $pegawai->status_kepegawaian }}
+                                            </span>
                                         </td>
                                         <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">
-                                            {{ $pegawai->jabatan_fungsional ?? '-' }}
+                                            <p class="text-xs text-gray-800 font-medium">{{ $pegawai->jabatan_fungsional ?: '-' }}</p>
+                                            <p class="text-[10px] text-gray-400">{{ $pegawai->jenis_guru ?: '-' }}</p>
+                                        </td>
+                                        <td class="px-4 py-3.5">
+                                            @if($pegawai->is_serdik)
+                                                <span class="badge-custom px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                                    <i class="fas fa-check-circle mr-1"></i>Serdik
+                                                </span>
+                                            @else
+                                                <span class="badge-custom px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800">
+                                                    <i class="fas fa-times-circle mr-1"></i>Non-Serdik
+                                                </span>
+                                            @endif
                                         </td>
                                         <td class="px-4 py-3.5 text-right">
-                                            <a href="{{ url('/pegawai/' . $pegawai->id) }}" class="px-2.5 py-1 bg-gray-100 hover:bg-blue-800 hover:text-white text-xs font-semibold rounded-md transition text-gray-700">
-                                                <i class="fas fa-eye mr-1"></i> Detail
+                                            <a href="{{ route('pegawai.show', $pegawai->id) }}" class="px-3 py-1.5 bg-gray-100 hover:bg-blue-800 hover:text-white text-xs font-semibold rounded-lg transition text-gray-700 inline-flex items-center gap-1">
+                                                <i class="fas fa-eye text-xs"></i> Detail
                                             </a>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="5" class="px-6 py-8 text-center text-xs text-gray-400 font-medium">
+                                    <td colspan="6" class="px-6 py-8 text-center text-xs text-gray-400 font-medium">
                                         Belum ada data Pegawai (PTK) yang terdaftar di {{ $sekolah->nama_sekolah }}.
                                     </td>
                                 </tr>
