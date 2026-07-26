@@ -2,7 +2,7 @@
 <header id="landingNavbar" class="w-full fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent py-5">
     <div class="w-full px-6 md:px-12 flex items-center justify-between">
         <!-- Brand Logo -->
-        <a href="{{ url('/landing') }}" class="flex items-center gap-3 group">
+        <a href="{{ url('/') }}" class="flex items-center gap-3 group">
             <img src="{{ asset('logo/logo.svg') }}" alt="SIMPEG-SP Logo" class="w-10 h-10 object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-200">
             <div>
                 <h1 class="font-extrabold text-lg leading-tight text-white tracking-tight">SIMPEG-SP</h1>
@@ -12,7 +12,7 @@
 
         <!-- Desktop Navigation Links -->
         <nav class="hidden md:flex items-center gap-8 text-xs font-semibold text-blue-100/90">
-            <a href="{{ url('/landing') }}" class="{{ Request::is('landing') && !Request::is('landing/*') ? 'text-white font-bold border-b-2 border-white pb-1' : 'hover:text-white transition' }}">
+            <a href="{{ url('/') }}" class="{{ (Request::is('/') || Request::is('landing')) && !Request::is('landing/*') ? 'text-white font-bold border-b-2 border-white pb-1' : 'hover:text-white transition' }}">
                 Beranda
             </a>
             <a href="{{ url('/landing/statistik') }}" class="{{ Request::is('landing/statistik') ? 'text-white font-bold border-b-2 border-white pb-1' : 'hover:text-white transition' }}">
@@ -32,7 +32,7 @@
         <!-- CTA Buttons (Official System Palette) -->
         <div class="flex items-center gap-3">
             @auth
-                <a href="{{ url('/') }}" class="bg-blue-800 hover:bg-blue-900 border border-blue-400/30 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2">
+                <a href="{{ route('dashboard') }}" class="bg-blue-800 hover:bg-blue-900 border border-blue-400/30 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-lg transition flex items-center gap-2">
                     <i class="fas fa-chart-pie text-xs"></i>
                     <span>Buka Dashboard</span>
                 </a>

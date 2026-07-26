@@ -8,7 +8,7 @@
     <!-- System Theme Initializer (Excludes Login & Landing) -->
     <script>
         (function() {
-            if (window.location.pathname.includes('/login') || window.location.pathname.includes('/landing')) {
+            if (window.location.pathname === '/' || window.location.pathname.includes('/login') || window.location.pathname.includes('/landing')) {
                 document.documentElement.setAttribute('data-theme', 'deep_blue');
             } else {
                 const savedTheme = localStorage.getItem('simpegTheme') || 'deep_blue';
@@ -65,14 +65,18 @@
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
 
-    @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*'))
+    @php
+        $isPublicPage = View::hasSection('hideNav') || Request::is('/') || Request::is('login') || Request::is('landing*');
+    @endphp
+
+    @unless($isPublicPage)
         <!-- Mobile Sidebar Overlay -->
         <div class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" id="sidebarOverlay"></div>
     @endunless
 
     <!-- Main Content Wrapper -->
-    <main class="{{ (View::hasSection('hideNav') || Request::is('login') || Request::is('landing*')) ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
-        @unless(View::hasSection('hideNav') || Request::is('login') || Request::is('landing*'))
+    <main class="{{ $isPublicPage ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
+        @unless($isPublicPage)
             <!-- Top Navbar Partial -->
             @include('layouts.navbar')
         @endunless
