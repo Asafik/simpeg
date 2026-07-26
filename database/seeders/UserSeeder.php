@@ -11,7 +11,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin Dinas
+        // Admin Dinas Principal Account
         User::updateOrCreate(
             ['username' => 'admin'],
             [
@@ -23,32 +23,23 @@ class UserSeeder extends Seeder
             ]
         );
 
-        $sd1 = Sekolah::where('npsn', '10201001')->first();
-        if ($sd1) {
-            User::updateOrCreate(
-                ['username' => 'operator_sd1'],
-                [
-                    'name' => 'Operator SD Negeri 01 Kota',
-                    'email' => 'operator.sdn01@dinas.sch.id',
-                    'password' => Hash::make('password'),
-                    'role' => 'OPERATOR_SEKOLAH',
-                    'sekolah_id' => $sd1->id,
-                ]
-            );
-        }
+        // Dynamically create Operator accounts for every seeded school
+        $defaultPassword = Hash::make('password');
+        $sekolahs = Sekolah::all();
 
-        $smp1 = Sekolah::where('npsn', '10201003')->first();
-        if ($smp1) {
+        foreach ($sekolahs as $sekolah) {
+            $username = 'ops_' . $sekolah->npsn;
             User::updateOrCreate(
-                ['username' => 'operator_smp1'],
+                ['username' => $username],
                 [
-                    'name' => 'Operator SMP Negeri 1 Medan',
-                    'email' => 'operator.smpn1@dinas.sch.id',
-                    'password' => Hash::make('password'),
+                    'name' => 'Operator ' . $sekolah->nama_sekolah,
+                    'email' => $username . '@dinas.sch.id',
+                    'password' => $defaultPassword,
                     'role' => 'OPERATOR_SEKOLAH',
-                    'sekolah_id' => $smp1->id,
+                    'sekolah_id' => $sekolah->id,
                 ]
             );
         }
     }
 }
+

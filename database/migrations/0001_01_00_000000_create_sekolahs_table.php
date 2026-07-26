@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('npsn', 20)->unique();
             $table->string('nama_sekolah', 150);
-            $table->string('kecamatan', 100);
+            $table->string('kecamatan', 100)->index();
             $table->string('nama_kepala_sekolah', 150)->nullable();
-            $table->string('nip_kepala_sekolah', 30)->nullable();
-            $table->string('status_kepala_sekolah', 50)->default('Definitif'); // Definitif, Plt, Plh
+            $table->string('nip_kepala_sekolah', 50)->nullable();
+            $table->string('status_kepala_sekolah', 50)->nullable()->default('Definitif'); // Definitif, Plt, Plh
             $table->string('email_sekolah', 100)->nullable();
             $table->text('alamat')->nullable();
             $table->timestamps();

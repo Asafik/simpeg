@@ -24,6 +24,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pegawai/{pegawai}', [PegawaiController::class, 'show'])->name('pegawai.show');
 
     Route::get('/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
+    Route::post('/sekolah', [SekolahController::class, 'store'])->name('sekolah.store');
+    Route::get('/sekolah/{sekolah}', [SekolahController::class, 'show'])->name('sekolah.show');
+    Route::put('/sekolah/{sekolah}', [SekolahController::class, 'update'])->name('sekolah.update');
+    Route::delete('/sekolah/{sekolah}', [SekolahController::class, 'destroy'])->name('sekolah.destroy');
+    Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
 });
