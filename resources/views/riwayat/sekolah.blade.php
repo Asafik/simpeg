@@ -3,8 +3,6 @@
 @section('title', 'Riwayat Perubahan - ' . $sekolah->nama_sekolah . ' - SIMPEG-SP')
 
 @section('content')
-    @include('layouts.sidebar')
-
     {{-- Hero Banner --}}
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-20 md:pb-24 shadow-lg overflow-hidden">
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">
@@ -176,11 +174,11 @@
 
                 {{-- Pagination --}}
                 @if($logs->hasPages())
-                    <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 bg-gray-50/50">
-                        <span class="text-xs text-gray-500 font-medium">
+                    <div class="px-6 py-4 border-t border-gray-100 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-3.5 bg-gray-50/50 text-center lg:text-left">
+                        <span class="text-xs text-gray-500 font-medium text-center lg:text-left">
                             Halaman <span class="font-bold text-gray-800">{{ $logs->currentPage() }}</span> dari <span class="font-bold text-gray-800">{{ $logs->lastPage() }}</span>
                         </span>
-                        <div class="flex items-center gap-1">
+                        <div class="flex items-center justify-center gap-1">
                             @if ($logs->onFirstPage())
                                 <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-left"></i></span>
                             @else

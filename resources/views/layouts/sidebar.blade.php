@@ -41,27 +41,30 @@
         <a href="{{ url('/verifikasi') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('verifikasi*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Verifikasi Data">
             <i class="fas fa-check-circle w-5 text-center flex-shrink-0"></i>
             <span class="font-medium text-sm sidebar-text">Verifikasi Data</span>
-            <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full sidebar-text">12</span>
         </a>
 
         <!-- Publik Section -->
         <div class="mt-4 pt-4 border-t border-gray-100 space-y-1">
             <p class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold px-3 mb-2 sidebar-text">Publik</p>
             
-            <a href="{{ url('/pengumuman') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('pengumuman*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Pengumuman">
-                <i class="fas fa-bullhorn w-5 text-center flex-shrink-0"></i>
-                <span class="font-medium text-sm sidebar-text">Pengumuman</span>
-            </a>
+            @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                <a href="{{ url('/pengumuman') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('pengumuman*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Pengumuman">
+                    <i class="fas fa-bullhorn w-5 text-center flex-shrink-0"></i>
+                    <span class="font-medium text-sm sidebar-text">Pengumuman</span>
+                </a>
+            @endif
         </div>
 
         <!-- System Settings Accordion Menu -->
         <div class="mt-4 pt-4 border-t border-gray-100 space-y-1">
             <p class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold px-3 mb-2 sidebar-text">Pengaturan</p>
             
-            <a href="{{ url('/users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('users*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Kelola User">
-                <i class="fas fa-user-gear w-5 text-center flex-shrink-0"></i>
-                <span class="font-medium text-sm sidebar-text">Kelola User</span>
-            </a>
+            @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                <a href="{{ url('/users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('users*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Kelola User">
+                    <i class="fas fa-user-gear w-5 text-center flex-shrink-0"></i>
+                    <span class="font-medium text-sm sidebar-text">Kelola User</span>
+                </a>
+            @endif
 
             <div class="relative">
                 <button type="button" 

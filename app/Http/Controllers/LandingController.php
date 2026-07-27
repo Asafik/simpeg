@@ -46,7 +46,24 @@ class LandingController extends Controller
     public function pengumuman(Request $request)
     {
         $category = $request->query('category', 'all');
+        $search = $request->query('search');
 
-        return view('landing.pengumuman', compact('category'));
+        $query = \App\Models\Announcement::where('is_published', true)->latest();
+
+        if ($category !== 'all' && !empty($category)) {
+            $query->where('kategori', $category);
+        }
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                  ->orWhere('isi', 'like', "%{$search}%")
+                  ->orWhere('ringkasan', 'like', "%{$search}%");
+            });
+        }
+
+        $announcements = $query->paginate(9)->withQueryString();
+
+        return view('landing.pengumuman', compact('announcements', 'category', 'search'));
     }
 }

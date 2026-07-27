@@ -3,9 +3,6 @@
 @section('title', 'SIMPEG-SP - Dashboard Admin Dinas')
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- ===== HERO BLUE WELCOME BANNER (Hope UI Design - Deep Blue) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-20 md:pb-24 shadow-lg shadow-blue-950/20 overflow-hidden">
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">
@@ -42,7 +39,7 @@
     <!-- ===== MAIN CONTENT BODY (With padding & overlapping stat cards) ===== -->
     <div class="px-4 md:px-8 pb-8 flex-1">
         <!-- ===== OVERLAPPING SUMMARY CARDS (Exact Match to Hope UI Card Style) ===== -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 -mt-12 md:-mt-14 mb-6 relative z-20">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 -mt-12 md:-mt-14 mb-6 relative z-20">
             <!-- Card 1: Total Satuan Pendidikan -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
@@ -119,9 +116,9 @@
         </div>
 
         <!-- ===== CHARTS ROW (DISTRIBUSI KECAMATAN & STATUS KEPALA SEKOLAH) ===== -->
-        <div class="grid lg:grid-cols-3 gap-6 mb-6">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
             <!-- Chart 1: Top Kecamatan Satuan Pendidikan (2 Cols) -->
-            <div class="lg:col-span-2 bg-white rounded-xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
+            <div class="xl:col-span-2 bg-white rounded-xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <div>
                         <h3 class="text-base font-bold text-gray-800">Persebaran Satuan Pendidikan Terbanyak (Per Kecamatan)</h3>

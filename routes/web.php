@@ -64,12 +64,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
     Route::get('/sekolah/{sekolah}/riwayat', [RiwayatController::class, 'sekolah'])->name('sekolah.riwayat');
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
-    Route::get('/pengumuman', [AnnouncementController::class, 'index'])->name('pengumuman.index');
-    Route::get('/pengumuman/create', [AnnouncementController::class, 'create'])->name('pengumuman.create');
-    Route::post('/pengumuman', [AnnouncementController::class, 'store'])->name('pengumuman.store');
-    Route::get('/pengumuman/{id}/edit', [AnnouncementController::class, 'edit'])->name('pengumuman.edit');
-    Route::put('/pengumuman/{id}', [AnnouncementController::class, 'update'])->name('pengumuman.update');
-    Route::delete('/pengumuman/{id}', [AnnouncementController::class, 'destroy'])->name('pengumuman.destroy');
+    Route::get('/verifikasi/{pegawai}', [VerificationController::class, 'show'])->name('verifikasi.show');
+    Route::get('/verifikasi/{pegawai}/tinjau', [VerificationController::class, 'tinjau'])->name('verifikasi.tinjau');
+    Route::post('/verifikasi/{pegawai}/status', [VerificationController::class, 'updateStatus'])->name('verifikasi.update-status');
+    Route::put('/verifikasi/{pegawai}/status', [VerificationController::class, 'updateStatus']);
+    Route::get('/admin/pengumuman', [AnnouncementController::class, 'index'])->name('pengumuman.index');
+    Route::get('/admin/pengumuman/create', [AnnouncementController::class, 'create'])->name('pengumuman.create');
+    Route::post('/admin/pengumuman', [AnnouncementController::class, 'store'])->name('pengumuman.store');
+    Route::get('/admin/pengumuman/{id}/edit', [AnnouncementController::class, 'edit'])->name('pengumuman.edit');
+    Route::put('/admin/pengumuman/{id}', [AnnouncementController::class, 'update'])->name('pengumuman.update');
+    Route::delete('/admin/pengumuman/{id}', [AnnouncementController::class, 'destroy'])->name('pengumuman.destroy');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
@@ -80,7 +84,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Setting Submenu Routes
     Route::get('/settings/profile', [SettingController::class, 'profile'])->name('settings.profile');
+    Route::post('/settings/profile', [SettingController::class, 'updateProfile'])->name('settings.profile.update');
+    Route::post('/settings/password', [SettingController::class, 'updatePassword'])->name('settings.password.update');
     Route::get('/settings/app', [SettingController::class, 'app'])->name('settings.app');
+    Route::post('/settings/app', [SettingController::class, 'updateApp'])->name('settings.app.update');
     Route::get('/settings/logs', [SettingController::class, 'logs'])->name('settings.logs');
-    Route::get('/settings', [SettingController::class, 'app']);
+    Route::get('/settings', [SettingController::class, 'profile']);
 });

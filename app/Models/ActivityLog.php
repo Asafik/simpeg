@@ -40,11 +40,11 @@ class ActivityLog extends Model
     public function getActionLabelAttribute(): string
     {
         return match ($this->action) {
-            'created'  => '➕ Data Ditambahkan',
-            'updated'  => '✏️ Data Diubah',
-            'deleted'  => '🗑 Data Dihapus',
-            'imported' => '📥 Import Excel',
-            'exported' => '📤 Export Excel',
+            'created'  => 'Data Ditambahkan',
+            'updated'  => 'Data Diubah',
+            'deleted'  => 'Data Dihapus',
+            'imported' => 'Import Excel',
+            'exported' => 'Export Excel',
             default    => ucfirst($this->action),
         };
     }

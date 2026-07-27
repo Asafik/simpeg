@@ -3,9 +3,6 @@
 @section('title', 'Verifikasi Data & Berkas - SIMPEG-SP')
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- ===== HERO BLUE BANNER (Exact Hope UI 2-Wave Design - Deep Blue) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">
@@ -33,7 +30,7 @@
             <div class="flex items-center gap-2">
                 <span class="text-xs font-bold text-amber-300 bg-white/15 backdrop-blur-md border border-white/20 px-4 py-2.5 rounded-lg shadow-sm flex items-center gap-2">
                     <i class="fas fa-clock text-amber-400"></i>
-                    <span>12 Berkas Menunggu Verifikasi</span>
+                    <span>{{ number_format($menungguCount ?? 0, 0, ',', '.') }} Menunggu Verifikasi</span>
                 </span>
             </div>
         </div>
@@ -42,18 +39,40 @@
     <!-- Page Content Container (With overlapping top margin) -->
     <div class="px-6 md:px-8 pb-8 flex-1 space-y-6">
 
+        @if(session('success'))
+            <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl p-4 shadow-md flex items-center justify-between relative z-30">
+                <div class="flex items-center gap-2 font-bold">
+                    <i class="fas fa-circle-check text-emerald-600 text-sm"></i>
+                    <span>{{ session('success') }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-emerald-500 hover:text-emerald-800 cursor-pointer"><i class="fas fa-xmark"></i></button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl p-4 shadow-md flex items-center justify-between relative z-30">
+                <div class="flex items-center gap-2 font-bold">
+                    <i class="fas fa-triangle-exclamation text-rose-600 text-sm"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-rose-500 hover:text-rose-800 cursor-pointer"><i class="fas fa-xmark"></i></button>
+            </div>
+        @endif
+
         <!-- SUMMARY METRIC CARDS (Exact Match to Hope UI Card Style) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 -mt-12 md:-mt-14 mb-6 relative z-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 -mt-12 md:-mt-14 mb-6 relative z-10">
             
-            <!-- Card 1: Total Pengajuan -->
+            <!-- Card 1: Total Dokumen -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-full border-2 border-blue-800 flex items-center justify-center text-blue-800 font-bold bg-blue-900/10 flex-shrink-0">
                         <i class="fas fa-folder-open text-base"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-400 font-medium">Total Dokumen</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">168</p>
+                        <p class="text-xs text-gray-400 font-medium">Total Pegawai Terhubung</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">
+                            {{ number_format($totalCount ?? 0, 0, ',', '.') }}
+                        </p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
@@ -67,7 +86,9 @@
                     </div>
                     <div>
                         <p class="text-xs text-gray-400 font-medium">Menunggu Verifikasi</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-amber-600 mt-0.5">12</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-amber-600 mt-0.5">
+                            {{ number_format($menungguCount ?? 0, 0, ',', '.') }}
+                        </p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
@@ -80,22 +101,26 @@
                         <i class="fas fa-circle-check text-base"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-400 font-medium">Disetujui & Valid</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-emerald-600 mt-0.5">145</p>
+                        <p class="text-xs text-gray-400 font-medium">Disetujui &amp; Valid</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-emerald-600 mt-0.5">
+                            {{ number_format($disetujuiCount ?? 0, 0, ',', '.') }}
+                        </p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
             </div>
 
-            <!-- Card 4: Ditolak / Draft -->
+            <!-- Card 4: Revisi -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-full border-2 border-rose-500 flex items-center justify-center text-rose-600 font-bold bg-rose-50/50 flex-shrink-0">
-                        <i class="fas fa-circle-xmark text-base"></i>
+                        <i class="fas fa-triangle-exclamation text-base"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-400 font-medium">Ditolak / Perlu Perbaikan</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-rose-600 mt-0.5">11</p>
+                        <p class="text-xs text-gray-400 font-medium">Perlu Revisi (Dinas)</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-rose-600 mt-0.5">
+                            {{ number_format($revisiCount ?? 0, 0, ',', '.') }}
+                        </p>
                     </div>
                 </div>
                 <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
@@ -103,20 +128,25 @@
 
         </div>
 
-        <!-- Filter Bar Panel (Exact Match to Sekolah & User Index UI) -->
+        <!-- Filter Bar Panel -->
         <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-30">
             <div class="flex items-center justify-between pb-3 border-b border-gray-100">
                 <h3 class="text-xs font-extrabold uppercase tracking-wider text-blue-800 flex items-center gap-2">
                     <i class="fas fa-filter"></i>
                     Filter &amp; Pencarian Dokumen Verifikasi
                 </h3>
+                @if(request('search') || request('status') || request('sekolah_id'))
+                    <a href="{{ route('verifikasi.index') }}" class="text-xs text-rose-600 hover:text-rose-800 font-bold flex items-center gap-1">
+                        <i class="fas fa-arrows-rotate text-[10px]"></i> Reset Filter
+                    </a>
+                @endif
             </div>
 
             <!-- Filter Inputs Form -->
-            <form action="{{ url('/verifikasi') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            <form action="{{ route('verifikasi.index') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
                 
                 <!-- Search Keyword -->
-                <div class="col-span-1 sm:col-span-2 md:col-span-2">
+                <div class="col-span-1 sm:col-span-2 xl:col-span-2">
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">Cari NIP / Nama Pegawai / Sekolah</label>
                     <div class="relative flex items-center">
                         <input type="text" name="search" value="{{ request('search') }}" placeholder="Ketik NIP, nama pegawai, atau nama sekolah..." 
@@ -130,12 +160,12 @@
                 <!-- Status Filter -->
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">Filter Status Verifikasi</label>
-                    <select name="status" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
+                    <select name="status" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium" onchange="this.form.submit()">
                         <option value="">Semua Status</option>
-                        <option value="MENUNGGU" selected>Menunggu Verifikasi (12)</option>
-                        <option value="DISETUJUI">Disetujui (145)</option>
-                        <option value="DITOLAK">Ditolak (3)</option>
-                        <option value="DRAFT">Draft / Belum Upload (8)</option>
+                        <option value="DRAFT" {{ request('status') == 'DRAFT' ? 'selected' : '' }}>Draft / Belum Upload</option>
+                        <option value="MENUNGGU" {{ request('status') == 'MENUNGGU' ? 'selected' : '' }}>Menunggu Verifikasi</option>
+                        <option value="REVISI" {{ request('status') == 'REVISI' ? 'selected' : '' }}>Revisi (Verifikasi Dinas)</option>
+                        <option value="DISETUJUI" {{ request('status') == 'DISETUJUI' ? 'selected' : '' }}>Disetujui &amp; Valid</option>
                     </select>
                 </div>
 
@@ -149,11 +179,11 @@
             </form>
         </div>
 
-        <!-- Table Card Container (Exact Match to Sekolah Index Table) -->
+        <!-- Table Card Container -->
         <div class="bg-white rounded-xl border border-gray-200/80 shadow-xl shadow-gray-200/50 overflow-hidden relative z-10">
             <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
                 <span class="text-xs text-gray-500 font-bold">
-                    Menampilkan <span class="font-bold text-gray-800">8</span> Antrean Dokumen Berkas Pegawai
+                    Menampilkan <span class="font-bold text-gray-800">{{ $pegawais->total() }}</span> Data Berkas Kepegawaian
                 </span>
                 <div class="flex items-center gap-2">
                     <span class="text-xs text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full font-bold">
@@ -163,436 +193,147 @@
             </div>
 
             <div class="table-scroll overflow-x-auto">
-                <table class="w-full text-sm text-left">
+                <table class="w-full min-w-[1200px] text-sm text-left">
                     <thead class="bg-gray-50/80 border-b border-gray-100 text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
                         <tr>
                             <th class="px-4 py-3.5 text-center">No.</th>
                             <th class="px-6 py-3.5">Nama Pegawai &amp; NIP</th>
                             <th class="px-6 py-3.5">Satuan Pendidikan (Sekolah)</th>
-                            <th class="px-6 py-3.5">Jenis Berkas</th>
+                            <th class="px-6 py-3.5">Kelengkapan Berkas</th>
                             <th class="px-6 py-3.5">Status Berkas</th>
-                            <th class="px-6 py-3.5 text-right">Aksi &amp; Verifikasi</th>
+                            <th class="px-6 py-3.5 text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
-                        
-                        <!-- Row 1: Menunggu Verifikasi -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">1</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-blue-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
-                                        SU
+                        @if(isset($pegawais) && count($pegawais) > 0)
+                            @foreach($pegawais as $pegawai)
+                                <tr class="hover:bg-gray-50/50 transition">
+                                    <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">
+                                        {{ $loop->iteration + ($pegawais->currentPage() - 1) * $pegawais->perPage() }}
+                                    </td>
+                                    <!-- Nama Pegawai & NIP -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2.5">
+                                            @php
+                                                $words = explode(' ', $pegawai->nama_lengkap);
+                                                $initials = strtoupper(substr($words[0] ?? 'P', 0, 1) . substr($words[1] ?? 'T', 0, 1));
+                                            @endphp
+                                            <div class="w-8 h-8 rounded-full bg-blue-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
+                                                {{ $initials }}
+                                            </div>
+                                            <div>
+                                                <p class="font-extrabold text-gray-900 text-xs">{{ $pegawai->nama_lengkap }}</p>
+                                                <p class="text-[10px] text-gray-500 font-medium">NIP/NIK: <span class="font-bold text-blue-950 font-mono">{{ $pegawai->nip_nik ?: '-' }}</span></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- Nama Sekolah -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-800 flex items-center justify-center font-bold text-xs flex-shrink-0 border border-blue-100">
+                                                <i class="fas fa-school text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-gray-900 text-xs">{{ $pegawai->sekolah->nama_sekolah ?? '-' }}</p>
+                                                <p class="text-[10px] text-gray-400 font-mono">NPSN: {{ $pegawai->sekolah->npsn ?? '-' }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- Kelengkapan Berkas -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-1.5 text-[11px]">
+                                            <span class="px-2 py-0.5 rounded font-bold {{ $pegawai->file_sk ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-gray-100 text-gray-400' }}">
+                                                SK: {{ $pegawai->file_sk ? 'Ada' : 'Kosong' }}
+                                            </span>
+                                            <span class="px-2 py-0.5 rounded font-bold {{ $pegawai->file_serdik ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-100 text-gray-400' }}">
+                                                Serdik: {{ $pegawai->file_serdik ? 'Ada' : 'Kosong' }}
+                                            </span>
+                                            <span class="px-2 py-0.5 rounded font-bold {{ $pegawai->file_ijazah ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-gray-100 text-gray-400' }}">
+                                                Ijazah: {{ $pegawai->file_ijazah ? 'Ada' : 'Kosong' }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <!-- Status Berkas -->
+                                    <td class="px-6 py-4">
+                                        @php
+                                            $st = $pegawai->status_verifikasi ?? 'DRAFT';
+                                        @endphp
+                                        @if($st === 'DISETUJUI')
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                <i class="fas fa-circle-check text-emerald-600"></i> Disetujui &amp; Valid
+                                            </span>
+                                        @elseif($st === 'REVISI')
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                                <i class="fas fa-triangle-exclamation text-rose-600"></i> Revisi (Verifikasi Dinas)
+                                            </span>
+                                        @elseif($st === 'MENUNGGU')
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                                <i class="fas fa-hourglass-half text-amber-600"></i> Menunggu Verifikasi
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-600 border border-gray-200">
+                                                <i class="fas fa-file-arrow-up text-gray-400"></i> Draft / Belum Upload
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <!-- Aksi -->
+                                    <td class="px-6 py-4 text-right">
+                                        <a href="{{ route('verifikasi.show', $pegawai->id) }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-900 text-white font-bold text-xs shadow-sm hover:shadow-md transition cursor-pointer">
+                                            <i class="fas fa-magnifying-glass-chart text-xs"></i>
+                                            <span>Tinjau Berkas</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="6" class="px-6 py-12 text-center text-gray-400 text-xs">
+                                    <div class="flex flex-col items-center justify-center gap-2">
+                                        <i class="fas fa-folder-open text-3xl text-gray-300"></i>
+                                        <p class="font-bold text-gray-600">Tidak ada antrean data verifikasi berkas.</p>
+                                        <p class="text-gray-400">Silakan gunakan pencarian atau ubah kriteria filter di atas.</p>
                                     </div>
-                                    <div class="truncate">
-                                        <p class="font-extrabold text-gray-900 text-xs truncate">SURAHMAT, S.Pd.</p>
-                                        <p class="text-[10px] text-gray-500 font-medium">NIP. <span class="font-bold text-blue-950 font-mono">198503122010011002</span></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-[11px] font-semibold inline-flex items-center gap-1">
-                                    <i class="fas fa-school text-gray-500"></i> SDN Balung Lor 01
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-800">
-                                    <i class="fas fa-file-pdf text-rose-600 text-sm"></i>
-                                    <span>SK Kepegawaian (SK_PNS_2026.pdf)</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 border border-amber-200 text-[11px] font-bold inline-flex items-center gap-1">
-                                    <i class="fas fa-hourglass-half text-amber-700"></i> Menunggu Verifikasi
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <button onclick="openVerificationModal('SURAHMAT, S.Pd.', 'SDN Balung Lor 01', 'SK Kepegawaian', 'SK_PNS_2026.pdf')" class="px-2.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold rounded-lg transition shadow-2xs">
-                                        <i class="fas fa-eye"></i> Tinjau &amp; Verifikasi
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 2: Disetujui -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">2</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
-                                        SN
-                                    </div>
-                                    <div class="truncate">
-                                        <p class="font-extrabold text-gray-900 text-xs truncate">SITI NURHALIZA, S.Pd.</p>
-                                        <p class="text-[10px] text-gray-500 font-medium">NIP. <span class="font-bold text-blue-950 font-mono">199004152014022005</span></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-[11px] font-semibold inline-flex items-center gap-1">
-                                    <i class="fas fa-school text-gray-500"></i> SDN Balung Lor 02
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-800">
-                                    <i class="fas fa-certificate text-emerald-600 text-sm"></i>
-                                    <span>Sertifikat Pendidik (Serdik_2025.pdf)</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-200 text-[11px] font-bold inline-flex items-center gap-1">
-                                    <i class="fas fa-circle-check text-emerald-700"></i> Disetujui &amp; Valid
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <button onclick="alert('Dokumen ini sudah terverifikasi valid.')" class="px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition">
-                                        <i class="fas fa-circle-info"></i> Detail Validasi
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 3: Ditolak -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">3</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-rose-700 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
-                                        BH
-                                    </div>
-                                    <div class="truncate">
-                                        <p class="font-extrabold text-gray-900 text-xs truncate">BAMBANG HERMANTO, S.T.</p>
-                                        <p class="text-[10px] text-gray-500 font-medium">NIP. <span class="font-bold text-blue-950 font-mono">197811092005011003</span></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-[11px] font-semibold inline-flex items-center gap-1">
-                                    <i class="fas fa-school text-gray-500"></i> SDN Balung Lor 03
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-800">
-                                    <i class="fas fa-graduation-cap text-purple-600 text-sm"></i>
-                                    <span>Ijazah Terakhir (Ijazah_S1.pdf)</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-rose-100 text-rose-900 border border-rose-200 text-[11px] font-bold inline-flex items-center gap-1">
-                                    <i class="fas fa-circle-xmark text-rose-700"></i> Ditolak (File Buram)
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <button onclick="alert('Alasan Penolakan: Berkas scan ijazah buram dan nomor ijazah tidak terbaca.')" class="px-2.5 py-1.5 bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold rounded-lg transition hover:bg-rose-100">
-                                        <i class="fas fa-circle-exclamation"></i> Alasan Ditolak
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 4: Menunggu Verifikasi -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">4</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-blue-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
-                                        RM
-                                    </div>
-                                    <div class="truncate">
-                                        <p class="font-extrabold text-gray-900 text-xs truncate">RETNO MUSTIKA RINI, S.Pd.</p>
-                                        <p class="text-[10px] text-gray-500 font-medium">NIP. <span class="font-bold text-blue-950 font-mono">198205202008012010</span></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-[11px] font-semibold inline-flex items-center gap-1">
-                                    <i class="fas fa-school text-gray-500"></i> SDN Gelang 01
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-800">
-                                    <i class="fas fa-file-pdf text-rose-600 text-sm"></i>
-                                    <span>SK Kepegawaian (SK_Kepsek_2026.pdf)</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 border border-amber-200 text-[11px] font-bold inline-flex items-center gap-1">
-                                    <i class="fas fa-hourglass-half text-amber-700"></i> Menunggu Verifikasi
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <button onclick="openVerificationModal('RETNO MUSTIKA RINI, S.Pd.', 'SDN Gelang 01', 'SK Kepegawaian', 'SK_Kepsek_2026.pdf')" class="px-2.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold rounded-lg transition shadow-2xs">
-                                        <i class="fas fa-eye"></i> Tinjau &amp; Verifikasi
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 5: Disetujui -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">5</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
-                                        LH
-                                    </div>
-                                    <div class="truncate">
-                                        <p class="font-extrabold text-gray-900 text-xs truncate">LUKMAN HADI, S.Pd.</p>
-                                        <p class="text-[10px] text-gray-500 font-medium">NIP. <span class="font-bold text-blue-950 font-mono">198701012011011004</span></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-[11px] font-semibold inline-flex items-center gap-1">
-                                    <i class="fas fa-school text-gray-500"></i> SDN Gelang 04
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-800">
-                                    <i class="fas fa-certificate text-emerald-600 text-sm"></i>
-                                    <span>Sertifikat Pendidik (Serdik_Lukman.pdf)</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-200 text-[11px] font-bold inline-flex items-center gap-1">
-                                    <i class="fas fa-circle-check text-emerald-700"></i> Disetujui &amp; Valid
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <button onclick="alert('Dokumen ini sudah terverifikasi valid.')" class="px-2.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition">
-                                        <i class="fas fa-circle-info"></i> Detail Validasi
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 6: Draft / Belum Upload -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">6</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-gray-600 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
-                                        AR
-                                    </div>
-                                    <div class="truncate">
-                                        <p class="font-extrabold text-gray-900 text-xs truncate">AHMAD RIFAI, S.Pd.</p>
-                                        <p class="text-[10px] text-gray-500 font-medium">NIP. <span class="font-bold text-blue-950 font-mono">199208142022031001</span></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-[11px] font-semibold inline-flex items-center gap-1">
-                                    <i class="fas fa-school text-gray-500"></i> SDN Curahlele 01
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-400 italic">
-                                    <i class="fas fa-file-circle-minus text-gray-400 text-sm"></i>
-                                    <span>Belum Diunggah</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-700 border border-gray-200 text-[11px] font-bold inline-flex items-center gap-1">
-                                    <i class="fas fa-clock-rotate-left text-gray-500"></i> Draft / Belum Upload
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <span class="text-xs text-gray-400 italic">Menunggu Ops Sekolah</span>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 7: Menunggu Verifikasi -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">7</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-blue-900 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
-                                        DA
-                                    </div>
-                                    <div class="truncate">
-                                        <p class="font-extrabold text-gray-900 text-xs truncate">DEWI ANGGRAENI, S.Pd.</p>
-                                        <p class="text-[10px] text-gray-500 font-medium">NIP. <span class="font-bold text-blue-950 font-mono">199512032023012002</span></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-[11px] font-semibold inline-flex items-center gap-1">
-                                    <i class="fas fa-school text-gray-500"></i> SDN Puger 01
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-800">
-                                    <i class="fas fa-graduation-cap text-purple-600 text-sm"></i>
-                                    <span>Ijazah Terakhir (Ijazah_S1_Dewi.pdf)</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-900 border border-amber-200 text-[11px] font-bold inline-flex items-center gap-1">
-                                    <i class="fas fa-hourglass-half text-amber-700"></i> Menunggu Verifikasi
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <button onclick="openVerificationModal('DEWI ANGGRAENI, S.Pd.', 'SDN Puger 01', 'Ijazah Terakhir', 'Ijazah_S1_Dewi.pdf')" class="px-2.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold rounded-lg transition shadow-2xs">
-                                        <i class="fas fa-eye"></i> Tinjau &amp; Verifikasi
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 8: Ditolak -->
-                        <tr class="hover:bg-gray-50/50 transition">
-                            <td class="px-4 py-4 text-center font-bold text-gray-400 text-xs">8</td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full bg-rose-700 text-white font-extrabold text-xs flex items-center justify-center shadow-xs flex-shrink-0">
-                                        HP
-                                    </div>
-                                    <div class="truncate">
-                                        <p class="font-extrabold text-gray-900 text-xs truncate">HERU PRASETYO, M.Pd.</p>
-                                        <p class="text-[10px] text-gray-500 font-medium">NIP. <span class="font-bold text-blue-950 font-mono">197906182006041005</span></p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-[11px] font-semibold inline-flex items-center gap-1">
-                                    <i class="fas fa-school text-gray-500"></i> SMPN 1 Balung
-                                </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="flex items-center gap-1.5 text-xs font-bold text-gray-800">
-                                    <i class="fas fa-file-pdf text-rose-600 text-sm"></i>
-                                    <span>SK Kepegawaian (SK_Golongan_IV.pdf)</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="px-2.5 py-1 rounded-md bg-rose-100 text-rose-900 border border-rose-200 text-[11px] font-bold inline-flex items-center gap-1">
-                                    <i class="fas fa-circle-xmark text-rose-700"></i> Ditolak (SK Kedaluwarsa)
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex items-center justify-end gap-1.5">
-                                    <button onclick="alert('Alasan Penolakan: Masa berlaku SK telah berakhir, harap unggah SK Jabatan terbaru.')" class="px-2.5 py-1.5 bg-rose-50 text-rose-700 border border-rose-200 text-xs font-bold rounded-lg transition hover:bg-rose-100">
-                                        <i class="fas fa-circle-exclamation"></i> Alasan Ditolak
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
+                                </td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </div>
 
-            <!-- Table Pagination (Matches Custom SIMPEG-SP UI Styling) -->
-            <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 bg-gray-50/50">
-                <span class="text-xs text-gray-500 font-medium">
-                    Halaman <span class="font-bold text-gray-800">1</span> dari <span class="font-bold text-gray-800">1</span> (Menampilkan 1 - 8 dari 8 Dokumen Verifikasi)
-                </span>
-                <div class="flex items-center gap-1">
-                    <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-left"></i></span>
-                    <span class="px-3 py-1.5 text-xs bg-blue-800 text-white font-bold rounded-lg shadow-sm">1</span>
-                    <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-right"></i></span>
+            <!-- Table Pagination -->
+            @if(isset($pegawais) && method_exists($pegawais, 'hasPages') && $pegawais->hasPages())
+                <div class="px-6 py-4 border-t border-gray-100 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-3.5 bg-gray-50/50 text-center lg:text-left">
+                    <span class="text-xs text-gray-500 font-medium text-center lg:text-left">
+                        Halaman <span class="font-bold text-gray-800">{{ $pegawais->currentPage() }}</span> dari <span class="font-bold text-gray-800">{{ $pegawais->lastPage() }}</span> (Menampilkan {{ $pegawais->firstItem() }} - {{ $pegawais->lastItem() }} dari {{ $pegawais->total() }} Data Berkas)
+                    </span>
+                    <div class="flex items-center justify-center gap-1">
+                        {{-- Previous Page Link --}}
+                        @if ($pegawais->onFirstPage())
+                            <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-left"></i></span>
+                        @else
+                            <a href="{{ $pegawais->previousPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 bg-white transition"><i class="fas fa-chevron-left"></i></a>
+                        @endif
+
+                        {{-- Pagination Elements --}}
+                        @foreach ($pegawais->getUrlRange(max(1, $pegawais->currentPage() - 2), min($pegawais->lastPage(), $pegawais->currentPage() + 2)) as $page => $url)
+                            @if ($page == $pegawais->currentPage())
+                                <span class="px-3 py-1.5 text-xs bg-blue-800 text-white font-bold rounded-lg shadow-sm">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 bg-white transition">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        {{-- Next Page Link --}}
+                        @if ($pegawais->hasMorePages())
+                            <a href="{{ $pegawais->nextPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-100 bg-white transition"><i class="fas fa-chevron-right"></i></a>
+                        @else
+                            <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-right"></i></span>
+                        @endif
+                    </div>
                 </div>
-            </div>
+            @endif
 
         </div>
 
     </div>
-
-    <!-- MODAL TINJAU & VERIFIKASI BERKAS -->
-    <div id="verificationModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-gray-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-5 animate-fadeIn">
-            
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 class="text-sm font-extrabold text-blue-950 flex items-center gap-2">
-                    <i class="fas fa-shield-halved text-blue-800"></i>
-                    Verifikasi Dokumen Pegawai
-                </h3>
-                <button onclick="closeVerificationModal()" class="text-gray-400 hover:text-gray-600">
-                    <i class="fas fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <div class="space-y-3 bg-gray-50/80 rounded-xl p-4 border border-gray-100 text-xs">
-                <div class="grid grid-cols-3 gap-2">
-                    <span class="text-gray-400 font-semibold">Nama Pegawai:</span>
-                    <span id="modalPegawaiName" class="col-span-2 font-bold text-gray-900"></span>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <span class="text-gray-400 font-semibold">Satuan Pendidikan:</span>
-                    <span id="modalSekolahName" class="col-span-2 font-bold text-gray-900"></span>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <span class="text-gray-400 font-semibold">Jenis Dokumen:</span>
-                    <span id="modalJenisDoc" class="col-span-2 font-bold text-blue-800"></span>
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <span class="text-gray-400 font-semibold">Nama File:</span>
-                    <span id="modalFileName" class="col-span-2 font-mono font-bold text-gray-700"></span>
-                </div>
-            </div>
-
-            <!-- PDF Viewer Mock Preview -->
-            <div class="bg-gray-900 rounded-xl p-8 text-center text-white space-y-2 border border-gray-800">
-                <i class="fas fa-file-pdf text-4xl text-rose-500"></i>
-                <p class="text-xs font-bold">Preview Dokumen Digital</p>
-                <p id="modalFileNameSub" class="text-[10px] text-gray-400 font-mono"></p>
-                <button onclick="alert('Membuka file dokumen di tab baru...')" class="inline-block mt-2 px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-lg text-xs font-bold shadow-xs">
-                    <i class="fas fa-external-link-alt text-[10px] mr-1"></i> Buka Fullscreen PDF
-                </button>
-            </div>
-
-            <!-- Modal Action Buttons -->
-            <div class="flex items-center justify-between pt-2 border-t border-gray-100">
-                <button onclick="closeVerificationModal()" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition">
-                    Batal
-                </button>
-                <div class="flex items-center gap-2">
-                    <button onclick="handleRejectAction()" class="px-4 py-2 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white border border-rose-200 text-xs font-bold rounded-lg transition">
-                        <i class="fas fa-times-circle mr-1"></i> Tolak Berkas
-                    </button>
-                    <button onclick="handleApproveAction()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition shadow-md shadow-emerald-600/20">
-                        <i class="fas fa-check-circle mr-1"></i> Setujui &amp; Sahkan
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <script>
-        function openVerificationModal(name, sekolah, jenis, file) {
-            document.getElementById('modalPegawaiName').innerText = name;
-            document.getElementById('modalSekolahName').innerText = sekolah;
-            document.getElementById('modalJenisDoc').innerText = jenis;
-            document.getElementById('modalFileName').innerText = file;
-            document.getElementById('modalFileNameSub').innerText = file;
-            
-            document.getElementById('verificationModal').classList.remove('hidden');
-        }
-
-        function closeVerificationModal() {
-            document.getElementById('verificationModal').classList.add('hidden');
-        }
-
-        function handleApproveAction() {
-            alert('Sukses! Berkas dokumen berhasil disetujui dan disahkan.');
-            closeVerificationModal();
-        }
-
-        function handleRejectAction() {
-            const reason = prompt('Masukkan alasan penolakan berkas:');
-            if (reason) {
-                alert(`Berkas ditolak dengan alasan: "${reason}"`);
-                closeVerificationModal();
-            }
-        }
-    </script>
 @endsection

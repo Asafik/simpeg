@@ -3,9 +3,6 @@
 @section('title', 'Setting & Konfigurasi - SIMPEG-SP')
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- ===== HERO BLUE BANNER (Exact Hope UI 2-Wave Design - Deep Blue) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">

@@ -9,9 +9,6 @@
 @section('title', $title)
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- ===== HERO BLUE BANNER (Exact Hope UI 2-Wave Design - Deep Blue) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">
@@ -327,8 +324,8 @@
                     <div class="relative bg-gray-50/60 hover:bg-blue-50/40 border-2 border-dashed border-gray-200 hover:border-blue-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_sk_input').click()">
                         
-                        <input type="file" name="file_sk" id="file_sk_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden"
-                               onchange="handleFileUploadPreview(this, 'file_sk_preview', 'file_sk_info', 'file_sk_icon')">
+                        <input type="file" name="file_sk" id="file_sk_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                               onchange="handleFileUploadPreview(this, 'file_sk_preview', 'file_sk_info', 'file_sk_icon', 'file_sk_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-blue-100/80 group-hover:bg-blue-800 text-blue-800 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
@@ -336,7 +333,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-gray-800 group-hover:text-blue-900 transition">SK Kepegawaian</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Format: PDF, JPG, PNG (Max 2MB)</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
                             </div>
 
                             @if(isset($pegawai->file_sk) && $pegawai->file_sk)
@@ -346,7 +343,7 @@
                                         <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
                                     </div>
                                     <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                        Lihat <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
+                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
                                     </a>
                                 </div>
                             @endif
@@ -354,7 +351,7 @@
                             <div id="file_sk_preview" class="hidden mt-2 bg-white border border-blue-200 rounded-lg p-2 text-left shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2 truncate">
-                                        <i class="fas fa-file-pdf text-rose-500 text-sm"></i>
+                                        <i id="file_sk_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
                                         <span id="file_sk_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
                                     </div>
                                     <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
@@ -373,8 +370,8 @@
                     <div class="relative bg-gray-50/60 hover:bg-emerald-50/40 border-2 border-dashed border-gray-200 hover:border-emerald-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_serdik_input').click()">
                         
-                        <input type="file" name="file_serdik" id="file_serdik_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden"
-                               onchange="handleFileUploadPreview(this, 'file_serdik_preview', 'file_serdik_info', 'file_serdik_icon')">
+                        <input type="file" name="file_serdik" id="file_serdik_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                               onchange="handleFileUploadPreview(this, 'file_serdik_preview', 'file_serdik_info', 'file_serdik_icon', 'file_serdik_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-emerald-100/80 group-hover:bg-emerald-700 text-emerald-700 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
@@ -382,7 +379,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-gray-800 group-hover:text-emerald-900 transition">Sertifikat Pendidik (Serdik)</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Format: PDF, JPG, PNG (Max 2MB)</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
                             </div>
 
                             @if(isset($pegawai->file_serdik) && $pegawai->file_serdik)
@@ -392,7 +389,7 @@
                                         <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
                                     </div>
                                     <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                        Lihat <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
+                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
                                     </a>
                                 </div>
                             @endif
@@ -400,7 +397,7 @@
                             <div id="file_serdik_preview" class="hidden mt-2 bg-white border border-emerald-200 rounded-lg p-2 text-left shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2 truncate">
-                                        <i class="fas fa-file-pdf text-rose-500 text-sm"></i>
+                                        <i id="file_serdik_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
                                         <span id="file_serdik_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
                                     </div>
                                     <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
@@ -419,8 +416,8 @@
                     <div class="relative bg-gray-50/60 hover:bg-purple-50/40 border-2 border-dashed border-gray-200 hover:border-purple-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_ijazah_input').click()">
                         
-                        <input type="file" name="file_ijazah" id="file_ijazah_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden"
-                               onchange="handleFileUploadPreview(this, 'file_ijazah_preview', 'file_ijazah_info', 'file_ijazah_icon')">
+                        <input type="file" name="file_ijazah" id="file_ijazah_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                               onchange="handleFileUploadPreview(this, 'file_ijazah_preview', 'file_ijazah_info', 'file_ijazah_icon', 'file_ijazah_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-purple-100/80 group-hover:bg-purple-700 text-purple-700 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
@@ -428,7 +425,7 @@
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-gray-800 group-hover:text-purple-900 transition">Ijazah Terakhir</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Format: PDF, JPG, PNG (Max 2MB)</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
                             </div>
 
                             @if(isset($pegawai->file_ijazah) && $pegawai->file_ijazah)
@@ -438,7 +435,7 @@
                                         <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
                                     </div>
                                     <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                        Lihat <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
+                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
                                     </a>
                                 </div>
                             @endif
@@ -446,7 +443,7 @@
                             <div id="file_ijazah_preview" class="hidden mt-2 bg-white border border-purple-200 rounded-lg p-2 text-left shadow-sm">
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center gap-2 truncate">
-                                        <i class="fas fa-file-pdf text-rose-500 text-sm"></i>
+                                        <i id="file_ijazah_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
                                         <span id="file_ijazah_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
                                     </div>
                                     <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
@@ -467,12 +464,11 @@
             <!-- Form Actions -->
             <div class="flex items-center justify-end gap-3 pt-2">
                 <a href="{{ route('pegawai.index') }}" class="px-5 py-2.5 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition">Batal</a>
-                <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-800 hover:bg-blue-900 rounded-lg shadow-md shadow-blue-900/30 transition flex items-center gap-2">
+                <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-800 hover:bg-blue-900 rounded-lg shadow-md shadow-blue-900/30 transition flex items-center gap-2 cursor-pointer">
                     <i class="fas fa-save"></i> {{ $isEdit ? 'Perbarui Data Pegawai' : 'Simpan Data Pegawai' }}
                 </button>
             </div>
 
-        </form>
         </form>
     </div>
 
@@ -595,19 +591,40 @@
                     }
                 }
             }
-        function handleFileUploadPreview(input, previewId, infoId, iconId) {
+        });
+
+        window.handleFileUploadPreview = function(input, previewId, infoId, iconId, previewIconId) {
             if (input.files && input.files[0]) {
                 const file = input.files[0];
                 const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                const ext = file.name.split('.').pop().toLowerCase();
                 
                 const infoElem = document.getElementById(infoId);
                 const previewElem = document.getElementById(previewId);
                 const iconElem = document.getElementById(iconId);
+                const previewIconElem = document.getElementById(previewIconId);
                 
-                if (infoElem) infoElem.innerText = `${file.name} (${fileSizeMB} MB)`;
-                if (previewElem) previewElem.classList.remove('hidden');
-                if (iconElem) iconElem.className = 'fas fa-circle-check text-xl';
+                // Dynamic File Type Icon
+                if (previewIconElem) {
+                    if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
+                        previewIconElem.className = 'fas fa-file-image text-blue-600 text-sm';
+                    } else if (ext === 'pdf') {
+                        previewIconElem.className = 'fas fa-file-pdf text-rose-500 text-sm';
+                    } else {
+                        previewIconElem.className = 'fas fa-file text-gray-500 text-sm';
+                    }
+                }
+
+                if (infoElem) {
+                    infoElem.innerText = `${file.name} (${fileSizeMB} MB)`;
+                }
+                if (previewElem) {
+                    previewElem.classList.remove('hidden');
+                }
+                if (iconElem) {
+                    iconElem.className = 'fas fa-circle-check text-xl text-emerald-600';
+                }
             }
-        }
+        };
     </script>
 @endsection

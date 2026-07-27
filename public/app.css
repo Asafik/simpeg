@@ -55,6 +55,27 @@ body {
     opacity: 1 !important;
 }
 
+/* ===== MOBILE SIDEBAR OVERLAY & BLUR (Z-INDEX 9998 & 9999) ===== */
+@media (max-width: 767px) {
+    #sidebarOverlay {
+        display: none;
+    }
+    #sidebarOverlay.active {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: rgba(15, 23, 42, 0.75) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        z-index: 9998 !important;
+    }
+    #sidebar {
+        z-index: 9999 !important;
+    }
+}
+
 /* ===== HOPE UI MINI SIDEBAR STYLES ===== */
 @media (min-width: 768px) {
     #sidebar.mini-sidebar {

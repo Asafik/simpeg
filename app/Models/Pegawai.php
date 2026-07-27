@@ -38,11 +38,16 @@ class Pegawai extends Model
         'file_sk',
         'file_serdik',
         'file_ijazah',
+        'status_verifikasi',
+        'catatan_verifikasi',
+        'tgl_verifikasi',
+        'verified_by',
     ];
 
     protected $casts = [
         'is_serdik' => 'boolean',
         'tanggal_lahir' => 'date',
+        'tgl_verifikasi' => 'datetime',
     ];
 
     protected $appends = ['usia'];
@@ -50,6 +55,11 @@ class Pegawai extends Model
     public function sekolah(): BelongsTo
     {
         return $this->belongsTo(Sekolah::class, 'sekolah_id');
+    }
+
+    public function verifier(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 
     public function getUsiaAttribute(): int

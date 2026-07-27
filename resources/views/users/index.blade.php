@@ -3,9 +3,6 @@
 @section('title', 'Manajemen User - SIMPEG-SP')
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- ===== HERO BLUE BANNER (Exact Hope UI 2-Wave Design - Deep Blue) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">
@@ -62,7 +59,7 @@
         @endif
 
         <!-- SUMMARY METRIC CARDS (Exact Match to Sekolah Index UI) -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 -mt-12 md:-mt-14 mb-6 relative z-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 -mt-12 md:-mt-14 mb-6 relative z-10">
             
             <!-- Card 1: Total Pengguna -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
@@ -287,11 +284,11 @@
 
             <!-- Table Pagination (Matches Custom SIMPEG-SP UI Styling) -->
             @if(isset($users) && method_exists($users, 'hasPages') && $users->hasPages())
-                <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 bg-gray-50/50">
-                    <span class="text-xs text-gray-500 font-medium">
+                <div class="px-6 py-4 border-t border-gray-100 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-3.5 bg-gray-50/50 text-center lg:text-left">
+                    <span class="text-xs text-gray-500 font-medium text-center lg:text-left">
                         Halaman <span class="font-bold text-gray-800">{{ $users->currentPage() }}</span> dari <span class="font-bold text-gray-800">{{ $users->lastPage() }}</span> (Menampilkan {{ $users->firstItem() }} - {{ $users->lastItem() }} dari {{ $users->total() }} Akun Pengguna)
                     </span>
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center justify-center gap-1">
                         {{-- Previous Page Link --}}
                         @if ($users->onFirstPage())
                             <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-left"></i></span>

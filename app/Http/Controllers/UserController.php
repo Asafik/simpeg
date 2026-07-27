@@ -13,10 +13,24 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     /**
+     * Helper to ensure only Admin Dinas can access user management.
+     */
+    private function ensureAdminAccess()
+    {
+        $user = Auth::user();
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            return redirect()->route('dashboard')->with('error', 'Akses Ditolak: Hanya Admin Dinas yang berhak mengelola akun pengguna sistem.');
+        }
+        return null;
+    }
+
+    /**
      * Display listing of system users (Admin Dinas & Operator Sekolah).
      */
     public function index(Request $request)
     {
+        if ($redirect = $this->ensureAdminAccess()) return $redirect;
+
         $search = $request->query('search');
         $role = $request->query('role');
 
@@ -63,6 +77,8 @@ class UserController extends Controller
      */
     public function create()
     {
+        if ($redirect = $this->ensureAdminAccess()) return $redirect;
+
         $sekolahs = Sekolah::orderBy('nama_sekolah')->get();
         return view('users.create', compact('sekolahs'));
     }
@@ -72,6 +88,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if ($redirect = $this->ensureAdminAccess()) return $redirect;
+
         $request->validate([
             'name'       => 'required|string|max:255',
             'username'   => 'required|string|max:255|unique:users,username',
@@ -115,6 +133,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        if ($redirect = $this->ensureAdminAccess()) return $redirect;
+
         $sekolahs = Sekolah::orderBy('nama_sekolah')->get();
         return view('users.create', compact('user', 'sekolahs'));
     }
@@ -124,6 +144,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        if ($redirect = $this->ensureAdminAccess()) return $redirect;
+
         $request->validate([
             'name'       => 'required|string|max:255',
             'username'   => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
@@ -171,6 +193,8 @@ class UserController extends Controller
      */
     public function resetPassword(User $user)
     {
+        if ($redirect = $this->ensureAdminAccess()) return $redirect;
+
         $newPassword = 'password';
         $user->update([
             'password' => Hash::make($newPassword),
@@ -187,6 +211,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if ($redirect = $this->ensureAdminAccess()) return $redirect;
+
         if (Auth::id() === $user->id) {
             return redirect()->route('users.index')
                 ->with('error', 'Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif digunakan.');

@@ -11,7 +11,7 @@
             const path = window.location.pathname;
             const isPublicPage = path === '/' || path === '/login' || path.startsWith('/landing') || 
                                  path.startsWith('/statistik') || path.startsWith('/layanan') || 
-                                 path.startsWith('/cek-ptk');
+                                 path.startsWith('/cek-ptk') || (path.startsWith('/pengumuman') && !path.startsWith('/admin'));
             if (isPublicPage) {
                 document.documentElement.setAttribute('data-theme', 'deep_blue');
             } else {
@@ -71,16 +71,19 @@
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
 
     @php
-        $isPublicPage = View::hasSection('hideNav') || Request::is('/') || Request::is('login') || Request::is('landing*') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*');
+        $isPublicPage = View::hasSection('hideNav') || Request::is('/') || Request::is('login') || Request::is('landing*') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || (Request::is('pengumuman*') && !Request::is('admin*'));
     @endphp
 
     @unless($isPublicPage)
-        <!-- Mobile Sidebar Overlay -->
-        <div class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" id="sidebarOverlay"></div>
+        <!-- Global Sidebar Navigation Partial -->
+        @include('layouts.sidebar')
+
+        <!-- Mobile Sidebar Overlay (Dark Dimmed + Backdrop Blur via app.css) -->
+        <div id="sidebarOverlay"></div>
     @endunless
 
     <!-- Main Content Wrapper (w-full 100% on public pages) -->
-    <main class="{{ $isPublicPage ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
+    <main class="{{ $isPublicPage ? 'w-full' : 'md:ml-[80px] lg:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
         @unless($isPublicPage)
             <!-- Top Navbar Partial -->
             @include('layouts.navbar')

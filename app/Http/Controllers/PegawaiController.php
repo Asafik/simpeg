@@ -107,9 +107,16 @@ class PegawaiController extends Controller
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'nullable|in:Laki-Laki,Perempuan',
             'agama' => 'nullable|string|max:50',
-            'file_sk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'file_serdik' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'file_ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'file_sk' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
+            'file_serdik' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
+            'file_ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
+        ], [
+            'file_sk.max' => 'Ukuran berkas SK Kepegawaian tidak boleh melebihi 20 MB.',
+            'file_sk.mimes' => 'Format berkas SK Kepegawaian harus PDF, JPG, JPEG, PNG, atau WEBP.',
+            'file_serdik.max' => 'Ukuran berkas Sertifikat Pendidik tidak boleh melebihi 20 MB.',
+            'file_serdik.mimes' => 'Format berkas Sertifikat Pendidik harus PDF, JPG, JPEG, PNG, atau WEBP.',
+            'file_ijazah.max' => 'Ukuran berkas Ijazah tidak boleh melebihi 20 MB.',
+            'file_ijazah.mimes' => 'Format berkas Ijazah harus PDF, JPG, JPEG, PNG, atau WEBP.',
         ]);
 
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $validated['sekolah_id'] != $user->sekolah_id) {
@@ -117,14 +124,21 @@ class PegawaiController extends Controller
         }
 
         // Upload files
+        $hasUpload = false;
         if ($request->hasFile('file_sk')) {
             $validated['file_sk'] = $request->file('file_sk')->store('berkas_pegawai/sk', 'public');
+            $hasUpload = true;
         }
         if ($request->hasFile('file_serdik')) {
             $validated['file_serdik'] = $request->file('file_serdik')->store('berkas_pegawai/serdik', 'public');
+            $hasUpload = true;
         }
         if ($request->hasFile('file_ijazah')) {
             $validated['file_ijazah'] = $request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public');
+            $hasUpload = true;
+        }
+        if ($hasUpload) {
+            $validated['status_verifikasi'] = 'MENUNGGU';
         }
 
         $pegawai = Pegawai::create($validated);
@@ -197,26 +211,40 @@ class PegawaiController extends Controller
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'nullable|in:Laki-Laki,Perempuan',
             'agama' => 'nullable|string|max:50',
-            'file_sk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'file_serdik' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
-            'file_ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'file_sk' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
+            'file_serdik' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
+            'file_ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
+        ], [
+            'file_sk.max' => 'Ukuran berkas SK Kepegawaian tidak boleh melebihi 20 MB.',
+            'file_sk.mimes' => 'Format berkas SK Kepegawaian harus PDF, JPG, JPEG, PNG, atau WEBP.',
+            'file_serdik.max' => 'Ukuran berkas Sertifikat Pendidik tidak boleh melebihi 20 MB.',
+            'file_serdik.mimes' => 'Format berkas Sertifikat Pendidik harus PDF, JPG, JPEG, PNG, atau WEBP.',
+            'file_ijazah.max' => 'Ukuran berkas Ijazah tidak boleh melebihi 20 MB.',
+            'file_ijazah.mimes' => 'Format berkas Ijazah harus PDF, JPG, JPEG, PNG, atau WEBP.',
         ]);
 
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $validated['sekolah_id'] != $user->sekolah_id) {
             return back()->withErrors(['sekolah_id' => 'Anda hanya dapat memperbarui data di sekolah Anda sendiri.']);
         }
 
+        $hasUpload = false;
         if ($request->hasFile('file_sk')) {
             if ($pegawai->file_sk) Storage::disk('public')->delete($pegawai->file_sk);
             $validated['file_sk'] = $request->file('file_sk')->store('berkas_pegawai/sk', 'public');
+            $hasUpload = true;
         }
         if ($request->hasFile('file_serdik')) {
             if ($pegawai->file_serdik) Storage::disk('public')->delete($pegawai->file_serdik);
             $validated['file_serdik'] = $request->file('file_serdik')->store('berkas_pegawai/serdik', 'public');
+            $hasUpload = true;
         }
         if ($request->hasFile('file_ijazah')) {
             if ($pegawai->file_ijazah) Storage::disk('public')->delete($pegawai->file_ijazah);
             $validated['file_ijazah'] = $request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public');
+            $hasUpload = true;
+        }
+        if ($hasUpload && ($pegawai->status_verifikasi === 'DRAFT' || $pegawai->status_verifikasi === 'REVISI')) {
+            $validated['status_verifikasi'] = 'MENUNGGU';
         }
 
         // Capture changes before update

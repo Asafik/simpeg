@@ -3,9 +3,6 @@
 @section('title', 'Detail ' . $sekolah->nama_sekolah . ' - SIMPEG-SP')
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- Reusable Loading Overlay Component -->
     @include('components.loading-overlay', [
         'id' => 'sekolahDetailOverlay',

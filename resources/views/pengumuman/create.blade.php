@@ -1,17 +1,14 @@
 @extends('layouts.app')
 
 @php
-    $isEdit = isset($isEdit) && $isEdit;
+    $isEdit = isset($announcement) && $announcement;
     $title = $isEdit ? 'Edit Pengumuman Publik - SIMPEG-SP' : 'Buat Pengumuman Publik Baru - SIMPEG-SP';
-    $formUrl = $isEdit ? route('pengumuman.update', $id ?? 1) : route('pengumuman.store');
+    $formUrl = $isEdit ? route('pengumuman.update', $announcement->id) : route('pengumuman.store');
 @endphp
 
 @section('title', $title)
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- ===== HERO BLUE BANNER (Exact Hope UI 2-Wave Design - Deep Blue) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">
@@ -55,6 +52,17 @@
     <!-- Page Content Container -->
     <div class="px-6 md:px-8 pb-8 flex-1 w-full -mt-8 relative z-20">
         
+        @if ($errors->any())
+            <div class="mb-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs rounded-xl p-4 shadow-md space-y-1">
+                <p class="font-bold flex items-center gap-1.5"><i class="fas fa-triangle-exclamation text-rose-600"></i> Terdapat kesalahan pengisian form:</p>
+                <ul class="list-disc list-inside pl-2 space-y-0.5">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ $formUrl }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @if($isEdit)
@@ -73,54 +81,68 @@
                     <!-- Judul Pengumuman -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Judul Pengumuman / Edaran Resmi <span class="text-red-500">*</span></label>
-                        <input type="text" name="judul" value="{{ $isEdit ? 'Jadwal Pemutakhiran Data Mandiri Pegawai Semester 1 Tahun 2026' : '' }}" placeholder="Contoh: Edaran Pemutakhiran Berkas SK & Serdik Tahun 2026" required
+                        <input type="text" name="judul" value="{{ old('judul', $announcement->judul ?? '') }}" placeholder="Contoh: Edaran Pemutakhiran Berkas SK & Serdik Tahun 2026" required
                             class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none font-medium">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         
-                        <!-- Target Audience -->
+                        <!-- Kategori -->
                         <div>
-                            <label class="block text-xs font-semibold text-gray-700 mb-1">Target Sasaran Penerima (Audience) <span class="text-red-500">*</span></label>
-                            <select name="target_audience" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none cursor-pointer">
-                                <option value="SEMUA">Semua Pegawai &amp; Operator Sekolah</option>
-                                <option value="OPERATOR">Operator Sekolah Saja</option>
-                                <option value="GURU_SERDIK">Guru Bersertifikasi (Serdik)</option>
-                                <option value="PPPK">Pegawai PPPK Saja</option>
-                                <option value="PUBLIK">Publik &amp; Umum</option>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori Pengumuman <span class="text-red-500">*</span></label>
+                            <select name="kategori" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none cursor-pointer">
+                                @php $kat = old('kategori', $announcement->kategori ?? 'Informasi Umum'); @endphp
+                                <option value="Informasi Umum" {{ $kat == 'Informasi Umum' ? 'selected' : '' }}>Informasi Umum</option>
+                                <option value="Penting" {{ $kat == 'Penting' ? 'selected' : '' }}>Penting</option>
+                                <option value="Verifikasi" {{ $kat == 'Verifikasi' ? 'selected' : '' }}>Verifikasi</option>
+                                <option value="Surat Edaran" {{ $kat == 'Surat Edaran' ? 'selected' : '' }}>Surat Edaran</option>
                             </select>
                         </div>
 
                         <!-- Status Terbit -->
                         <div>
                             <label class="block text-xs font-semibold text-gray-700 mb-1">Status Terbit / Publikasi <span class="text-red-500">*</span></label>
-                            <select name="status" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none cursor-pointer font-bold text-blue-900">
-                                <option value="PUBLISHED">Langsung Dipublikasikan (Aktif)</option>
-                                <option value="DRAFT">Simpan Sebagai Draft</option>
+                            @php $pub = old('is_published', $announcement->is_published ?? true); @endphp
+                            <select name="is_published" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none cursor-pointer font-bold text-blue-900">
+                                <option value="1" {{ $pub ? 'selected' : '' }}>Langsung Dipublikasikan (Aktif)</option>
+                                <option value="0" {{ !$pub ? 'selected' : '' }}>Simpan Sebagai Draft</option>
                             </select>
                         </div>
 
                     </div>
 
+                    <!-- Ringkasan Singkat -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Ringkasan Singkat (Sub-judul / Preview)</label>
+                        <input type="text" name="ringkasan" value="{{ old('ringkasan', $announcement->ringkasan ?? '') }}" placeholder="Sub-judul singkat yang muncul pada pengumuman..." 
+                               class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none font-medium">
+                    </div>
+
                     <!-- Isi Pengumuman -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Isi / Detail Pengumuman Lengkap <span class="text-red-500">*</span></label>
-                        <textarea name="content" rows="7" placeholder="Tuliskan petunjuk edaran, tenggat waktu, serta rincian persyaratan secara lengkap..." required
-                            class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg p-3.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none font-normal leading-relaxed">{{ $isEdit ? 'Diberitahukan kepada seluruh ASN & Non-ASN Dinas Pendidikan Kabupaten Jember untuk memperbarui dokumen SK dan Ijazah sebelum tanggal 15 Agustus 2026.' : '' }}</textarea>
+                        <textarea name="isi" rows="7" placeholder="Tuliskan petunjuk edaran, tenggat waktu, serta rincian persyaratan secara lengkap..." required
+                            class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg p-3.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none font-normal leading-relaxed">{{ old('isi', $announcement->isi ?? '') }}</textarea>
                     </div>
 
                     <!-- Lampiran Berkas PDF -->
                     <div class="border-2 border-dashed border-gray-200 hover:border-blue-500 rounded-2xl p-5 text-center bg-gray-50/60 transition group cursor-pointer"
                          onclick="document.getElementById('attachment_input').click()">
-                        <input type="file" name="attachment" id="attachment_input" accept=".pdf" class="hidden">
+                        <input type="file" name="lampiran" id="attachment_input" accept=".pdf,.jpg,.png,.docx" class="hidden"
+                               onchange="if(this.files[0]) document.getElementById('file_info').innerText = this.files[0].name">
                         <div class="space-y-1.5">
                             <div class="w-10 h-10 rounded-2xl bg-rose-100 group-hover:bg-rose-600 text-rose-600 group-hover:text-white mx-auto flex items-center justify-center transition shadow-xs">
                                 <i class="fas fa-file-pdf text-lg"></i>
                             </div>
-                            <p class="text-xs font-bold text-gray-800">Upload Surat Edaran / Lampiran PDF (Opsional)</p>
-                            <p class="text-[10px] text-gray-400">Format: PDF (Maksimal 5 MB)</p>
+                            <p class="text-xs font-bold text-gray-800">Upload Surat Edaran / Lampiran Berkas (Opsional)</p>
+                            <p class="text-[10px] text-gray-400">Format: PDF, DOCX, JPG, PNG (Max 10MB)</p>
+                            <div id="file_info" class="text-xs font-bold text-blue-800">
+                                @if(isset($announcement->lampiran_file) && $announcement->lampiran_file)
+                                    Lampiran Terunggah: {{ basename($announcement->lampiran_file) }}
+                                @endif
+                            </div>
                             <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-blue-300 group-hover:text-blue-800 transition mt-1">
-                                <i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas Surat Edaran
+                                <i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas Lampiran
                             </span>
                         </div>
                     </div>
@@ -130,7 +152,7 @@
                 <!-- Form Actions -->
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                     <a href="{{ route('pengumuman.index') }}" class="px-5 py-2.5 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition">Batal</a>
-                    <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-800 hover:bg-blue-900 rounded-lg shadow-md shadow-blue-900/30 transition flex items-center gap-2">
+                    <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-800 hover:bg-blue-900 rounded-lg shadow-md shadow-blue-900/30 transition flex items-center gap-2 cursor-pointer">
                         <i class="fas fa-save"></i> {{ $isEdit ? 'Perbarui Pengumuman' : 'Simpan & Publis Pengumuman' }}
                     </button>
                 </div>

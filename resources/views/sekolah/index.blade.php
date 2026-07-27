@@ -3,9 +3,6 @@
 @section('title', 'Kelola Sekolah - SIMPEG-SP')
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- Reusable Loading Overlay Component -->
     @include('components.loading-overlay', [
         'id' => 'sekolahLoadingOverlay',
@@ -62,7 +59,7 @@
         @endif
         
         <!-- ===== 4 OVERLAPPING SUMMARY METRIC CARDS (DASHBOARD STYLE) ===== -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 -mt-12 md:-mt-14 mb-6 relative z-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 -mt-12 md:-mt-14 mb-6 relative z-10">
             
             <!-- Card 1: Total Satuan Pendidikan -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
@@ -140,7 +137,7 @@
             </div>
 
             <!-- Filter Inputs Form -->
-            <form action="{{ url('/sekolah') }}" method="GET" id="sekolahFilterForm" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            <form action="{{ url('/sekolah') }}" method="GET" id="sekolahFilterForm" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
                 
                 <!-- Search Input -->
                 <div class="col-span-1 sm:col-span-2 md:col-span-1">
@@ -222,7 +219,7 @@
             </div>
 
             <div class="table-scroll overflow-x-auto">
-                <table class="w-full text-sm text-left">
+                <table class="w-full min-w-[1200px] text-sm text-left">
                     <thead class="bg-gray-50/80 border-b border-gray-100 text-[11px] uppercase tracking-wider text-gray-500 font-semibold">
                         <tr>
                             <th class="px-4 py-3.5 text-center">No.</th>
@@ -313,11 +310,11 @@
 
             <!-- Table Pagination (Matches Custom SIMPEG-SP UI Styling) -->
             @if(isset($sekolahs) && method_exists($sekolahs, 'hasPages') && $sekolahs->hasPages())
-                <div class="px-6 py-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 bg-gray-50/50">
-                    <span class="text-xs text-gray-500 font-medium">
+                <div class="px-6 py-4 border-t border-gray-100 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-3.5 bg-gray-50/50 text-center lg:text-left">
+                    <span class="text-xs text-gray-500 font-medium text-center lg:text-left">
                         Halaman <span class="font-bold text-gray-800">{{ $sekolahs->currentPage() }}</span> dari <span class="font-bold text-gray-800">{{ $sekolahs->lastPage() }}</span> (Menampilkan {{ $sekolahs->firstItem() }} - {{ $sekolahs->lastItem() }} dari {{ $sekolahs->total() }} Sekolah)
                     </span>
-                    <div class="flex items-center gap-1">
+                    <div class="flex items-center justify-center gap-1">
                         {{-- Previous Page Link --}}
                         @if ($sekolahs->onFirstPage())
                             <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-left"></i></span>
@@ -373,4 +370,6 @@
                     form.submit();
                 });
             });
+        });
+    </script>
 @endsection
