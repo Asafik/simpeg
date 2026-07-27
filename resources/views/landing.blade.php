@@ -59,7 +59,7 @@
 @section('content')
     <!-- ===== UNIFIED FULL-SCREEN HERO HEADER BLOCK ===== -->
     <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white relative overflow-hidden min-h-screen flex flex-col justify-between shadow-2xl">
-        
+
         <!-- Hope UI Background Wave Gradient Overlay -->
         <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 600">
             <path d="M 200,600 C 360,320 520,60 750,0 L 1000,0 L 1000,600 Z" fill="url(#landingWaveGrad1)"></path>
@@ -120,7 +120,7 @@
 
         <!-- 2. Hero Section Grid (Entrance Animations: Slower 1.4s Slide In) -->
         <section id="beranda" class="w-full px-6 md:px-12 pt-24 md:pt-32 pb-20 md:pb-28 relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center flex-1 my-auto">
-            
+
             <!-- Left Text Column (Slides in Slower from Left - 1.4s) -->
             <div class="space-y-6 text-left animate-fade-left">
                 <!-- Main Title Header -->
@@ -173,7 +173,7 @@
     <!-- ===== REAL-TIME PUBLIC STATS CARDS (SLOWER SCROLL REVEAL - 1.2s) ===== -->
     <section id="statistik" class="px-6 md:px-12 -mt-16 relative z-20 max-w-6xl mx-auto w-full reveal-on-scroll">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            
+
             <!-- Stat 1 -->
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center gap-4 hover:-translate-y-1 transition duration-300">
                 <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-xl font-bold flex-shrink-0">
@@ -254,7 +254,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                
+
                 <!-- Feature 1 -->
                 <div class="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-sm space-y-4 hover:shadow-md hover:-translate-y-1 transition duration-300">
                     <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-xl font-bold">
@@ -306,7 +306,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
+
             <!-- Card 1 -->
             <div class="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-sm space-y-3 hover:shadow-md hover:-translate-y-1 transition duration-300">
                 <div class="flex items-center justify-between text-xs">
@@ -341,7 +341,7 @@
     <!-- ===== FOOTER RESMI (DEEP BLUE NAVY) ===== -->
     <footer class="bg-blue-950 text-white mt-auto border-t border-blue-900">
         <div class="px-6 md:px-16 py-12 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-xs">
-            
+
             <div class="space-y-3 md:col-span-2">
                 <div class="flex items-center gap-3">
                     <img src="{{ asset('logo/logo.svg') }}" alt="SIMPEG-SP Logo" class="w-9 h-9 object-contain">

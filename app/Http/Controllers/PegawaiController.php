@@ -38,13 +38,22 @@ class PegawaiController extends Controller
 
                 $pegawais = $query->paginate(15)->withQueryString();
 
-                $totalPegawaiCount = Pegawai::count();
-                $totalPnsCount     = Pegawai::where('status_kepegawaian', 'PNS')->count();
-                $totalPppkCount    = Pegawai::whereIn('status_kepegawaian', ['PPPK', 'PPPK PW'])->count();
-                $totalSerdikCount  = Pegawai::where('is_serdik', true)->count();
+                // Scope counts by user role
+                if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $user->sekolah_id) {
+                    $sekolahId = $user->sekolah_id;
+                    $totalPegawaiCount = Pegawai::where('sekolah_id', $sekolahId)->count();
+                    $totalPnsCount     = Pegawai::where('sekolah_id', $sekolahId)->where('status_kepegawaian', 'PNS')->count();
+                    $totalPppkCount    = Pegawai::where('sekolah_id', $sekolahId)->whereIn('status_kepegawaian', ['PPPK', 'PPPK PW'])->count();
+                    $totalSerdikCount  = Pegawai::where('sekolah_id', $sekolahId)->where('is_serdik', true)->count();
+                } else {
+                    $totalPegawaiCount = Pegawai::count();
+                    $totalPnsCount     = Pegawai::where('status_kepegawaian', 'PNS')->count();
+                    $totalPppkCount    = Pegawai::whereIn('status_kepegawaian', ['PPPK', 'PPPK PW'])->count();
+                    $totalSerdikCount  = Pegawai::where('is_serdik', true)->count();
+                }
 
-                $sekolahs = ($user && method_exists($user, 'isAdminDinas') && $user->isAdminDinas()) 
-                    ? Sekolah::orderBy('nama_sekolah')->get() 
+                $sekolahs = ($user && method_exists($user, 'isAdminDinas') && $user->isAdminDinas())
+                    ? Sekolah::orderBy('nama_sekolah')->get()
                     : collect();
                 $kecamatans = Sekolah::distinct()->pluck('kecamatan')->sort()->values();
 
@@ -176,8 +185,8 @@ class PegawaiController extends Controller
     {
         $pegawai = Pegawai::findOrFail($id);
         $user = Auth::user();
-        $sekolahs = ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) 
-            ? Sekolah::where('id', $user->sekolah_id)->get() 
+        $sekolahs = ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah())
+            ? Sekolah::where('id', $user->sekolah_id)->get()
             : Sekolah::orderBy('nama_sekolah')->get();
 
         return view('pegawai.create', compact('pegawai', 'sekolahs'));
@@ -317,7 +326,7 @@ class PegawaiController extends Controller
     public function downloadTemplate()
     {
         $spreadsheet = new Spreadsheet();
-        
+
         // --- Sheet 1: Form Data Pegawai ---
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setTitle('Form SDN');
@@ -326,7 +335,7 @@ class PegawaiController extends Controller
         $sheet->setCellValue('B2', 'DATA PEGAWAI ASN (PNS, PPPK, PPPK PARUH WAKTU) & NON-ASN');
         $sheet->setCellValue('B3', 'DI UNIT PELAKSANA TUGAS DAERAH (UPTD) SATUAN PENDIDIKAN DINAS PENDIDIKAN');
         $sheet->setCellValue('B4', 'TAHUN 2026');
-        
+
         $sheet->getStyle('B2:B4')->getFont()->setBold(true)->setSize(11);
         $sheet->getStyle('B2')->getFont()->setSize(12);
 

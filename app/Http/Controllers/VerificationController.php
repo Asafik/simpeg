@@ -15,7 +15,13 @@ class VerificationController extends Controller
      */
     public function index(Request $request)
     {
+        $user = Auth::user();
         $query = Pegawai::whereNotNull('sekolah_id')->with(['sekolah', 'verifier']);
+
+        // Scope query for Operator Sekolah
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            $query->where('sekolah_id', $user->sekolah_id);
+        }
 
         // Search Filter (NIP, NIK, Nama Pegawai, Nama Sekolah)
         if ($request->filled('search')) {
@@ -44,14 +50,21 @@ class VerificationController extends Controller
         // Pagination
         $pegawais = $query->latest('updated_at')->paginate(15)->withQueryString();
 
-        // Calculate Summary Metrics
-        $totalCount = Pegawai::whereNotNull('sekolah_id')->count();
-        $menungguCount = Pegawai::whereNotNull('sekolah_id')->whereIn('status_verifikasi', ['MENUNGGU', 'DRAFT'])->count();
-        $revisiCount = Pegawai::whereNotNull('sekolah_id')->where('status_verifikasi', 'REVISI')->count();
-        $disetujuiCount = Pegawai::whereNotNull('sekolah_id')->where('status_verifikasi', 'DISETUJUI')->count();
-
-        // Sekolah Dropdown List
-        $sekolahs = Sekolah::orderBy('nama_sekolah')->get(['id', 'nama_sekolah', 'npsn']);
+        // Calculate Summary Metrics based on role
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            $sekolahId = $user->sekolah_id;
+            $totalCount = Pegawai::where('sekolah_id', $sekolahId)->count();
+            $menungguCount = Pegawai::where('sekolah_id', $sekolahId)->whereIn('status_verifikasi', ['MENUNGGU', 'DRAFT'])->count();
+            $revisiCount = Pegawai::where('sekolah_id', $sekolahId)->where('status_verifikasi', 'REVISI')->count();
+            $disetujuiCount = Pegawai::where('sekolah_id', $sekolahId)->where('status_verifikasi', 'DISETUJUI')->count();
+            $sekolahs = collect(); // Operator doesn't need school list filter
+        } else {
+            $totalCount = Pegawai::whereNotNull('sekolah_id')->count();
+            $menungguCount = Pegawai::whereNotNull('sekolah_id')->whereIn('status_verifikasi', ['MENUNGGU', 'DRAFT'])->count();
+            $revisiCount = Pegawai::whereNotNull('sekolah_id')->where('status_verifikasi', 'REVISI')->count();
+            $disetujuiCount = Pegawai::whereNotNull('sekolah_id')->where('status_verifikasi', 'DISETUJUI')->count();
+            $sekolahs = Sekolah::orderBy('nama_sekolah')->get(['id', 'nama_sekolah', 'npsn']);
+        }
 
         return view('verifikasi.index', compact(
             'pegawais',
@@ -68,6 +81,13 @@ class VerificationController extends Controller
      */
     public function show(Pegawai $pegawai)
     {
+        $user = Auth::user();
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            if ($pegawai->sekolah_id !== $user->sekolah_id) {
+                abort(403, 'Anda tidak memiliki akses untuk melihat berkas pegawai dari sekolah lain.');
+            }
+        }
+
         $pegawai->load(['sekolah', 'verifier']);
         return view('verifikasi.show', compact('pegawai'));
     }

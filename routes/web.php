@@ -39,7 +39,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Pegawai Management & Data Exchange Routes
+    // Pegawai Management & Data Exchange Routes (Accessible by both Admin and Operator)
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
     Route::get('/pegawai/create', [PegawaiController::class, 'create'])->name('pegawai.create');
     Route::post('/pegawai', [PegawaiController::class, 'store'])->name('pegawai.store');
@@ -54,35 +54,43 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/pegawai/{pegawai}', [PegawaiController::class, 'destroy'])->name('pegawai.destroy');
     Route::get('/pegawai/{pegawai}/riwayat', [RiwayatController::class, 'pegawai'])->name('pegawai.riwayat');
 
-    Route::get('/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
-    Route::get('/sekolah/create', [SekolahController::class, 'create'])->name('sekolah.create');
-    Route::post('/sekolah', [SekolahController::class, 'store'])->name('sekolah.store');
-    Route::get('/sekolah/{sekolah}', [SekolahController::class, 'show'])->name('sekolah.show');
-    Route::get('/sekolah/{sekolah}/edit', [SekolahController::class, 'edit'])->name('sekolah.edit');
-    Route::put('/sekolah/{sekolah}', [SekolahController::class, 'update'])->name('sekolah.update');
-    Route::delete('/sekolah/{sekolah}', [SekolahController::class, 'destroy'])->name('sekolah.destroy');
-    Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
-    Route::get('/sekolah/{sekolah}/riwayat', [RiwayatController::class, 'sekolah'])->name('sekolah.riwayat');
+    // Admin Dinas Only Routes
+    Route::middleware(['role:ADMIN_DINAS'])->group(function () {
+        Route::get('/sekolah', [SekolahController::class, 'index'])->name('sekolah.index');
+        Route::get('/sekolah/create', [SekolahController::class, 'create'])->name('sekolah.create');
+        Route::post('/sekolah', [SekolahController::class, 'store'])->name('sekolah.store');
+        Route::get('/sekolah/{sekolah}', [SekolahController::class, 'show'])->name('sekolah.show');
+        Route::get('/sekolah/{sekolah}/edit', [SekolahController::class, 'edit'])->name('sekolah.edit');
+        Route::put('/sekolah/{sekolah}', [SekolahController::class, 'update'])->name('sekolah.update');
+        Route::delete('/sekolah/{sekolah}', [SekolahController::class, 'destroy'])->name('sekolah.destroy');
+        Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
+        Route::get('/sekolah/{sekolah}/riwayat', [RiwayatController::class, 'sekolah'])->name('sekolah.riwayat');
+
+        Route::post('/verifikasi/{pegawai}/status', [VerificationController::class, 'updateStatus'])->name('verifikasi.update-status');
+        Route::put('/verifikasi/{pegawai}/status', [VerificationController::class, 'updateStatus']);
+
+        Route::get('/admin/pengumuman', [AnnouncementController::class, 'index'])->name('pengumuman.index');
+        Route::get('/admin/pengumuman/create', [AnnouncementController::class, 'create'])->name('pengumuman.create');
+        Route::post('/admin/pengumuman', [AnnouncementController::class, 'store'])->name('pengumuman.store');
+        Route::get('/admin/pengumuman/{id}/edit', [AnnouncementController::class, 'edit'])->name('pengumuman.edit');
+        Route::put('/admin/pengumuman/{id}', [AnnouncementController::class, 'update'])->name('pengumuman.update');
+        Route::delete('/admin/pengumuman/{id}', [AnnouncementController::class, 'destroy'])->name('pengumuman.destroy');
+
+        Route::get('/users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+    });
+
+    // Verification Routes (Accessible by both Admin and Operator, but Operator has limited view)
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
     Route::get('/verifikasi/{pegawai}', [VerificationController::class, 'show'])->name('verifikasi.show');
     Route::get('/verifikasi/{pegawai}/tinjau', [VerificationController::class, 'tinjau'])->name('verifikasi.tinjau');
-    Route::post('/verifikasi/{pegawai}/status', [VerificationController::class, 'updateStatus'])->name('verifikasi.update-status');
-    Route::put('/verifikasi/{pegawai}/status', [VerificationController::class, 'updateStatus']);
-    Route::get('/admin/pengumuman', [AnnouncementController::class, 'index'])->name('pengumuman.index');
-    Route::get('/admin/pengumuman/create', [AnnouncementController::class, 'create'])->name('pengumuman.create');
-    Route::post('/admin/pengumuman', [AnnouncementController::class, 'store'])->name('pengumuman.store');
-    Route::get('/admin/pengumuman/{id}/edit', [AnnouncementController::class, 'edit'])->name('pengumuman.edit');
-    Route::put('/admin/pengumuman/{id}', [AnnouncementController::class, 'update'])->name('pengumuman.update');
-    Route::delete('/admin/pengumuman/{id}', [AnnouncementController::class, 'destroy'])->name('pengumuman.destroy');
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::post('/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
 
-    // Setting Submenu Routes
+    // Setting Submenu Routes (Accessible by both Admin and Operator)
     Route::get('/settings/profile', [SettingController::class, 'profile'])->name('settings.profile');
     Route::post('/settings/profile', [SettingController::class, 'updateProfile'])->name('settings.profile.update');
     Route::post('/settings/password', [SettingController::class, 'updatePassword'])->name('settings.password.update');

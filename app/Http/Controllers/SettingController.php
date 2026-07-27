@@ -93,18 +93,7 @@ class SettingController extends Controller
 
         // Scope logs by user role
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
-            $sekolahId = $user->sekolah_id;
-            $query->where(function ($q) use ($user, $sekolahId) {
-                $q->where('user_id', $user->id);
-                if ($sekolahId) {
-                    $q->orWhereHasMorph('loggable', [Pegawai::class], function ($qPegawai) use ($sekolahId) {
-                        $qPegawai->where('sekolah_id', $sekolahId);
-                    })
-                    ->orWhereHasMorph('loggable', [Sekolah::class], function ($qSekolah) use ($sekolahId) {
-                        $qSekolah->where('id', $sekolahId);
-                    });
-                }
-            });
+            $query->where('user_id', $user->id);
         }
 
         // Search Filter (Keyword in label, user_name, user_role, ip_address)

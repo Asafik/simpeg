@@ -19,7 +19,7 @@
                 </linearGradient>
             </defs>
         </svg>
-        
+
         <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
             <div class="max-w-2xl">
                 <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight mb-2">Verifikasi & Validasi Berkas Pegawai</h2>
@@ -61,7 +61,7 @@
 
         <!-- SUMMARY METRIC CARDS (Exact Match to Hope UI Card Style) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 -mt-12 md:-mt-14 mb-6 relative z-10">
-            
+
             <!-- Card 1: Total Dokumen -->
             <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
@@ -144,12 +144,12 @@
 
             <!-- Filter Inputs Form -->
             <form action="{{ route('verifikasi.index') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-                
+
                 <!-- Search Keyword -->
                 <div class="col-span-1 sm:col-span-2 xl:col-span-2">
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">Cari NIP / Nama Pegawai / Sekolah</label>
                     <div class="relative flex items-center">
-                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Ketik NIP, nama pegawai, atau nama sekolah..." 
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Ketik NIP, nama pegawai, atau nama sekolah..."
                                class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg pl-3 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-medium">
                         <button type="submit" class="absolute right-1 w-7 h-7 bg-blue-800 hover:bg-blue-900 text-white rounded-md transition flex items-center justify-center shadow-sm cursor-pointer" title="Cari Data">
                             <i class="fas fa-arrow-right text-xs"></i>
@@ -278,10 +278,14 @@
                                     </td>
                                     <!-- Aksi -->
                                     <td class="px-6 py-4 text-right">
-                                        <a href="{{ route('verifikasi.show', $pegawai->id) }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-900 text-white font-bold text-xs shadow-sm hover:shadow-md transition cursor-pointer">
-                                            <i class="fas fa-magnifying-glass-chart text-xs"></i>
-                                            <span>Tinjau Berkas</span>
-                                        </a>
+                                        @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                                            <a href="{{ route('verifikasi.show', $pegawai->id) }}" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-800 hover:bg-blue-900 text-white font-bold text-xs shadow-sm hover:shadow-md transition cursor-pointer">
+                                                <i class="fas fa-magnifying-glass-chart text-xs"></i>
+                                                <span>Tinjau Berkas</span>
+                                            </a>
+                                        @else
+                                            <span class="text-xs text-gray-400 italic font-medium">Hanya Lihat</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
