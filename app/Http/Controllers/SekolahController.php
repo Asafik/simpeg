@@ -12,6 +12,11 @@ class SekolahController extends Controller
 {
     public function index(Request $request)
     {
+        $user = auth()->user();
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            return redirect()->route('operator.sekolah.index');
+        }
+
         $search = trim($request->query('search', ''));
         $kecamatanFilter = trim($request->query('kecamatan', ''));
 

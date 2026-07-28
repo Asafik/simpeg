@@ -26,10 +26,10 @@ class PegawaiController extends Controller
             if (class_exists(Pegawai::class)) {
                 $query = Pegawai::with('sekolah')->latest();
 
-                // Operator sekolah restriction if user logged in
-                if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $user->sekolah_id) {
-                    $filters['sekolah_id'] = $user->sekolah_id;
-                }
+        // Redirect Operator Sekolah to their dedicated pegawai management page
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            return redirect()->route('operator.pegawai.index');
+        }
 
                 if (method_exists(Pegawai::class, 'scopeFilterKriteria')) {
                     $query->filterKriteria($filters);

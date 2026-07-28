@@ -20,10 +20,9 @@ class DashboardController extends Controller
         $pegawaiQuery = Pegawai::query();
         $sekolahQuery = Sekolah::query();
 
-        // Scope queries if logged in as Operator Sekolah
-        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $user->sekolah_id) {
-            $pegawaiQuery->where('sekolah_id', $user->sekolah_id);
-            $sekolahQuery->where('id', $user->sekolah_id);
+        // Redirect Operator Sekolah to their dedicated dashboard
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            return redirect()->route('operator.dashboard');
         }
 
         // Summary Card Stats

@@ -25,24 +25,50 @@
 
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 overflow-y-auto">
-        <p class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold px-3 mb-4 sidebar-text">Main Menu</p>
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('dashboard*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Dashboard">
-            <i class="fas fa-chart-pie w-5 text-center flex-shrink-0"></i>
-            <span class="font-medium text-sm sidebar-text">Dashboard</span>
-        </a>
-        <a href="{{ url('/pegawai') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('pegawai*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Data Pegawai">
-            <i class="fas fa-users w-5 text-center flex-shrink-0"></i>
-            <span class="font-medium text-sm sidebar-text">Data Pegawai</span>
-        </a>
-        <a href="{{ url('/sekolah') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('sekolah*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Kelola Sekolah">
-            <i class="fas fa-school w-5 text-center flex-shrink-0"></i>
-            <span class="font-medium text-sm sidebar-text">Kelola Sekolah</span>
-        </a>
-        <a href="{{ url('/verifikasi') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('verifikasi*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Verifikasi Data">
-            <i class="fas fa-check-circle w-5 text-center flex-shrink-0"></i>
-            <span class="font-medium text-sm sidebar-text">Verifikasi Data</span>
-            <span class="ml-auto bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full sidebar-text">12</span>
-        </a>
+        @if(Auth::check() && method_exists(Auth::user(), 'isOperatorSekolah') && Auth::user()->isOperatorSekolah())
+            <a href="{{ route('operator.dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('operator/dashboard*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Dashboard Operator">
+                <i class="fas fa-chart-pie w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Dashboard</span>
+            </a>
+        @else
+            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('dashboard*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Dashboard">
+                <i class="fas fa-chart-pie w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Dashboard</span>
+            </a>
+        @endif
+        @if(Auth::check() && method_exists(Auth::user(), 'isOperatorSekolah') && Auth::user()->isOperatorSekolah())
+            <a href="{{ route('operator.pegawai.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('operator/pegawai*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Data Pegawai">
+                <i class="fas fa-users w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Data Pegawai</span>
+            </a>
+        @else
+            <a href="{{ url('/pegawai') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('pegawai*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Data Pegawai">
+                <i class="fas fa-users w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Data Pegawai</span>
+            </a>
+        @endif
+        @if(Auth::check() && method_exists(Auth::user(), 'isOperatorSekolah') && Auth::user()->isOperatorSekolah())
+            <a href="{{ route('operator.sekolah.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('operator/sekolah*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Profil Sekolah">
+                <i class="fas fa-school w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Profil Sekolah</span>
+            </a>
+        @else
+            <a href="{{ url('/sekolah') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('sekolah*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Kelola Sekolah">
+                <i class="fas fa-school w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Kelola Sekolah</span>
+            </a>
+        @endif
+        @if(Auth::check() && method_exists(Auth::user(), 'isOperatorSekolah') && Auth::user()->isOperatorSekolah())
+            <a href="{{ route('operator.verifikasi.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('operator/verifikasi*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Verifikasi Berkas">
+                <i class="fas fa-check-circle w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Verifikasi Berkas</span>
+            </a>
+        @else
+            <a href="{{ url('/verifikasi') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('verifikasi*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Verifikasi Data">
+                <i class="fas fa-check-circle w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Verifikasi Data</span>
+            </a>
+        @endif
         <a href="{{ url('/users') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('users*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition" title="Kelola User">
             <i class="fas fa-user-gear w-5 text-center flex-shrink-0"></i>
             <span class="font-medium text-sm sidebar-text">Kelola User</span>

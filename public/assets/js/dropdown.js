@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Auto-convert standard native HTML <select> elements into Custom Select Dropdowns
     function convertNativeSelects() {
-        const nativeSelects = document.querySelectorAll('select:not(.no-custom-select)');
+        const nativeSelects = document.querySelectorAll('select:not(.no-custom-select):not(.select2)');
 
         nativeSelects.forEach(select => {
             if (select.closest('.custom-select-wrapper')) return; // Already inside custom wrapper

@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OperatorDashboardController;
+use App\Http\Controllers\OperatorPegawaiController;
+use App\Http\Controllers\OperatorSekolahController;
+use App\Http\Controllers\OperatorVerifikasiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SekolahController;
@@ -51,6 +55,26 @@ Route::post('/logout', [AuthController::class, 'logout']);
 // Protected System Routes (Must Be Logged In)
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/operator/dashboard', [OperatorDashboardController::class, 'index'])->name('operator.dashboard');
+
+    // Dedicated Operator Pegawai Routes
+    Route::get('/operator/pegawai', [OperatorPegawaiController::class, 'index'])->name('operator.pegawai.index');
+    Route::get('/operator/pegawai/create', [OperatorPegawaiController::class, 'create'])->name('operator.pegawai.create');
+    Route::post('/operator/pegawai', [OperatorPegawaiController::class, 'store'])->name('operator.pegawai.store');
+    Route::post('/operator/pegawai/bulk-delete', [OperatorPegawaiController::class, 'bulkDestroy'])->name('operator.pegawai.bulk-destroy');
+    Route::get('/operator/pegawai/{pegawai}', [OperatorPegawaiController::class, 'show'])->name('operator.pegawai.show');
+    Route::get('/operator/pegawai/{pegawai}/edit', [OperatorPegawaiController::class, 'edit'])->name('operator.pegawai.edit');
+    Route::put('/operator/pegawai/{pegawai}', [OperatorPegawaiController::class, 'update'])->name('operator.pegawai.update');
+    Route::delete('/operator/pegawai/{pegawai}', [OperatorPegawaiController::class, 'destroy'])->name('operator.pegawai.destroy');
+
+    // Dedicated Operator Sekolah Routes
+    Route::get('/operator/sekolah', [OperatorSekolahController::class, 'index'])->name('operator.sekolah.index');
+    Route::get('/operator/sekolah/edit', [OperatorSekolahController::class, 'edit'])->name('operator.sekolah.edit');
+    Route::put('/operator/sekolah', [OperatorSekolahController::class, 'update'])->name('operator.sekolah.update');
+
+    // Dedicated Operator Verifikasi Routes
+    Route::get('/operator/verifikasi', [OperatorVerifikasiController::class, 'index'])->name('operator.verifikasi.index');
+    Route::post('/operator/verifikasi/{id}/upload', [OperatorVerifikasiController::class, 'upload'])->name('operator.verifikasi.upload');
 
     // Pegawai Management & Data Exchange Routes
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
@@ -73,6 +97,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/sekolah/{sekolah}', [SekolahController::class, 'destroy'])->name('sekolah.destroy');
     Route::post('/sekolah/{sekolah}/reset-password', [SekolahController::class, 'resetPassword'])->name('sekolah.reset-password');
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
+    Route::post('/verifikasi/{id}', [VerificationController::class, 'verify'])->name('verifikasi.verify');
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
     // Setting Submenu Routes

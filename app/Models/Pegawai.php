@@ -37,6 +37,8 @@ class Pegawai extends Model
         'file_sk',
         'file_serdik',
         'file_ijazah',
+        'status_verifikasi',
+        'catatan_verifikasi',
     ];
 
     protected $casts = [

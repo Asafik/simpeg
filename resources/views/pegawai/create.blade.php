@@ -82,7 +82,7 @@
                     <!-- Satuan Pendidikan / Sekolah -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Satuan Pendidikan / Sekolah <span class="text-red-500">*</span></label>
-                        <select name="sekolah_id" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none cursor-pointer">
+                        <select name="sekolah_id" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none cursor-pointer">
                             <option value="">-- Pilih Satuan Pendidikan --</option>
                             @foreach($sekolahs as $s)
                                 <option value="{{ $s->id }}" {{ old('sekolah_id', $pegawai->sekolah_id ?? '') == $s->id ? 'selected' : '' }}>
@@ -125,7 +125,7 @@
                     <!-- Jenis Kelamin -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Jenis Kelamin</label>
-                        <select name="jenis_kelamin" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="jenis_kelamin" class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="">-- Pilih Jenis Kelamin --</option>
                             <option value="Laki-Laki" {{ old('jenis_kelamin', $pegawai->jenis_kelamin ?? '') == 'Laki-Laki' ? 'selected' : '' }}>Laki-Laki</option>
                             <option value="Perempuan" {{ old('jenis_kelamin', $pegawai->jenis_kelamin ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
@@ -135,7 +135,7 @@
                     <!-- Agama -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Agama</label>
-                        <select name="agama" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="agama" class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="">-- Pilih Agama --</option>
                             @foreach(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha', 'Khonghucu', 'Lainnya'] as $ag)
                                 <option value="{{ $ag }}" {{ old('agama', $pegawai->agama ?? '') == $ag ? 'selected' : '' }}>{{ $ag }}</option>
@@ -155,7 +155,7 @@
                     <!-- Status Kepegawaian -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Status Kepegawaian <span class="text-red-500">*</span></label>
-                        <select name="status_kepegawaian" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="status_kepegawaian" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="PNS" {{ old('status_kepegawaian', $pegawai->status_kepegawaian ?? '') == 'PNS' ? 'selected' : '' }}>PNS</option>
                             <option value="PPPK" {{ old('status_kepegawaian', $pegawai->status_kepegawaian ?? '') == 'PPPK' ? 'selected' : '' }}>PPPK</option>
                             <option value="PPPK PW" {{ old('status_kepegawaian', $pegawai->status_kepegawaian ?? '') == 'PPPK PW' ? 'selected' : '' }}>PPPK PW (Paruh Waktu)</option>
@@ -190,7 +190,7 @@
                     <!-- Status Serdik -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Status Sertifikasi (Serdik) <span class="text-red-500">*</span></label>
-                        <select name="is_serdik" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="is_serdik" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="1" {{ old('is_serdik', isset($pegawai) && $pegawai->is_serdik ? '1' : '0') == '1' ? 'selected' : '' }}>SERDIK (Bersertifikasi)</option>
                             <option value="0" {{ old('is_serdik', isset($pegawai) && $pegawai->is_serdik ? '1' : '0') == '0' ? 'selected' : '' }}>NON SERDIK</option>
                         </select>
@@ -220,7 +220,7 @@
                     <!-- Jenis PTK -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Jenis PTK <span class="text-red-500">*</span></label>
-                        <select name="jenis_ptk" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="jenis_ptk" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="Pendidik" {{ old('jenis_ptk', $pegawai->jenis_ptk ?? '') == 'Pendidik' ? 'selected' : '' }}>Pendidik (Guru)</option>
                             <option value="Tenaga Kependidikan" {{ old('jenis_ptk', $pegawai->jenis_ptk ?? '') == 'Tenaga Kependidikan' ? 'selected' : '' }}>Tenaga Kependidikan (TU/Laboran)</option>
                         </select>
@@ -247,7 +247,7 @@
                     <!-- Tingkat Pendidikan -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Tingkat Pendidikan <span class="text-red-500">*</span></label>
-                        <select name="tingkat_pendidikan" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="tingkat_pendidikan" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="SMA/K" {{ old('tingkat_pendidikan', $pegawai->tingkat_pendidikan ?? '') == 'SMA/K' ? 'selected' : '' }}>SMA / Sederajat</option>
                             <option value="D3" {{ old('tingkat_pendidikan', $pegawai->tingkat_pendidikan ?? '') == 'D3' ? 'selected' : '' }}>Diploma 3 (D3)</option>
                             <option value="S1/D4" {{ old('tingkat_pendidikan', $pegawai->tingkat_pendidikan ?? 'S1/D4') == 'S1/D4' ? 'selected' : '' }}>Strata 1 (S1) / D4</option>
