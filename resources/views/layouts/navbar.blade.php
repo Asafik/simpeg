@@ -1,5 +1,5 @@
 <!-- ===== TOPBAR (Mentok Atas & Full Width) ===== -->
-<header class="bg-white border-b border-gray-200/80 px-4 md:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-40">
+<header class="bg-white border-b border-gray-200/80 px-4 md:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30">
     <div class="flex items-center gap-3">
         <!-- Mobile Toggle -->
         <button class="md:hidden text-gray-700 text-xl w-9 h-9 rounded-lg hover:bg-gray-100 flex items-center justify-center transition" id="mobileToggle">
@@ -29,11 +29,36 @@
         <div class="relative pl-2 border-l border-gray-200">
             <button type="button" id="userDropdownBtn" class="flex items-center gap-2.5 hover:opacity-80 transition cursor-pointer focus:outline-none">
                 <div class="w-9 h-9 rounded-full bg-blue-800 text-white font-bold flex items-center justify-center text-xs shadow-sm flex-shrink-0">
-                    AD
+                    @if(Auth::check())
+                        @php
+                            $words = explode(' ', Auth::user()->name);
+                            $initials = '';
+                            if (count($words) >= 2) {
+                                $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                            } else {
+                                $initials = strtoupper(substr(Auth::user()->name, 0, 2));
+                            }
+                        @endphp
+                        {{ $initials }}
+                    @else
+                        AD
+                    @endif
                 </div>
                 <div class="hidden md:block text-left">
-                    <p class="text-xs font-bold text-gray-800 leading-tight">Admin Dinas</p>
-                    <p class="text-[10px] text-gray-400">Administrator Dinas</p>
+                    <p class="text-xs font-bold text-gray-800 leading-tight">{{ Auth::check() ? Auth::user()->name : 'Admin Dinas' }}</p>
+                    <p class="text-[10px] text-gray-400">
+                        @if(Auth::check())
+                            @if(Auth::user()->isAdminDinas())
+                                Administrator Dinas
+                            @elseif(Auth::user()->isOperatorSekolah())
+                                Operator {{ Auth::user()->sekolah->nama ?? 'Sekolah' }}
+                            @else
+                                {{ Auth::user()->role }}
+                            @endif
+                        @else
+                            Administrator Dinas
+                        @endif
+                    </p>
                 </div>
             </button>
 
@@ -41,9 +66,21 @@
             <div id="userDropdownMenu" class="hidden absolute right-0 mt-3 w-60 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 transition-all duration-200">
                 <!-- User Header Summary -->
                 <div class="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
-                    <p class="text-xs font-bold text-gray-900">Administrator Dinas</p>
-                    <p class="text-[10px] text-gray-400 font-medium truncate">admin@dinas.go.id</p>
-                    <span class="inline-block mt-1.5 px-2 py-0.5 bg-blue-100 text-blue-800 font-bold text-[9px] rounded-full">ADMIN DINAS</span>
+                    <p class="text-xs font-bold text-gray-900">{{ Auth::check() ? Auth::user()->name : 'Administrator Dinas' }}</p>
+                    <p class="text-[10px] text-gray-400 font-medium truncate">{{ Auth::check() ? Auth::user()->email : 'admin@dinas.go.id' }}</p>
+                    <span class="inline-block mt-1.5 px-2 py-0.5 bg-blue-100 text-blue-800 font-bold text-[9px] rounded-full">
+                        @if(Auth::check())
+                            @if(Auth::user()->isAdminDinas())
+                                ADMIN DINAS
+                            @elseif(Auth::user()->isOperatorSekolah())
+                                OPERATOR SEKOLAH
+                            @else
+                                {{ strtoupper(Auth::user()->role) }}
+                            @endif
+                        @else
+                            ADMIN DINAS
+                        @endif
+                    </span>
                 </div>
 
                 <!-- Dropdown Links -->
@@ -52,10 +89,12 @@
                         <i class="fas fa-user-gear text-gray-400 text-xs"></i>
                         <span class="font-medium">Pengaturan Akun</span>
                     </a>
-                    <a href="{{ url('/users') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-gray-700 hover:bg-blue-50/50 hover:text-blue-800 transition">
-                        <i class="fas fa-users-gear text-gray-400 text-xs"></i>
-                        <span class="font-medium">Manajemen User</span>
-                    </a>
+                    @if(Auth::check() && Auth::user()->isAdminDinas())
+                        <a href="{{ url('/users') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-gray-700 hover:bg-blue-50/50 hover:text-blue-800 transition">
+                            <i class="fas fa-users-gear text-gray-400 text-xs"></i>
+                            <span class="font-medium">Manajemen User</span>
+                        </a>
+                    @endif
                 </div>
 
                 <!-- Logout Button Form -->

@@ -39,22 +39,41 @@ body {
 }
 
 /* ===== SUBMENU SLIDE-DOWN ANIMATION ===== */
-#settingSubmenuList {
-    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-in-out;
+.sidebar-accordion-submenu,
+#settingSubmenuList,
+#settingSubmenu {
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
     overflow: hidden;
+    max-height: 0;
+    opacity: 0;
 }
 
-#settingSubmenuList.hidden-submenu {
-    max-height: 0 !important;
-    opacity: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    pointer-events: none;
-}
-
-#settingSubmenuList.open-submenu {
-    max-height: 300px !important;
+.sidebar-accordion-submenu.accordion-expanded,
+#settingSubmenuList.open-submenu,
+#settingSubmenu.accordion-expanded {
+    max-height: 250px !important;
     opacity: 1 !important;
+}
+
+/* ===== MOBILE SIDEBAR OVERLAY & BLUR (Z-INDEX 9998 & 9999) ===== */
+@media (max-width: 767px) {
+    #sidebarOverlay {
+        display: none;
+    }
+    #sidebarOverlay.active {
+        display: block !important;
+        position: fixed !important;
+        inset: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: rgba(15, 23, 42, 0.75) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        z-index: 9998 !important;
+    }
+    #sidebar {
+        z-index: 9999 !important;
+    }
 }
 
 /* ===== HOPE UI MINI SIDEBAR STYLES ===== */

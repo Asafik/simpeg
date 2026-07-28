@@ -1,0 +1,89 @@
+/* ===== TABLES & PAGINATION STYLES (SIMPEG-SP COMPONENT) ===== */
+
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+.table-scroll table {
+    min-width: 1300px !important;
+}
+.table-scroll th,
+.table-scroll td {
+    white-space: nowrap !important;
+}
+
+/* Table Custom Scrollbar */
+.table-scroll::-webkit-scrollbar {
+    height: 7px;
+}
+.table-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+.table-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+.table-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Custom Badges */
+.badge-custom {
+    padding: 3px 12px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Table Row Smooth Transition */
+.table-row-hover {
+    transition: background-color 0.2s ease;
+}
+
+/* ===== CUSTOM PAGINATION STYLING (SIMPEG-SP THEME) ===== */
+.custom-pagination nav > div:first-child {
+    display: none !important;
+}
+.custom-pagination nav > div.hidden > div:first-child {
+    display: none !important;
+}
+.custom-pagination nav > div.hidden {
+    display: flex !important;
+    justify-content: flex-end !important;
+}
+.custom-pagination span.relative.z-0,
+.custom-pagination div.inline-flex {
+    border-radius: 0.75rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+}
+.custom-pagination a, 
+.custom-pagination span[aria-current="page"] > span,
+.custom-pagination span[aria-disabled="true"] > span {
+    padding: 0.45rem 0.85rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    border-color: #e2e8f0 !important;
+    transition: all 0.2s ease !important;
+}
+.custom-pagination span[aria-current="page"] > span {
+    background-color: #1e3a8a !important; /* Deep Blue theme */
+    color: #ffffff !important;
+    border-color: #1e3a8a !important;
+}
+.custom-pagination a:hover {
+    background-color: #eff6ff !important;
+    color: #1e3a8a !important;
+}
+
+/* Fade in animation for floating bulk action bar */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+    animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

@@ -9,9 +9,6 @@
 @section('title', $title)
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
-
     <!-- ===== HERO BLUE BANNER (Exact Hope UI 2-Wave Design - Deep Blue) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">
         <svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 300">
@@ -79,17 +76,65 @@
                 </h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Satuan Pendidikan / Sekolah -->
+                    <!-- Satuan Pendidikan / Sekolah (Custom Searchable Dropdown) -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Satuan Pendidikan / Sekolah <span class="text-red-500">*</span></label>
-                        <select name="sekolah_id" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none cursor-pointer">
-                            <option value="">-- Pilih Satuan Pendidikan --</option>
-                            @foreach($sekolahs as $s)
-                                <option value="{{ $s->id }}" {{ old('sekolah_id', $pegawai->sekolah_id ?? '') == $s->id ? 'selected' : '' }}>
-                                    {{ $s->nama_sekolah }} (NPSN: {{ $s->npsn }})
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="relative" id="customSekolahSelect">
+                            <input type="hidden" name="sekolah_id" id="sekolahIdInput" value="{{ old('sekolah_id', $pegawai->sekolah_id ?? '') }}" required>
+                            
+                            <!-- Trigger Button -->
+                            <button type="button" id="sekolahSelectBtn" onclick="toggleSekolahDropdown()"
+                                class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 flex items-center justify-between focus:ring-2 focus:ring-blue-800/20 focus:outline-none transition hover:border-gray-300">
+                                <span id="sekolahSelectLabel" class="truncate font-medium text-gray-700">
+                                    -- Pilih Satuan Pendidikan --
+                                </span>
+                                <i class="fas fa-chevron-down text-[10px] text-gray-400 ml-2 flex-shrink-0"></i>
+                            </button>
+
+                            <!-- Dropdown Panel -->
+                            <div id="sekolahDropdownPanel" class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden animate-fadeIn">
+                                <!-- Search Input Header -->
+                                <div class="p-2 border-b border-gray-100 bg-gray-50/80">
+                                    <div class="relative">
+                                        <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                                        <input type="text" id="sekolahSearchInput" oninput="filterSekolahOptions()" placeholder="Ketik nama sekolah, NPSN, atau kecamatan..."
+                                            class="w-full bg-white border border-gray-200 rounded-lg pl-8 pr-8 py-2 text-xs text-gray-800 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10">
+                                        <button type="button" id="clearSekolahSearchBtn" onclick="clearSekolahSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs">
+                                            <i class="fas fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Options Scrollable Container -->
+                                <div class="max-h-60 overflow-y-auto divide-y divide-gray-50 p-1" id="sekolahOptionsList">
+                                    <div class="sekolah-option-item px-3 py-2 text-xs hover:bg-blue-50 text-gray-700 rounded-lg cursor-pointer transition flex items-center justify-between"
+                                         data-id="" data-search="-- pilih satuan pendidikan --" onclick="selectSekolahOption('', '-- Pilih Satuan Pendidikan --')">
+                                        <span class="font-medium text-gray-500">-- Pilih Satuan Pendidikan --</span>
+                                    </div>
+                                    @foreach($sekolahs as $s)
+                                        @php
+                                            $isSel = old('sekolah_id', $pegawai->sekolah_id ?? '') == $s->id;
+                                            $searchText = strtolower($s->nama_sekolah . ' ' . $s->npsn . ' ' . $s->kecamatan);
+                                            $displayLabel = $s->nama_sekolah;
+                                        @endphp
+                                        <div class="sekolah-option-item group px-3 py-2.5 text-xs hover:bg-blue-900 hover:text-white rounded-lg cursor-pointer transition flex items-center justify-between {{ $isSel ? 'bg-blue-900 text-white font-bold' : 'text-gray-700' }}"
+                                             data-id="{{ $s->id }}"
+                                             data-name="{{ $displayLabel }}"
+                                             data-search="{{ $searchText }}"
+                                             onclick="selectSekolahOption('{{ $s->id }}', '{{ addslashes($s->nama_sekolah) }}')">
+                                            <span class="font-semibold text-xs truncate group-hover:text-white {{ $isSel ? 'text-white' : 'text-gray-800' }}">{{ $s->nama_sekolah }}</span>
+                                            @if($isSel)
+                                                <i class="fas fa-check text-white text-xs flex-shrink-0 ml-2"></i>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                    <div id="noSekolahFound" class="hidden px-4 py-6 text-center text-xs text-gray-400 italic">
+                                        <i class="fas fa-school-circle-xmark text-lg text-gray-300 mb-1 block"></i>
+                                        Tidak ada sekolah yang cocok dengan pencarian.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Nama Lengkap + Gelar -->
@@ -264,51 +309,153 @@
                 </div>
             </div>
 
-            <!-- SECTION 4: UPLOAD BERKAS PENDUKUNG (PDF Max 2 MB) -->
+            <!-- SECTION 4: UPLOAD BERKAS PENDUKUNG (PDF / Gambar, Max 2 MB) -->
             <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4">
-                <h3 class="text-xs font-extrabold uppercase tracking-wider text-blue-800 border-b border-gray-100 pb-3 flex items-center gap-2">
-                    <i class="fas fa-file-pdf"></i> Upload Berkas Pendukung (PDF, Max 2 MB)
-                </h3>
+                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-blue-800 flex items-center gap-2">
+                        <i class="fas fa-folder-open text-sm"></i> Upload Berkas Pendukung (PDF / Gambar, Max 2 MB)
+                    </h3>
+                    <span class="text-[10px] text-gray-400 font-medium"><i class="fas fa-shield-halved text-emerald-600 mr-1"></i>Aman & Terenkripsi</span>
+                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     
-                    <!-- File SK -->
-                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center bg-gray-50/50">
-                        <i class="fas fa-cloud-arrow-up text-2xl text-blue-800 mb-2"></i>
-                        <p class="text-xs font-bold text-gray-800">SK Kepegawaian</p>
-                        @if(isset($pegawai->file_sk) && $pegawai->file_sk)
-                            <p class="text-[10px] text-emerald-600 font-semibold mt-1">✓ File Terunggah</p>
-                            <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" class="inline-block mt-1 text-[10px] text-blue-600 underline">Lihat File Saat Ini</a>
-                        @else
-                            <p class="text-[10px] text-gray-400 mt-1">Upload PDF (Max 2MB)</p>
-                        @endif
-                        <input type="file" name="file_sk" accept=".pdf,.jpg,.jpeg,.png" class="mt-2 text-xs w-full text-gray-500">
+                    <!-- 1. FILE SK KEPEGAWAIAN -->
+                    <div class="relative bg-gray-50/60 hover:bg-blue-50/40 border-2 border-dashed border-gray-200 hover:border-blue-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
+                         onclick="document.getElementById('file_sk_input').click()">
+                        
+                        <input type="file" name="file_sk" id="file_sk_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                               onchange="handleFileUploadPreview(this, 'file_sk_preview', 'file_sk_info', 'file_sk_icon', 'file_sk_preview_icon')">
+
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-100/80 group-hover:bg-blue-800 text-blue-800 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
+                                <i id="file_sk_icon" class="fas fa-cloud-arrow-up text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-800 group-hover:text-blue-900 transition">SK Kepegawaian</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
+                            </div>
+
+                            @if(isset($pegawai->file_sk) && $pegawai->file_sk)
+                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left flex items-center justify-between">
+                                    <div class="flex items-center gap-2 truncate">
+                                        <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
+                                        <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
+                                    </div>
+                                    <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
+                                    </a>
+                                </div>
+                            @endif
+
+                            <div id="file_sk_preview" class="hidden mt-2 bg-white border border-blue-200 rounded-lg p-2 text-left shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 truncate">
+                                        <i id="file_sk_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
+                                        <span id="file_sk_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
+                                    </div>
+                                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
+                                </div>
+                            </div>
+
+                            <div class="pt-1">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-blue-300 group-hover:text-blue-800 transition">
+                                    <i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- File Serdik -->
-                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center bg-gray-50/50">
-                        <i class="fas fa-certificate text-2xl text-emerald-600 mb-2"></i>
-                        <p class="text-xs font-bold text-gray-800">Sertifikat Pendidik</p>
-                        @if(isset($pegawai->file_serdik) && $pegawai->file_serdik)
-                            <p class="text-[10px] text-emerald-600 font-semibold mt-1">✓ File Terunggah</p>
-                            <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" class="inline-block mt-1 text-[10px] text-blue-600 underline">Lihat File Saat Ini</a>
-                        @else
-                            <p class="text-[10px] text-gray-400 mt-1">Upload PDF (Max 2MB)</p>
-                        @endif
-                        <input type="file" name="file_serdik" accept=".pdf,.jpg,.jpeg,.png" class="mt-2 text-xs w-full text-gray-500">
+                    <!-- 2. FILE SERTIFIKAT PENDIDIK (SERDIK) -->
+                    <div class="relative bg-gray-50/60 hover:bg-emerald-50/40 border-2 border-dashed border-gray-200 hover:border-emerald-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
+                         onclick="document.getElementById('file_serdik_input').click()">
+                        
+                        <input type="file" name="file_serdik" id="file_serdik_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                               onchange="handleFileUploadPreview(this, 'file_serdik_preview', 'file_serdik_info', 'file_serdik_icon', 'file_serdik_preview_icon')">
+
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-100/80 group-hover:bg-emerald-700 text-emerald-700 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
+                                <i id="file_serdik_icon" class="fas fa-certificate text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-800 group-hover:text-emerald-900 transition">Sertifikat Pendidik (Serdik)</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
+                            </div>
+
+                            @if(isset($pegawai->file_serdik) && $pegawai->file_serdik)
+                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left flex items-center justify-between">
+                                    <div class="flex items-center gap-2 truncate">
+                                        <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
+                                        <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
+                                    </div>
+                                    <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
+                                    </a>
+                                </div>
+                            @endif
+
+                            <div id="file_serdik_preview" class="hidden mt-2 bg-white border border-emerald-200 rounded-lg p-2 text-left shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 truncate">
+                                        <i id="file_serdik_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
+                                        <span id="file_serdik_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
+                                    </div>
+                                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
+                                </div>
+                            </div>
+
+                            <div class="pt-1">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-emerald-300 group-hover:text-emerald-800 transition">
+                                    <i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- File Ijazah -->
-                    <div class="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center bg-gray-50/50">
-                        <i class="fas fa-graduation-cap text-2xl text-purple-600 mb-2"></i>
-                        <p class="text-xs font-bold text-gray-800">Ijazah Terakhir</p>
-                        @if(isset($pegawai->file_ijazah) && $pegawai->file_ijazah)
-                            <p class="text-[10px] text-emerald-600 font-semibold mt-1">✓ File Terunggah</p>
-                            <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" class="inline-block mt-1 text-[10px] text-blue-600 underline">Lihat File Saat Ini</a>
-                        @else
-                            <p class="text-[10px] text-gray-400 mt-1">Upload PDF (Max 2MB)</p>
-                        @endif
-                        <input type="file" name="file_ijazah" accept=".pdf,.jpg,.jpeg,.png" class="mt-2 text-xs w-full text-gray-500">
+                    <!-- 3. FILE IJAZAH TERAKHIR -->
+                    <div class="relative bg-gray-50/60 hover:bg-purple-50/40 border-2 border-dashed border-gray-200 hover:border-purple-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
+                         onclick="document.getElementById('file_ijazah_input').click()">
+                        
+                        <input type="file" name="file_ijazah" id="file_ijazah_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                               onchange="handleFileUploadPreview(this, 'file_ijazah_preview', 'file_ijazah_info', 'file_ijazah_icon', 'file_ijazah_preview_icon')">
+
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 rounded-2xl bg-purple-100/80 group-hover:bg-purple-700 text-purple-700 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
+                                <i id="file_ijazah_icon" class="fas fa-graduation-cap text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-gray-800 group-hover:text-purple-900 transition">Ijazah Terakhir</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
+                            </div>
+
+                            @if(isset($pegawai->file_ijazah) && $pegawai->file_ijazah)
+                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left flex items-center justify-between">
+                                    <div class="flex items-center gap-2 truncate">
+                                        <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
+                                        <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
+                                    </div>
+                                    <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
+                                    </a>
+                                </div>
+                            @endif
+
+                            <div id="file_ijazah_preview" class="hidden mt-2 bg-white border border-purple-200 rounded-lg p-2 text-left shadow-sm">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 truncate">
+                                        <i id="file_ijazah_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
+                                        <span id="file_ijazah_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
+                                    </div>
+                                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
+                                </div>
+                            </div>
+
+                            <div class="pt-1">
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-purple-300 group-hover:text-purple-800 transition">
+                                    <i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -317,11 +464,167 @@
             <!-- Form Actions -->
             <div class="flex items-center justify-end gap-3 pt-2">
                 <a href="{{ route('pegawai.index') }}" class="px-5 py-2.5 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg transition">Batal</a>
-                <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-800 hover:bg-blue-900 rounded-lg shadow-md shadow-blue-900/30 transition flex items-center gap-2">
+                <button type="submit" class="px-6 py-2.5 text-xs font-bold text-white bg-blue-800 hover:bg-blue-900 rounded-lg shadow-md shadow-blue-900/30 transition flex items-center gap-2 cursor-pointer">
                     <i class="fas fa-save"></i> {{ $isEdit ? 'Perbarui Data Pegawai' : 'Simpan Data Pegawai' }}
                 </button>
             </div>
 
         </form>
     </div>
+
+    <script>
+        function toggleSekolahDropdown() {
+            const panel = document.getElementById('sekolahDropdownPanel');
+            const input = document.getElementById('sekolahSearchInput');
+            if (!panel) return;
+            const isHidden = panel.classList.contains('hidden');
+            
+            if (isHidden) {
+                panel.classList.remove('hidden');
+                setTimeout(() => input?.focus(), 50);
+            } else {
+                panel.classList.add('hidden');
+            }
+        }
+
+        function selectSekolahOption(id, name) {
+            const input = document.getElementById('sekolahIdInput');
+            const label = document.getElementById('sekolahSelectLabel');
+            const panel = document.getElementById('sekolahDropdownPanel');
+            
+            if (input) input.value = id;
+            if (label) label.innerText = name || '-- Pilih Satuan Pendidikan --';
+            if (panel) panel.classList.add('hidden');
+            
+            // Update checkmarks & styling
+            document.querySelectorAll('.sekolah-option-item').forEach(item => {
+                const itemSpan = item.querySelector('span');
+                let checkIcon = item.querySelector('.fa-check');
+                
+                if (item.getAttribute('data-id') == id) {
+                    item.classList.add('bg-blue-900', 'text-white', 'font-bold');
+                    item.classList.remove('text-gray-700');
+                    if (itemSpan) {
+                        itemSpan.classList.add('text-white');
+                        itemSpan.classList.remove('text-gray-800');
+                    }
+                    if (!checkIcon && id !== '') {
+                        checkIcon = document.createElement('i');
+                        checkIcon.className = 'fas fa-check text-white text-xs flex-shrink-0 ml-2';
+                        item.appendChild(checkIcon);
+                    }
+                } else {
+                    item.classList.remove('bg-blue-900', 'text-white', 'font-bold');
+                    item.classList.add('text-gray-700');
+                    if (itemSpan) {
+                        itemSpan.classList.remove('text-white');
+                        itemSpan.classList.add('text-gray-800');
+                    }
+                    if (checkIcon) checkIcon.remove();
+                }
+            });
+        }
+
+        function filterSekolahOptions() {
+            const searchInput = document.getElementById('sekolahSearchInput');
+            const clearBtn = document.getElementById('clearSekolahSearchBtn');
+            const noFound = document.getElementById('noSekolahFound');
+            if (!searchInput) return;
+
+            const query = searchInput.value.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+            const items = document.querySelectorAll('.sekolah-option-item');
+            let visibleCount = 0;
+
+            if (query.length > 0) {
+                clearBtn?.classList.remove('hidden');
+            } else {
+                clearBtn?.classList.add('hidden');
+            }
+
+            items.forEach(item => {
+                const searchText = item.getAttribute('data-search') || '';
+                const cleanSearch = searchText.replace(/[^a-z0-9]/g, '');
+                
+                if (!query || cleanSearch.includes(query)) {
+                    item.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            if (visibleCount === 0) {
+                noFound?.classList.remove('hidden');
+            } else {
+                noFound?.classList.add('hidden');
+            }
+        }
+
+        function clearSekolahSearch() {
+            const input = document.getElementById('sekolahSearchInput');
+            if (input) {
+                input.value = '';
+                filterSekolahOptions();
+                input.focus();
+            }
+        }
+
+        // Close dropdown on click outside
+        document.addEventListener('click', function(e) {
+            const container = document.getElementById('customSekolahSelect');
+            const panel = document.getElementById('sekolahDropdownPanel');
+            if (container && panel && !container.contains(e.target)) {
+                panel.classList.add('hidden');
+            }
+        });
+
+        // Initialize label if old/preset value exists
+        document.addEventListener('DOMContentLoaded', function() {
+            const hiddenVal = document.getElementById('sekolahIdInput')?.value;
+            if (hiddenVal) {
+                const activeItem = document.querySelector(`.sekolah-option-item[data-id="${hiddenVal}"]`);
+                if (activeItem) {
+                    const name = activeItem.getAttribute('data-name');
+                    if (name) {
+                        const label = document.getElementById('sekolahSelectLabel');
+                        if (label) label.innerText = name;
+                    }
+                }
+            }
+        });
+
+        window.handleFileUploadPreview = function(input, previewId, infoId, iconId, previewIconId) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                const ext = file.name.split('.').pop().toLowerCase();
+                
+                const infoElem = document.getElementById(infoId);
+                const previewElem = document.getElementById(previewId);
+                const iconElem = document.getElementById(iconId);
+                const previewIconElem = document.getElementById(previewIconId);
+                
+                // Dynamic File Type Icon
+                if (previewIconElem) {
+                    if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
+                        previewIconElem.className = 'fas fa-file-image text-blue-600 text-sm';
+                    } else if (ext === 'pdf') {
+                        previewIconElem.className = 'fas fa-file-pdf text-rose-500 text-sm';
+                    } else {
+                        previewIconElem.className = 'fas fa-file text-gray-500 text-sm';
+                    }
+                }
+
+                if (infoElem) {
+                    infoElem.innerText = `${file.name} (${fileSizeMB} MB)`;
+                }
+                if (previewElem) {
+                    previewElem.classList.remove('hidden');
+                }
+                if (iconElem) {
+                    iconElem.className = 'fas fa-circle-check text-xl text-emerald-600';
+                }
+            }
+        };
+    </script>
 @endsection

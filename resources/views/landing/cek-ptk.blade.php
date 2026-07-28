@@ -5,7 +5,7 @@
 @section('content')
     <!-- ===== UNIFIED HERO HEADER BLOCK (MATCHING HOMEPAGE BRANDING) ===== -->
     <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white relative overflow-hidden shadow-2xl">
-        
+
         <!-- Hope UI Background Wave Gradient Overlay -->
         <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 600">
             <path d="M 200,600 C 360,320 520,60 750,0 L 1000,0 L 1000,600 Z" fill="url(#landingWaveGrad1)"></path>
@@ -26,9 +26,6 @@
         @include('landing.navbarlanding')
 
         <div class="w-full px-6 md:px-12 pt-32 pb-20 relative z-10 space-y-4">
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-blue-200 bg-white/10 px-3.5 py-1.5 rounded-full border border-white/15 inline-flex items-center gap-2">
-                <i class="fas fa-magnifying-glass text-xs text-blue-300"></i> Pencarian Publik
-            </span>
             <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Cek Status Verifikasi Data PTK</h1>
             <p class="text-sm md:text-base text-blue-100/90 max-w-2xl font-normal leading-relaxed">
                 Verifikasi status keaktifan, kualifikasi 7 kriteria kepegawaian, dan kepemilikan Sertifikat Pendidik (Serdik) secara transparan.
@@ -38,7 +35,7 @@
 
     <!-- ===== CEK PTK SEARCH CONTENT ===== -->
     <main class="max-w-4xl mx-auto px-6 md:px-12 py-16 space-y-10">
-        
+
         <!-- Search Card Widget -->
         <div class="bg-white rounded-3xl border border-gray-200 shadow-xl p-8 space-y-6">
             <div class="space-y-2 text-center max-w-lg mx-auto">
@@ -58,47 +55,86 @@
             </form>
         </div>
 
-        <!-- Verification Demo Result Card (Sample Data) -->
-        <div class="bg-white rounded-3xl border border-gray-200/90 shadow-lg p-8 space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-lg">
-                        <i class="fas fa-user-check"></i>
+        <!-- Verification Result Card (Dynamic Data) -->
+        @if(!empty($keyword))
+            @if($pegawai)
+                <div class="bg-white rounded-3xl border border-gray-200/90 shadow-lg p-8 space-y-6">
+                    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-800 flex items-center justify-center font-bold text-lg">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-extrabold text-base text-gray-900">{{ $pegawai->nama }}</h4>
+                                <p class="text-xs font-medium text-gray-500">NIP: {{ $pegawai->nip ?? '-' }} • NIK: {{ $pegawai->nik ?? '-' }}</p>
+                            </div>
+                        </div>
+                        @if($pegawai->status_verifikasi === 'Disetujui')
+                            <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs flex items-center gap-1.5">
+                                <i class="fas fa-check-circle text-xs"></i> DATA PTK TERVERIFIKASI
+                            </span>
+                        @elseif($pegawai->status_verifikasi === 'Ditolak')
+                            <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-extrabold text-xs flex items-center gap-1.5">
+                                <i class="fas fa-circle-xmark text-xs"></i> PERLU PERBAIKAN BERKAS
+                            </span>
+                        @else
+                            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 font-extrabold text-xs flex items-center gap-1.5">
+                                <i class="fas fa-clock text-xs"></i> MENUNGGU VERIFIKASI
+                            </span>
+                        @endif
                     </div>
-                    <div>
-                        <h4 class="font-extrabold text-base text-gray-900">Budi Santoso, S.Pd.</h4>
-                        <p class="text-xs font-medium text-gray-500">NIP: 198503202010011005 • Guru Kelas SD</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
+                            <span class="text-gray-400 font-medium">Satuan Pendidikan (Sekolah):</span>
+                            <p class="font-bold text-gray-800">{{ $pegawai->sekolah->nama ?? '-' }}</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
+                            <span class="text-gray-400 font-medium">Status Kepegawaian (7 Kriteria):</span>
+                            <p class="font-bold text-blue-800">{{ $pegawai->status_kepegawaian }}</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
+                            <span class="text-gray-400 font-medium">Pangkat / Golongan Ruang:</span>
+                            <p class="font-bold text-gray-800">{{ $pegawai->pangkat_golongan ?? '-' }}</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
+                            <span class="text-gray-400 font-medium">Status Sertifikasi Pendidik (Serdik):</span>
+                            @if($pegawai->is_serdik)
+                                <p class="font-bold text-emerald-700">Bersertifikasi Pendidik (Aktif)</p>
+                            @else
+                                <p class="font-bold text-gray-500">Belum Bersertifikasi Pendidik</p>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 text-xs text-blue-900 flex items-center justify-between">
+                        <span class="font-medium">Data diperbarui secara otomatis dari SIMPEG-SP Dinas Pendidikan.</span>
+                        <span class="font-bold text-blue-800">{{ $pegawai->updated_at ? $pegawai->updated_at->translatedFormat('d F Y') : date('d F Y') }}</span>
                     </div>
                 </div>
-                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs flex items-center gap-1.5">
-                    <i class="fas fa-check-circle text-xs"></i> DATA PTK TERVERIFIKASI
-                </span>
+            @else
+                <div class="bg-white rounded-3xl border border-gray-200/90 shadow-lg p-8 text-center space-y-4">
+                    <div class="w-16 h-16 rounded-full bg-rose-100 text-rose-800 flex items-center justify-center text-2xl mx-auto">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <h4 class="font-extrabold text-base text-gray-900">Data PTK Tidak Ditemukan</h4>
+                        <p class="text-xs text-gray-500">NIP atau NIK "{{ $keyword }}" tidak terdaftar di sistem SIMPEG-SP Dinas Pendidikan.</p>
+                    </div>
+                </div>
+            @endif
+        @else
+            <!-- Default Info Card when no search has been made -->
+            <div class="bg-white rounded-3xl border border-gray-200/90 shadow-lg p-8 text-center space-y-4">
+                <div class="w-16 h-16 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center text-2xl mx-auto">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="font-extrabold text-base text-gray-900">Silakan Cari Data PTK</h4>
+                    <p class="text-xs text-gray-500">Masukkan NIP atau NIK pegawai pada form di atas untuk memverifikasi status keaktifan data.</p>
+                </div>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
-                    <span class="text-gray-400 font-medium">Satuan Pendidikan (Sekolah):</span>
-                    <p class="font-bold text-gray-800">SD Negeri 01 Pusat Kota</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
-                    <span class="text-gray-400 font-medium">Status Kepegawaian (7 Kriteria):</span>
-                    <p class="font-bold text-blue-800">Pegawai Negeri Sipil (PNS)</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
-                    <span class="text-gray-400 font-medium">Pangkat / Golongan Ruang:</span>
-                    <p class="font-bold text-gray-800">Penata Muda Tk. I / III/b</p>
-                </div>
-                <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
-                    <span class="text-gray-400 font-medium">Status Sertifikasi Pendidik (Serdik):</span>
-                    <p class="font-bold text-emerald-700">Bersertifikasi Pendidik (Aktif)</p>
-                </div>
-            </div>
-
-            <div class="p-4 rounded-2xl bg-blue-50/70 border border-blue-100 text-xs text-blue-900 flex items-center justify-between">
-                <span class="font-medium">Data diperbarui secara otomatis dari SIMPEG-SP Dinas Pendidikan.</span>
-                <span class="font-bold text-blue-800">25 Juli 2026</span>
-            </div>
-        </div>
+        @endif
 
     </main>
 

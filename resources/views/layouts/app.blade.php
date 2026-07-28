@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'SIMPEG-SP - Dashboard Admin Dinas')</title>
     
-    <!-- System Theme Initializer (Excludes Login & Landing) -->
+    <!-- System Theme Initializer (Excludes Login, /, and Public Landing Pages) -->
     <script>
         (function() {
-            if (window.location.pathname === '/' || window.location.pathname.includes('/login') || window.location.pathname.includes('/landing')) {
+            const path = window.location.pathname;
+            const isPublicPage = path === '/' || path === '/login' || path.startsWith('/landing') || 
+                                 path.startsWith('/statistik') || path.startsWith('/layanan') || 
+                                 path.startsWith('/cek-ptk') || (path.startsWith('/pengumuman') && !path.startsWith('/admin'));
+            if (isPublicPage) {
                 document.documentElement.setAttribute('data-theme', 'deep_blue');
             } else {
                 const savedTheme = localStorage.getItem('simpegTheme') || 'deep_blue';
@@ -59,6 +63,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/header-banner.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/calendar.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/tables.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/dropdown.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker.css') }}">
 
@@ -139,23 +144,33 @@
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
 
     @php
-        $isPublicPage = View::hasSection('hideNav') || Request::is('/') || Request::is('login') || Request::is('landing*');
+        $isPublicPage = View::hasSection('hideNav') || Request::is('/') || Request::is('login') || Request::is('landing*') || Request::is('statistik*') || Request::is('layanan*') || Request::is('cek-ptk*') || (Request::is('pengumuman*') && !Request::is('admin*'));
     @endphp
 
     @unless($isPublicPage)
-        <!-- Mobile Sidebar Overlay -->
-        <div class="fixed inset-0 bg-gray-900/50 z-40 md:hidden" id="sidebarOverlay"></div>
+        <!-- Global Sidebar Navigation Partial -->
+        @include('layouts.sidebar')
+
+        <!-- Mobile Sidebar Overlay (Dark Dimmed + Backdrop Blur via app.css) -->
+        <div id="sidebarOverlay"></div>
     @endunless
 
-    <!-- Main Content Wrapper -->
-    <main class="{{ $isPublicPage ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
+    <!-- Main Content Wrapper (w-full 100% on public pages) -->
+    <main class="{{ $isPublicPage ? 'w-full' : 'md:ml-[80px] lg:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
         @unless($isPublicPage)
             <!-- Top Navbar Partial -->
             @include('layouts.navbar')
         @endunless
 
         <!-- Dynamic Content Section -->
-        @yield('content')
+        <div class="flex-1 flex flex-col">
+            @yield('content')
+        </div>
+
+        @unless($isPublicPage)
+            <!-- Admin Footer Partial (Full Width Edge-to-Edge & Sticks to Bottom) -->
+            @include('layouts.footer')
+        @endunless
     </main>
 
     <!-- jQuery & Select2 JS CDN -->
@@ -170,6 +185,7 @@
     <script src="{{ asset('assets/js/calendar.js') }}"></script>
     <script src="{{ asset('assets/js/dropdown.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker.js') }}"></script>
+    <script src="{{ asset('assets/js/tables.js') }}"></script>
     <script>
         $(document).ready(function() {
             function initSelect2() {

@@ -28,7 +28,7 @@ class DashboardController extends Controller
         // Summary Card Stats
         $totalSekolah = (clone $sekolahQuery)->count();
         $totalPegawai = (clone $pegawaiQuery)->count();
-        
+
         $totalPns = (clone $pegawaiQuery)->where('status_kepegawaian', 'PNS')->count();
         $totalPppk = (clone $pegawaiQuery)->where('status_kepegawaian', 'PPPK')->count();
         $totalPppkPw = (clone $pegawaiQuery)->where('status_kepegawaian', 'PPPK PW')->count();
@@ -38,7 +38,13 @@ class DashboardController extends Controller
         $totalDefinitif = (clone $sekolahQuery)->where('status_kepala_sekolah', 'Definitif')->count();
         $totalPlt = (clone $sekolahQuery)->where('status_kepala_sekolah', 'Plt')->count();
         $totalPlh = (clone $sekolahQuery)->where('status_kepala_sekolah', 'Plh')->count();
-        $totalOperator = User::where('role', 'OPERATOR_SEKOLAH')->count();
+
+        // Scope operator count by role
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            $totalOperator = User::where('role', 'OPERATOR_SEKOLAH')->where('sekolah_id', $user->sekolah_id)->count();
+        } else {
+            $totalOperator = User::where('role', 'OPERATOR_SEKOLAH')->count();
+        }
 
         // Chart 1: Top 7 Kecamatan by Total Schools
         $kecamatanStats = Sekolah::select('kecamatan', DB::raw('count(*) as total'))

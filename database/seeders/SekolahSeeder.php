@@ -4,52 +4,46 @@ namespace Database\Seeders;
 
 use App\Models\Sekolah;
 use Illuminate\Database\Seeder;
-use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\File;
 
 class SekolahSeeder extends Seeder
 {
     public function run(): void
     {
-        $filePath = 'C:/Users/ilham/Downloads/Data Pegawai Satuan Pendidikan Tahun 2026 (Jawaban) (1).xlsx';
+        $jsonPath = database_path('seeders/sekolahs_data.json');
 
-        if (file_exists($filePath)) {
-            try {
-                $spreadsheet = IOFactory::load($filePath);
-                $sheet = $spreadsheet->getActiveSheet();
-                $rows = $sheet->toArray();
+        if (File::exists($jsonPath)) {
+            $jsonContent = File::get($jsonPath);
+            $sekolahs = json_decode($jsonContent, true);
 
-                for ($i = 1; $i < count($rows); $i++) {
-                    $row = $rows[$i];
-                    $npsn = trim((string) ($row[4] ?? ''));
-
-                    if (empty($npsn) || !is_numeric($npsn)) {
-                        continue;
-                    }
-
-                    $namaKepala = trim((string) ($row[1] ?? ''));
-                    $nipKepala = trim((string) ($row[2] ?? ''));
-                    $namaSekolah = trim((string) ($row[3] ?? ''));
-                    $kecamatan = trim((string) ($row[5] ?? ''));
-                    $statusKepala = trim((string) ($row[8] ?? 'Definitif'));
-                    $emailSekolah = trim((string) ($row[9] ?? ''));
-
-                    Sekolah::updateOrCreate(
-                        ['npsn' => $npsn],
-                        [
-                            'nama_sekolah' => $namaSekolah ?: 'Sekolah NPSN ' . $npsn,
-                            'kecamatan' => $kecamatan ?: 'Kecamatan Utama',
-                            'nama_kepala_sekolah' => $namaKepala ?: null,
-                            'nip_kepala_sekolah' => $nipKepala ?: null,
-                            'status_kepala_sekolah' => $statusKepala ?: 'Definitif',
-                            'email_sekolah' => $emailSekolah ?: null,
-                        ]
-                    );
-                }
-            } catch (\Throwable $e) {
-                // Ignore if not present
+            foreach ($sekolahs as $data) {
+                Sekolah::updateOrCreate(
+                    ['npsn' => $data['npsn']],
+                    [
+                        'nama_sekolah'          => $data['nama_sekolah'],
+                        'kecamatan'             => $data['kecamatan'],
+                        'nama_kepala_sekolah'   => $data['nama_kepala_sekolah'] ?? null,
+                        'nip_kepala_sekolah'    => $data['nip_kepala_sekolah'] ?? null,
+                        'status_kepala_sekolah' => $data['status_kepala_sekolah'] ?? 'Definitif',
+                        'email_sekolah'         => !empty($data['email_sekolah']) ? $data['email_sekolah'] : null,
+                        'alamat'                => $data['alamat'] ?? ('Jl. Pendidikan, Kec. ' . $data['kecamatan']),
+                    ]
+                );
             }
+        } else {
+            // Default Fallback
+            Sekolah::updateOrCreate(
+                ['npsn' => '20523594'],
+                [
+                    'nama_sekolah'          => 'SDN Kertonegoro 01',
+                    'kecamatan'             => 'Jenggawah',
+                    'nama_kepala_sekolah'   => 'NURUL WIDIYASTUTIK, S.Pd',
+                    'nip_kepala_sekolah'    => '197205221994032006',
+                    'status_kepala_sekolah' => 'Plt',
+                    'email_sekolah'         => 'sdnkertonegoro01@dinas.sch.id',
+                    'alamat'                => 'Jl. Pendidikan No. 01, Kec. Jenggawah',
+                ]
+            );
         }
     }
 }
-
-

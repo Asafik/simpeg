@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
         nativeSelects.forEach(select => {
             if (select.closest('.custom-select-wrapper')) return; // Already inside custom wrapper
 
+            const selectName = select.name || '';
+            const selectId = select.id || '';
+
+            // Remove name and required from original native select to prevent un-focusable HTML5 validation errors
+            select.removeAttribute('name');
+            select.removeAttribute('required');
+
             const wrapper = document.createElement('div');
             wrapper.className = 'custom-select-wrapper relative flex-1 min-w-[140px]';
 
@@ -18,9 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Trigger Button
             const trigger = document.createElement('button');
             trigger.type = 'button';
-            trigger.className = 'custom-select-trigger w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-left flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-blue-800/20';
+            trigger.className = 'custom-select-trigger w-full bg-gray-50 border border-gray-200 rounded-lg px-3.5 py-2.5 text-xs text-left flex items-center justify-between transition focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-medium';
             trigger.innerHTML = `
-                <span class="custom-select-label font-medium text-gray-700 truncate mr-2">${placeholder}</span>
+                <span class="custom-select-label text-gray-700 truncate mr-2 font-medium">${placeholder}</span>
                 <i class="fas fa-angle-down text-gray-400 text-xs transition-transform duration-200 flex-shrink-0"></i>
             `;
 
@@ -33,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             Array.from(select.options).forEach(opt => {
                 const optDiv = document.createElement('div');
-                optDiv.className = `custom-option px-3 py-2 hover:bg-blue-50/70 hover:text-blue-800 cursor-pointer font-medium transition ${opt.selected ? 'selected' : ''}`;
+                optDiv.className = `custom-option px-3.5 py-2 hover:bg-blue-50/70 hover:text-blue-800 cursor-pointer font-medium transition ${opt.selected ? 'selected bg-blue-50 text-blue-800 font-bold' : ''}`;
                 optDiv.setAttribute('data-value', opt.value);
                 optDiv.textContent = opt.text;
                 listContainer.appendChild(optDiv);
@@ -44,8 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hidden real input for form submission
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
-            hiddenInput.name = select.name || '';
-            hiddenInput.id = select.id || '';
+            hiddenInput.name = selectName;
+            if (selectId) hiddenInput.id = selectId;
             hiddenInput.className = 'custom-select-input';
             hiddenInput.value = value;
 
@@ -109,8 +116,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
                     }
 
-                    options.forEach(o => o.classList.remove('selected'));
-                    this.classList.add('selected');
+                    options.forEach(o => o.classList.remove('selected', 'bg-blue-50', 'text-blue-800', 'font-bold'));
+                    this.classList.add('selected', 'bg-blue-50', 'text-blue-800', 'font-bold');
 
                     menu.classList.add('hidden');
                     if (arrow) arrow.classList.remove('rotate-180');

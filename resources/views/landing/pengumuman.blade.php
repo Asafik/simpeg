@@ -26,9 +26,6 @@
         @include('landing.navbarlanding')
 
         <div class="w-full px-6 md:px-12 pt-32 pb-20 relative z-10 space-y-4">
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-blue-200 bg-white/10 px-3.5 py-1.5 rounded-full border border-white/15 inline-flex items-center gap-2">
-                <i class="fas fa-bullhorn text-xs text-blue-300"></i> Pusat Informasi Resmi
-            </span>
             <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Pengumuman &amp; Berita Kepegawaian</h1>
             <p class="text-sm md:text-base text-blue-100/90 max-w-2xl font-normal leading-relaxed">
                 Informasi resmi seputar edaran verifikasi berkas, pemutakhiran sertifikasi pendidik, dan kebijakan Dinas Pendidikan.
@@ -42,76 +39,64 @@
         <!-- Filter Tabs & Search Bar -->
         <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-4">
             <div class="flex items-center gap-2 text-xs font-bold">
-                <button class="px-4 py-2 rounded-xl bg-blue-800 text-white shadow-sm">Semua Kategori</button>
-                <button class="px-4 py-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Verifikasi Berkas</button>
-                <button class="px-4 py-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Sertifikasi Pendidik</button>
-                <button class="px-4 py-2 rounded-xl bg-gray-100 text-gray-600 hover:bg-gray-200 transition">Kebijakan Dinas</button>
+                <a href="{{ route('landing.pengumuman', ['category' => 'all']) }}" class="px-4 py-2 rounded-xl {{ request('category', 'all') == 'all' ? 'bg-blue-800 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }} transition">Semua Kategori</a>
+                <a href="{{ route('landing.pengumuman', ['category' => 'Verifikasi']) }}" class="px-4 py-2 rounded-xl {{ request('category') == 'Verifikasi' ? 'bg-blue-800 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }} transition">Verifikasi Berkas</a>
+                <a href="{{ route('landing.pengumuman', ['category' => 'Penting']) }}" class="px-4 py-2 rounded-xl {{ request('category') == 'Penting' ? 'bg-blue-800 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }} transition">Penting</a>
+                <a href="{{ route('landing.pengumuman', ['category' => 'Surat Edaran']) }}" class="px-4 py-2 rounded-xl {{ request('category') == 'Surat Edaran' ? 'bg-blue-800 text-white shadow-sm' : 'bg-gray-100 text-gray-600 hover:bg-gray-200' }} transition">Surat Edaran</a>
             </div>
 
-            <div class="relative w-full sm:w-64">
+            <form action="{{ route('landing.pengumuman') }}" method="GET" class="relative w-full sm:w-64">
                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                <input type="text" placeholder="Cari pengumuman..." class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-8 pr-3 py-2 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-800/20">
-            </div>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari pengumuman..." class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-8 pr-3 py-2 text-xs text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-medium">
+            </form>
         </div>
 
         <!-- Announcements Grid List -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            <!-- Card 1 -->
-            <div class="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-sm space-y-4 hover:shadow-md transition">
-                <div class="flex items-center justify-between text-xs">
-                    <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 font-bold text-[10px]">VERIFIKASI BERKAS</span>
-                    <span class="text-gray-400 font-medium">25 Juli 2026</span>
+            @if(isset($announcements) && count($announcements) > 0)
+                @foreach($announcements as $item)
+                    <div class="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-sm space-y-4 hover:shadow-md transition flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold border {{ $item->kategori_badge_class }}">
+                                    {{ strtoupper($item->kategori) }}
+                                </span>
+                                <span class="text-gray-400 font-medium text-[11px]">
+                                    {{ $item->created_at ? $item->created_at->format('d M Y') : '-' }}
+                                </span>
+                            </div>
+                            <h3 class="text-base font-bold text-gray-900 leading-snug">
+                                {{ $item->judul }}
+                            </h3>
+                            <p class="text-xs text-gray-600 leading-relaxed">
+                                {{ $item->ringkasan ?: Str::limit(strip_tags($item->isi), 140) }}
+                            </p>
+                        </div>
+                        
+                        <div class="pt-3 border-t border-gray-100 flex items-center justify-between">
+                            <span class="text-[10px] text-gray-400 font-medium"><i class="fas fa-user-circle mr-1"></i> {{ $item->penulis_nama ?? 'Dinas Pendidikan' }}</span>
+                            @if($item->lampiran_file)
+                                <a href="{{ asset('storage/' . $item->lampiran_file) }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 hover:underline">
+                                    <span>Unduh Lampiran</span>
+                                    <i class="fas fa-download text-[10px]"></i>
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="col-span-1 md:col-span-3 bg-white rounded-2xl border border-gray-200/80 p-12 text-center text-gray-400 space-y-3">
+                    <i class="fas fa-bullhorn text-4xl text-gray-300"></i>
+                    <p class="font-bold text-gray-600 text-sm">Belum ada pengumuman resmi yang diterbitkan saat ini.</p>
                 </div>
-                <h3 class="text-base font-bold text-gray-900 hover:text-blue-800 cursor-pointer transition">
-                    Jadwal Verifikasi Berkas Kepegawaian Tahap II Tahun 2026
-                </h3>
-                <p class="text-xs text-gray-500 leading-relaxed">
-                    Dinas Pendidikan membuka tahap verifikasi ulang berkas SK Kepegawaian bagi seluruh pegawai Non-ASN dan PPPK Paruh Waktu.
-                </p>
-                <a href="#" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 hover:underline">
-                    <span>Baca Selengkapnya</span>
-                    <i class="fas fa-arrow-right text-[10px]"></i>
-                </a>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-sm space-y-4 hover:shadow-md transition">
-                <div class="flex items-center justify-between text-xs">
-                    <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px]">SERTIFIKASI PENDIDIK</span>
-                    <span class="text-gray-400 font-medium">20 Juli 2026</span>
-                </div>
-                <h3 class="text-base font-bold text-gray-900 hover:text-blue-800 cursor-pointer transition">
-                    Pemutakhiran Data Sertifikasi Pendidik (Serdik) Guru SD &amp; SMP
-                </h3>
-                <p class="text-xs text-gray-500 leading-relaxed">
-                    Himbauan kepada Operator Sekolah untuk memperbarui data sertifikasi guru di portal SIMPEG-SP sebelum batas waktu berakhir.
-                </p>
-                <a href="#" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 hover:underline">
-                    <span>Baca Selengkapnya</span>
-                    <i class="fas fa-arrow-right text-[10px]"></i>
-                </a>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-sm space-y-4 hover:shadow-md transition">
-                <div class="flex items-center justify-between text-xs">
-                    <span class="px-2.5 py-1 rounded-full bg-purple-100 text-purple-800 font-bold text-[10px]">KEBIJAKAN DINAS</span>
-                    <span class="text-gray-400 font-medium">15 Juli 2026</span>
-                </div>
-                <h3 class="text-base font-bold text-gray-900 hover:text-blue-800 cursor-pointer transition">
-                    Edaran Sistem Informasi Kepegawaian Satuan Pendidikan 2026
-                </h3>
-                <p class="text-xs text-gray-500 leading-relaxed">
-                    Instruksi Kepala Dinas Pendidikan mengenai penggunaan resmi platform SIMPEG-SP untuk seluruh Kepala Sekolah dan Operator.
-                </p>
-                <a href="#" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 hover:underline">
-                    <span>Baca Selengkapnya</span>
-                    <i class="fas fa-arrow-right text-[10px]"></i>
-                </a>
-            </div>
-
+            @endif
         </div>
+
+        @if(isset($announcements) && method_exists($announcements, 'hasPages') && $announcements->hasPages())
+            <div class="flex justify-center pt-4">
+                {{ $announcements->links() }}
+            </div>
+        @endif
 
     </main>
 

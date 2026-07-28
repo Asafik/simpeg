@@ -18,11 +18,11 @@
         <div class="space-y-3">
             <h3 class="font-bold text-sm text-white">Tautan Cepat</h3>
             <ul class="space-y-2 text-blue-200/80">
-                <li><a href="{{ url('/landing') }}" class="hover:text-white transition">Beranda</a></li>
-                <li><a href="{{ url('/landing/statistik') }}" class="hover:text-white transition">Statistik Data</a></li>
-                <li><a href="{{ url('/landing/layanan') }}" class="hover:text-white transition">Layanan & Keunggulan</a></li>
-                <li><a href="{{ url('/landing/cek-ptk') }}" class="hover:text-white transition">Cek Data PTK</a></li>
-                <li><a href="{{ url('/landing/pengumuman') }}" class="hover:text-white transition">Pengumuman</a></li>
+                <li><a href="{{ url('/') }}" class="hover:text-white transition">Beranda</a></li>
+                <li><a href="{{ url('/statistik') }}" class="hover:text-white transition">Statistik Data</a></li>
+                <li><a href="{{ url('/layanan') }}" class="hover:text-white transition">Layanan & Keunggulan</a></li>
+                <li><a href="{{ url('/cek-ptk') }}" class="hover:text-white transition">Cek Data PTK</a></li>
+                <li><a href="{{ url('/pengumuman') }}" class="hover:text-white transition">Pengumuman</a></li>
                 <li><a href="{{ url('/login') }}" class="hover:text-white transition">Portal Login Admin</a></li>
             </ul>
         </div>

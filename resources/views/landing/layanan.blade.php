@@ -5,7 +5,7 @@
 @section('content')
     <!-- ===== UNIFIED HERO HEADER BLOCK (MATCHING HOMEPAGE BRANDING) ===== -->
     <div class="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white relative overflow-hidden shadow-2xl">
-        
+
         <!-- Hope UI Background Wave Gradient Overlay -->
         <svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 1000 600">
             <path d="M 200,600 C 360,320 520,60 750,0 L 1000,0 L 1000,600 Z" fill="url(#landingWaveGrad1)"></path>
@@ -26,9 +26,7 @@
         @include('landing.navbarlanding')
 
         <div class="w-full px-6 md:px-12 pt-32 pb-20 relative z-10 space-y-4">
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-blue-200 bg-white/10 px-3.5 py-1.5 rounded-full border border-white/15 inline-flex items-center gap-2">
-                <i class="fas fa-layer-group text-xs text-blue-300"></i> Sistem Manajemen Terpadu
-            </span>
+
             <h1 class="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Layanan &amp; Keunggulan Sistem</h1>
             <p class="text-sm md:text-base text-blue-100/90 max-w-2xl font-normal leading-relaxed">
                 Fitur unggulan SIMPEG-SP yang dirancang untuk mendukung transformasi digital tata kelola kepegawaian di seluruh Satuan Pendidikan.
@@ -38,7 +36,7 @@
 
     <!-- ===== LAYANAN DETAIL CONTENT ===== -->
     <main class="w-full px-6 md:px-12 py-16 space-y-16">
-        
+
         <!-- Feature 1 Detailed Breakdown -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div class="space-y-4">
@@ -64,15 +62,15 @@
                     <div class="text-left space-y-2">
                         <div class="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs font-bold text-blue-900 flex justify-between">
                             <span>1. Pegawai Negeri Sipil (PNS)</span>
-                            <span>58%</span>
+                            <span>{{ $persenPns }}%</span>
                         </div>
                         <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-900 flex justify-between">
                             <span>2. PPPK Penuh Waktu</span>
-                            <span>24%</span>
+                            <span>{{ $persenPppk }}%</span>
                         </div>
                         <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-900 flex justify-between">
                             <span>3. PPPK Paruh Waktu</span>
-                            <span>10%</span>
+                            <span>{{ $persenPppkPw }}%</span>
                         </div>
                     </div>
                 </div>

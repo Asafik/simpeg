@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,6 +55,24 @@ class AuthController extends Controller
 
         if (Auth::attempt([$fieldType => $credentials['login'], 'password' => $credentials['password']], $request->remember)) {
             $request->session()->regenerate();
+            $user = Auth::user();
+
+            // Record ActivityLog on Login
+            try {
+                ActivityLog::create([
+                    'loggable_type' => User::class,
+                    'loggable_id'   => $user->id,
+                    'action'        => 'login',
+                    'label'         => "Login ke dalam sistem SIMPEG-SP",
+                    'changes'       => null,
+                    'user_id'       => $user->id,
+                    'user_name'     => $user->name,
+                    'user_role'     => $user->role === 'ADMIN_DINAS' ? 'Admin Dinas' : 'Operator Sekolah',
+                    'ip_address'    => $request->ip(),
+                ]);
+            } catch (\Throwable $e) {
+                // Ignore failure
+            }
 
             $user = Auth::user();
             if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
@@ -74,6 +94,25 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        if ($user) {
+            try {
+                ActivityLog::create([
+                    'loggable_type' => User::class,
+                    'loggable_id'   => $user->id,
+                    'action'        => 'logout',
+                    'label'         => "Logout dari sistem SIMPEG-SP",
+                    'changes'       => null,
+                    'user_id'       => $user->id,
+                    'user_name'     => $user->name,
+                    'user_role'     => $user->role === 'ADMIN_DINAS' ? 'Admin Dinas' : 'Operator Sekolah',
+                    'ip_address'    => $request->ip(),
+                ]);
+            } catch (\Throwable $e) {
+                // Ignore failure
+            }
+        }
+
         Auth::logout();
 
         if ($request && method_exists($request, 'session')) {
