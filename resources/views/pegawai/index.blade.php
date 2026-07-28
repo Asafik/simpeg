@@ -258,9 +258,20 @@
                         <option value=">55" {{ request('kelompok_usia') == '>55' ? 'selected' : '' }}>&gt; 55 Tahun (Pensiun)</option>
                     </select>
                 </div>
+
+                <!-- 8. Penugasan / Multi-Sekolah -->
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">8. Penugasan Sekolah</label>
+                    <select name="multi_sekolah" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
+                        <option value="">Semua Penugasan Sekolah</option>
+                        <option value="1" {{ (request('multi_sekolah') == '1' || request('multi_sekolah') == 'ya') ? 'selected' : '' }}>&gt; 1 Sekolah (Multi-Sekolah) [{{ $totalMultiSekolahCount ?? 176 }}]</option>
+                        <option value="0" {{ (request('multi_sekolah') == '0' || request('multi_sekolah') == 'tidak') ? 'selected' : '' }}>1 Sekolah Saja</option>
+                    </select>
+                </div>
+
                 <!-- Filter Action Buttons Bar -->
                 <div class="col-span-1 sm:col-span-2 md:col-span-4 flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
-                    @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('is_serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia'))
+                    @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('is_serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia') || request('multi_sekolah'))
                         <a href="{{ route('pegawai.index') }}" onclick="showLoadingOverlay('Mereset Filter...', 'Mengembalikan daftar master data Pegawai...')" class="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
                             <i class="fas fa-rotate-left text-[10px]"></i> Reset Filter
                         </a>
@@ -300,7 +311,7 @@
                     <span class="text-xs text-gray-500 font-bold">
                         Menampilkan {{ isset($pegawais) && method_exists($pegawais, 'total') ? $pegawais->total() : (\App\Models\Pegawai::count()) }} Master Data Pegawai (PTK)
                     </span>
-                    @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('is_serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia'))
+                    @if(request('search') || request('status_kepegawaian') || request('jabatan_fungsional') || request('serdik') || request('is_serdik') || request('jenis_ptk') || request('jenis_guru') || request('tingkat_pendidikan') || request('kelompok_usia') || request('multi_sekolah'))
                         <div class="flex items-center gap-2">
                             <span class="text-xs text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full font-bold">
                                 <i class="fas fa-check-circle mr-1"></i> Filter Aktif: 
@@ -308,6 +319,7 @@
                                 @if(request('jabatan_fungsional')) | Jabatan: {{ request('jabatan_fungsional') }} @endif
                                 @if(request('jenis_ptk')) | PTK: {{ request('jenis_ptk') }} @endif
                                 @if(request('jenis_guru')) | Guru: {{ request('jenis_guru') }} @endif
+                                @if(request('multi_sekolah')) | Penugasan: {{ request('multi_sekolah') == '1' ? '>1 Sekolah (Multi)' : '1 Sekolah' }} @endif
                             </span>
                         </div>
                     @endif
@@ -348,13 +360,13 @@
                                         </td>
                                         <td class="px-4 py-3.5">
                                             <div class="flex items-center gap-2.5">
-                                                @php
-                                                    $words = explode(' ', $pegawai->nama_lengkap);
-                                                    $initials = strtoupper(substr($words[0] ?? 'P', 0, 1) . substr($words[1] ?? 'T', 0, 1));
-                                                @endphp
-                                                <div class="w-8 h-8 rounded-full bg-blue-800 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">
-                                                    {{ $initials }}
-                                                </div>
+                                                @if($pegawai->photo_profile)
+                                                    <img src="{{ $pegawai->profile_picture_url }}" alt="{{ $pegawai->nama_lengkap }}" class="w-8 h-8 rounded-full object-cover flex-shrink-0 border border-gray-200">
+                                                @else
+                                                    <div class="w-8 h-8 rounded-full bg-blue-800 text-white font-bold text-xs flex items-center justify-center flex-shrink-0">
+                                                        {{ $pegawai->initials }}
+                                                     </div>
+                                                @endif
                                                 <div>
                                                     <p class="font-bold text-gray-900 text-xs">{{ $pegawai->nama_lengkap }}</p>
                                                     <div class="flex items-center gap-1.5 mt-0.5">
@@ -367,7 +379,29 @@
                                             </div>
                                         </td>
                                         <td class="px-4 py-3.5 text-xs text-gray-700 font-medium">
-                                            {{ $pegawai->sekolah->nama_sekolah ?? '-' }}
+                                            <div class="space-y-1">
+                                                <div class="flex items-center gap-1.5 flex-wrap">
+                                                    <span class="font-bold text-gray-900">{{ $pegawai->sekolah->nama_sekolah ?? '-' }}</span>
+                                                    @if($pegawai->sekolahs->count() > 1)
+                                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-800 border border-amber-200" title="Pegawai ini bertugas di {{ $pegawai->sekolahs->count() }} sekolah">
+                                                            <i class="fas fa-layer-group text-[9px]"></i>
+                                                            {{ $pegawai->sekolahs->count() }} Sekolah
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                @if($pegawai->sekolahs->count() > 1)
+                                                    <div class="text-[10px] text-gray-500 space-y-0.5 pt-0.5">
+                                                        @foreach($pegawai->sekolahs as $sek)
+                                                            @if(!$sek->pivot->is_primary)
+                                                                <p class="text-gray-500 flex items-center gap-1">
+                                                                    <i class="fas fa-building-columns text-[9px] text-amber-600"></i>
+                                                                    <span>{{ $sek->nama_sekolah }}</span>
+                                                                </p>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
                                         </td>
                                         <td class="px-4 py-3.5">
                                             @php
@@ -414,16 +448,31 @@
                                         </td>
                                         <td class="px-4 py-3.5">
                                             <div class="flex items-center gap-1.5 text-xs">
-                                                @if($pegawai->file_sk)
-                                                    <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" class="text-red-500 hover:text-red-700" title="SK Kepegawaian"><i class="fas fa-file-pdf"></i></a>
+                                                @if(!empty($pegawai->file_sk) && is_array($pegawai->file_sk) && count($pegawai->file_sk) > 0)
+                                                    <button type="button" onclick='openFileModal("SK Kepegawaian - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_sk))' class="text-blue-500 hover:text-blue-700 relative group" title="SK Kepegawaian ({{ count($pegawai->file_sk) }} File)">
+                                                        <i class="fas fa-images"></i>
+                                                        @if(count($pegawai->file_sk) > 1)
+                                                            <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] font-bold px-1 rounded-full leading-none py-[2px]">{{ count($pegawai->file_sk) }}</span>
+                                                        @endif
+                                                    </button>
                                                 @endif
-                                                @if($pegawai->file_serdik)
-                                                    <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" class="text-emerald-600 hover:text-emerald-800" title="Sertifikat Pendidik"><i class="fas fa-file-pdf"></i></a>
+                                                @if(!empty($pegawai->file_serdik) && is_array($pegawai->file_serdik) && count($pegawai->file_serdik) > 0)
+                                                    <button type="button" onclick='openFileModal("Sertifikat Pendidik - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_serdik))' class="text-emerald-500 hover:text-emerald-700 relative group" title="Sertifikat Pendidik ({{ count($pegawai->file_serdik) }} File)">
+                                                        <i class="fas fa-images"></i>
+                                                        @if(count($pegawai->file_serdik) > 1)
+                                                            <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] font-bold px-1 rounded-full leading-none py-[2px]">{{ count($pegawai->file_serdik) }}</span>
+                                                        @endif
+                                                    </button>
                                                 @endif
-                                                @if($pegawai->file_ijazah)
-                                                    <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" class="text-blue-600 hover:text-blue-800" title="Ijazah Terakhir"><i class="fas fa-file-pdf"></i></a>
+                                                @if(!empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah) && count($pegawai->file_ijazah) > 0)
+                                                    <button type="button" onclick='openFileModal("Ijazah Terakhir - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_ijazah))' class="text-purple-500 hover:text-purple-700 relative group" title="Ijazah Terakhir ({{ count($pegawai->file_ijazah) }} File)">
+                                                        <i class="fas fa-images"></i>
+                                                        @if(count($pegawai->file_ijazah) > 1)
+                                                            <span class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[8px] font-bold px-1 rounded-full leading-none py-[2px]">{{ count($pegawai->file_ijazah) }}</span>
+                                                        @endif
+                                                    </button>
                                                 @endif
-                                                @if(!$pegawai->file_sk && !$pegawai->file_serdik && !$pegawai->file_ijazah)
+                                                @if(empty($pegawai->file_sk) && empty($pegawai->file_serdik) && empty($pegawai->file_ijazah))
                                                     <span class="text-gray-300 text-[10px] italic">Tidak ada</span>
                                                 @endif
                                             </div>
@@ -586,6 +635,25 @@
         </div>
         </div>
     </div>
+    
+    <!-- Modal Preview Berkas -->
+    <div id="filePreviewModal" class="hidden fixed inset-0 flex items-center justify-center p-4 bg-gray-900/70 backdrop-blur-sm animate-fadeIn" style="z-index: 99999 !important;">
+        <div class="bg-white rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 class="text-sm font-bold text-gray-800" id="filePreviewTitle">Preview Berkas</h3>
+                <button onclick="closeFileModal()" class="text-gray-400 hover:text-red-500 transition-colors p-1">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/30">
+                <div id="filePreviewContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <!-- Content generated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     @push('scripts')
         <script>
@@ -671,6 +739,45 @@
                     showLoadingOverlay('Memproses Filter Pegawai...', 'Sistem sedang menyaring data pegawai...');
                 }
             }
+
+            // Preview Berkas
+            // Modal Logics
+            window.openFileModal = function(title, files) {
+                const modal = document.getElementById('filePreviewModal');
+                if (!modal) return;
+
+                // Move modal to body root to avoid parent z-index stacking issues
+                document.body.appendChild(modal);
+
+                document.getElementById('filePreviewTitle').innerText = title;
+                const container = document.getElementById('filePreviewContainer');
+                container.innerHTML = '';
+                
+                if (files && files.length > 0) {
+                    files.forEach(file => {
+                        const url = '{{ asset("storage") }}/' + file;
+                        container.innerHTML += `
+                            <div class="group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                                <a href="${url}" target="_blank" class="block">
+                                    <img src="${url}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 bg-gray-100">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span class="text-white text-[10px] font-bold bg-blue-600/80 px-3 py-1.5 rounded-full backdrop-blur-sm shadow-lg"><i class="fas fa-external-link-alt mr-1"></i> Buka Penuh</span>
+                                    </div>
+                                </a>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div class="col-span-full text-center text-xs text-gray-400 py-8 italic">Tidak ada berkas</div>';
+                }
+                
+                modal.classList.remove('hidden');
+            };
+
+            window.closeFileModal = function() {
+                const modal = document.getElementById('filePreviewModal');
+                if (modal) modal.classList.add('hidden');
+            };
         </script>
     @endpush
 @endsection

@@ -55,8 +55,6 @@
         <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-xl shadow-gray-200/50 flex flex-wrap items-center justify-between gap-6">
             <div class="flex items-center gap-4">
                 @php
-                    $words = explode(' ', $pegawai->nama_lengkap ?? 'P T');
-                    $initials = strtoupper(substr($words[0] ?? 'P', 0, 1) . substr($words[1] ?? 'T', 0, 1));
                     $badgeClasses = match($pegawai->status_kepegawaian ?? '') {
                         'PNS' => 'bg-blue-100 text-blue-800',
                         'PPPK' => 'bg-emerald-100 text-emerald-800',
@@ -64,9 +62,13 @@
                         default => 'bg-gray-100 text-gray-800',
                     };
                 @endphp
-                <div class="w-16 h-16 rounded-2xl bg-blue-800 text-white text-2xl font-extrabold flex items-center justify-center shadow-lg shadow-blue-900/30">
-                    {{ $initials }}
-                </div>
+                @if($pegawai->photo_profile)
+                    <img src="{{ $pegawai->profile_picture_url }}" alt="{{ $pegawai->nama_lengkap }}" class="w-16 h-16 rounded-2xl object-cover shadow-lg shadow-blue-900/30">
+                @else
+                    <div class="w-16 h-16 rounded-2xl bg-blue-800 text-white text-2xl font-extrabold flex items-center justify-center shadow-lg shadow-blue-900/30">
+                        {{ $pegawai->initials }}
+                    </div>
+                @endif
                 <div>
                     <div class="flex flex-wrap items-center gap-2">
                         <h2 class="text-lg font-bold text-gray-900">{{ $pegawai->nama_lengkap }}</h2>
@@ -83,12 +85,17 @@
                             </span>
                         @endif
                     </div>
-                    <p class="text-xs font-semibold text-gray-500 mt-1">
-                        NIP: <span class="font-mono text-gray-800">{{ $pegawai->nip_nik ?: '-' }}</span>
+                    <p class="text-xs font-semibold text-gray-500 mt-1 flex items-center gap-1.5 flex-wrap">
+                        <span>NIP: <span class="font-mono text-gray-800">{{ $pegawai->nip_nik ?: '-' }}</span></span>
                         @if($pegawai->nik)
-                            • NIK: <span class="font-mono text-gray-800">{{ $pegawai->nik }}</span>
+                            <span>• NIK: <span class="font-mono text-gray-800">{{ $pegawai->nik }}</span></span>
                         @endif
-                        • {{ $pegawai->sekolah->nama_sekolah ?? '-' }}
+                        <span>• {{ $pegawai->sekolah->nama_sekolah ?? '-' }}</span>
+                        @if($pegawai->sekolahs->count() > 1)
+                            <span class="bg-amber-100 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-full text-[10px] font-extrabold" title="Pegawai ini bertugas di {{ $pegawai->sekolahs->count() }} sekolah">
+                                <i class="fas fa-layer-group text-[9px] mr-1"></i>{{ $pegawai->sekolahs->count() }} Sekolah
+                            </span>
+                        @endif
                     </p>
                     <p class="text-xs text-gray-400 mt-0.5">
                         Jabatan: <span class="font-medium text-gray-700">{{ $pegawai->jabatan_fungsional ?: '-' }}</span>
@@ -99,9 +106,67 @@
                 </div>
             </div>
             <div class="text-right border-l border-gray-100 pl-6 hidden sm:block">
-                <p class="text-xs text-gray-400">Satuan Pendidikan</p>
+                <p class="text-xs text-gray-400">Satuan Pendidikan Utama</p>
                 <p class="text-xs font-bold text-gray-800 mt-0.5">{{ $pegawai->sekolah->nama_sekolah ?? '-' }}</p>
                 <p class="text-[10px] text-gray-400">NPSN: {{ $pegawai->sekolah->npsn ?? '-' }}</p>
+                @if($pegawai->sekolahs->count() > 1)
+                    <span class="inline-block mt-1 px-2 py-0.5 bg-amber-100 text-amber-800 rounded-full text-[10px] font-extrabold border border-amber-200">
+                        + {{ $pegawai->sekolahs->count() - 1 }} Sekolah Lainnya
+                    </span>
+                @endif
+            </div>
+        </div>
+
+        <!-- DAFTAR SATUAN PENDIDIKAN TEMPAT BERTUGAS (RELASI MANY-TO-MANY) -->
+        <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm space-y-4">
+            <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+                <div>
+                    <h3 class="text-xs font-extrabold uppercase tracking-wider text-blue-800 flex items-center gap-2">
+                        <i class="fas fa-building-columns"></i> Satuan Pendidikan Tempat Mengajar / Bertugas
+                    </h3>
+                    <p class="text-[11px] text-gray-400 mt-0.5">Daftar seluruh sekolah tempat pegawai bertugas resmi (Total: {{ $pegawai->sekolahs->count() }} sekolah).</p>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-extrabold {{ $pegawai->sekolahs->count() > 1 ? 'bg-amber-100 text-amber-800 border border-amber-200 shadow-xs' : 'bg-blue-100 text-blue-800' }}">
+                    <i class="fas fa-layer-group text-[10px] mr-1"></i> {{ $pegawai->sekolahs->count() }} Sekolah Terdaftar
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @forelse($pegawai->sekolahs as $sek)
+                    <div class="p-4 rounded-xl border {{ $sek->pivot->is_primary ? 'bg-blue-50/40 border-blue-200/80' : 'bg-gray-50/80 border-gray-200/80' }} flex items-start justify-between gap-3 relative transition hover:shadow-sm">
+                        <div class="space-y-1.5 min-w-0">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <h4 class="font-bold text-gray-900 text-sm truncate" title="{{ $sek->nama_sekolah }}">{{ $sek->nama_sekolah }}</h4>
+                                @if($sek->pivot->is_primary)
+                                    <span class="px-2 py-0.5 bg-blue-800 text-white rounded text-[9px] font-extrabold uppercase tracking-wide">
+                                        Sekolah Utama
+                                    </span>
+                                @else
+                                    <span class="px-2 py-0.5 bg-amber-100 text-amber-800 border border-amber-200 rounded text-[9px] font-extrabold uppercase tracking-wide">
+                                        Sekolah Tambahan / Mengajar
+                                    </span>
+                                @endif
+                            </div>
+                            <p class="text-xs text-gray-600">
+                                <i class="fas fa-id-card text-[10px] text-gray-400 mr-1"></i> NPSN: <span class="font-mono text-gray-800 font-semibold">{{ $sek->npsn }}</span>
+                                <span class="mx-1.5 text-gray-300">•</span>
+                                <i class="fas fa-location-dot text-[10px] text-gray-400 mr-1"></i> Kec: <span class="font-medium text-gray-800">{{ $sek->kecamatan ?: '-' }}</span>
+                            </p>
+                            @if($sek->nama_kepala_sekolah)
+                                <p class="text-[11px] text-gray-400">
+                                    <i class="fas fa-user-tie text-[10px] text-gray-400 mr-1"></i> Kepala Sekolah: <span class="text-gray-700 font-medium">{{ $sek->nama_kepala_sekolah }}</span>
+                                </p>
+                            @endif
+                        </div>
+                        <a href="{{ route('sekolah.show', $sek->id) }}" class="px-3 py-1.5 bg-white border border-gray-200 hover:bg-blue-800 hover:text-white hover:border-blue-800 text-blue-900 text-xs font-bold rounded-lg transition flex items-center gap-1 shadow-xs flex-shrink-0">
+                            <i class="fas fa-eye text-[10px]"></i> Detail
+                        </a>
+                    </div>
+                @empty
+                    <div class="col-span-2 py-6 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                        <p class="text-xs text-gray-400">Belum ada sekolah terdaftar untuk pegawai ini.</p>
+                    </div>
+                @endforelse
             </div>
         </div>
 
@@ -230,20 +295,24 @@
                 <!-- Card Berkas 1: SK -->
                 <div class="border border-gray-200 rounded-xl p-4 flex flex-col justify-between space-y-3 bg-gray-50/50">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg {{ $pegawai->file_sk ? 'bg-red-100 text-red-600' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center text-lg">
-                            <i class="fas fa-file-pdf"></i>
+                        <div class="w-10 h-10 rounded-lg {{ !empty($pegawai->file_sk) ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center text-lg">
+                            <i class="fas fa-images"></i>
                         </div>
                         <div>
                             <p class="text-xs font-bold text-gray-800">SK Kepegawaian</p>
-                            <p class="text-[10px] {{ $pegawai->file_sk ? 'text-emerald-600 font-semibold' : 'text-gray-400' }}">
-                                {{ $pegawai->file_sk ? 'Terunggah' : 'Belum diunggah' }}
+                            <p class="text-[10px] {{ !empty($pegawai->file_sk) ? 'text-emerald-600 font-semibold' : 'text-gray-400' }}">
+                                {{ !empty($pegawai->file_sk) ? count($pegawai->file_sk) . ' Gambar Terunggah' : 'Belum diunggah' }}
                             </p>
                         </div>
                     </div>
-                    @if($pegawai->file_sk)
-                        <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" class="w-full py-2 bg-blue-800 text-white rounded-lg text-xs font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-1">
-                            <i class="fas fa-eye"></i> View SK PDF
-                        </a>
+                    @if(!empty($pegawai->file_sk) && is_array($pegawai->file_sk))
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($pegawai->file_sk as $idx => $file)
+                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-blue-800 text-white rounded-lg text-[10px] font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-1">
+                                <i class="fas fa-image"></i> Gbr {{ $idx+1 }}
+                            </a>
+                            @endforeach
+                        </div>
                     @else
                         <button disabled class="w-full py-2 bg-gray-200 text-gray-400 rounded-lg text-xs font-semibold cursor-not-allowed">
                             Belum Ada File
@@ -254,20 +323,24 @@
                 <!-- Card Berkas 2: Serdik -->
                 <div class="border border-gray-200 rounded-xl p-4 flex flex-col justify-between space-y-3 bg-gray-50/50">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg {{ $pegawai->file_serdik ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center text-lg">
-                            <i class="fas fa-file-pdf"></i>
+                        <div class="w-10 h-10 rounded-lg {{ !empty($pegawai->file_serdik) ? 'bg-emerald-100 text-emerald-600' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center text-lg">
+                            <i class="fas fa-images"></i>
                         </div>
                         <div>
                             <p class="text-xs font-bold text-gray-800">Sertifikat Pendidik</p>
-                            <p class="text-[10px] {{ $pegawai->file_serdik ? 'text-emerald-600 font-semibold' : 'text-gray-400' }}">
-                                {{ $pegawai->file_serdik ? 'Terunggah' : 'Belum diunggah' }}
+                            <p class="text-[10px] {{ !empty($pegawai->file_serdik) ? 'text-emerald-600 font-semibold' : 'text-gray-400' }}">
+                                {{ !empty($pegawai->file_serdik) ? count($pegawai->file_serdik) . ' Gambar Terunggah' : 'Belum diunggah' }}
                             </p>
                         </div>
                     </div>
-                    @if($pegawai->file_serdik)
-                        <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" class="w-full py-2 bg-emerald-700 text-white rounded-lg text-xs font-semibold hover:bg-emerald-800 transition flex items-center justify-center gap-1">
-                            <i class="fas fa-eye"></i> View Serdik PDF
-                        </a>
+                    @if(!empty($pegawai->file_serdik) && is_array($pegawai->file_serdik))
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($pegawai->file_serdik as $idx => $file)
+                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-emerald-700 text-white rounded-lg text-[10px] font-semibold hover:bg-emerald-800 transition flex items-center justify-center gap-1">
+                                <i class="fas fa-image"></i> Gbr {{ $idx+1 }}
+                            </a>
+                            @endforeach
+                        </div>
                     @else
                         <button disabled class="w-full py-2 bg-gray-200 text-gray-400 rounded-lg text-xs font-semibold cursor-not-allowed">
                             Belum Ada File
@@ -278,20 +351,24 @@
                 <!-- Card Berkas 3: Ijazah -->
                 <div class="border border-gray-200 rounded-xl p-4 flex flex-col justify-between space-y-3 bg-gray-50/50">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg {{ $pegawai->file_ijazah ? 'bg-blue-100 text-blue-600' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center text-lg">
-                            <i class="fas fa-file-pdf"></i>
+                        <div class="w-10 h-10 rounded-lg {{ !empty($pegawai->file_ijazah) ? 'bg-purple-100 text-purple-600' : 'bg-gray-200 text-gray-400' }} flex items-center justify-center text-lg">
+                            <i class="fas fa-images"></i>
                         </div>
                         <div>
                             <p class="text-xs font-bold text-gray-800">Ijazah Terakhir</p>
-                            <p class="text-[10px] {{ $pegawai->file_ijazah ? 'text-emerald-600 font-semibold' : 'text-gray-400' }}">
-                                {{ $pegawai->file_ijazah ? 'Terunggah' : 'Belum diunggah' }}
+                            <p class="text-[10px] {{ !empty($pegawai->file_ijazah) ? 'text-emerald-600 font-semibold' : 'text-gray-400' }}">
+                                {{ !empty($pegawai->file_ijazah) ? count($pegawai->file_ijazah) . ' Gambar Terunggah' : 'Belum diunggah' }}
                             </p>
                         </div>
                     </div>
-                    @if($pegawai->file_ijazah)
-                        <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" class="w-full py-2 bg-blue-800 text-white rounded-lg text-xs font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-1">
-                            <i class="fas fa-eye"></i> View Ijazah PDF
-                        </a>
+                    @if(!empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah))
+                        <div class="flex flex-wrap gap-2">
+                            @foreach($pegawai->file_ijazah as $idx => $file)
+                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-blue-800 text-white rounded-lg text-[10px] font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-1">
+                                <i class="fas fa-image"></i> Gbr {{ $idx+1 }}
+                            </a>
+                            @endforeach
+                        </div>
                     @else
                         <button disabled class="w-full py-2 bg-gray-200 text-gray-400 rounded-lg text-xs font-semibold cursor-not-allowed">
                             Belum Ada File
@@ -301,6 +378,8 @@
 
             </div>
         </div>
+
+
 
     </div>
 @endsection

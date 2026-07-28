@@ -67,24 +67,9 @@ class SekolahController extends Controller
             $query->where('status_kepala_sekolah', $statusKepsek);
         }
 
-        // 4. Jenjang Sekolah Filter (Supports SD/SDN, SMP/SMPN, TK/TKN)
+        // 4. Jenjang/Tingkatan Filter (Uses tingkatan column directly)
         if (!empty($jenjang)) {
-            if ($jenjang === 'SD') {
-                $query->where(function ($q) {
-                    $q->where('nama_sekolah', 'like', 'SD%')
-                      ->orWhere('nama_sekolah', 'like', '%SDN%');
-                });
-            } elseif ($jenjang === 'SMP') {
-                $query->where(function ($q) {
-                    $q->where('nama_sekolah', 'like', 'SMP%')
-                      ->orWhere('nama_sekolah', 'like', '%SMPN%');
-                });
-            } elseif ($jenjang === 'TK') {
-                $query->where(function ($q) {
-                    $q->where('nama_sekolah', 'like', 'TK%')
-                      ->orWhere('nama_sekolah', 'like', '%TKN%');
-                });
-            }
+            $query->where('tingkatan', $jenjang);
         }
 
         // Paginate results preserving all query parameters
@@ -119,6 +104,7 @@ class SekolahController extends Controller
         $validated = $request->validate([
             'npsn' => ['required', 'string', 'max:20', 'unique:sekolahs,npsn'],
             'nama_sekolah' => ['required', 'string', 'max:255'],
+            'tingkatan' => ['required', 'string', Rule::in(['TK', 'SD', 'SMP', 'SMA'])],
             'kecamatan' => ['required', 'string', 'max:100'],
             'email_sekolah' => ['nullable', 'email', 'max:255'],
             'nama_kepala_sekolah' => ['nullable', 'string', 'max:255'],
@@ -130,7 +116,7 @@ class SekolahController extends Controller
 
         // Capture all field values for initial created log
         $allFields = [];
-        foreach (['nama_sekolah','npsn','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'] as $f) {
+        foreach (['nama_sekolah','npsn','tingkatan','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'] as $f) {
             $val = $sekolah->$f;
             if (!is_null($val) && $val !== '') {
                 $allFields[$f] = ['data' => (string)$val];
@@ -188,6 +174,7 @@ class SekolahController extends Controller
         $validated = $request->validate([
             'npsn' => ['required', 'string', 'max:20', Rule::unique('sekolahs', 'npsn')->ignore($sekolah->id)],
             'nama_sekolah' => ['required', 'string', 'max:255'],
+            'tingkatan' => ['required', 'string', Rule::in(['TK', 'SD', 'SMP', 'SMA'])],
             'kecamatan' => ['required', 'string', 'max:100'],
             'email_sekolah' => ['nullable', 'email', 'max:255'],
             'nama_kepala_sekolah' => ['nullable', 'string', 'max:255'],
@@ -196,7 +183,7 @@ class SekolahController extends Controller
         ]);
 
         // Capture changes before update
-        $trackableFields = ['npsn','nama_sekolah','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'];
+        $trackableFields = ['npsn','nama_sekolah','tingkatan','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'];
         $changes = [];
         foreach ($trackableFields as $field) {
             $oldVal = $sekolah->getOriginal($field);

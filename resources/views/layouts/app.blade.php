@@ -83,7 +83,7 @@
     @endunless
 
     <!-- Main Content Wrapper (w-full 100% on public pages) -->
-    <main class="{{ $isPublicPage ? 'w-full' : 'md:ml-[80px] lg:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
+    <main class="{{ $isPublicPage ? 'w-full' : 'ml-0 md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col transition-all duration-300" id="mainContent">
         @unless($isPublicPage)
             <!-- Top Navbar Partial -->
             @include('layouts.navbar')

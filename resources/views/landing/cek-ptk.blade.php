@@ -87,7 +87,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                         <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
                             <span class="text-gray-400 font-medium">Satuan Pendidikan (Sekolah):</span>
-                            <p class="font-bold text-gray-800">{{ $pegawai->sekolah->nama ?? '-' }}</p>
+                            <p class="font-bold text-gray-800">{{ $pegawai->sekolah?->nama_sekolah ?? '-' }}</p>
                         </div>
                         <div class="p-4 rounded-2xl bg-gray-50 space-y-1">
                             <span class="text-gray-400 font-medium">Status Kepegawaian (7 Kriteria):</span>

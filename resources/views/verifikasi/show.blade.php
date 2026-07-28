@@ -159,10 +159,10 @@
                                 </div>
                             </div>
                             <div>
-                                @if($pegawai->file_sk)
-                                    <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
-                                        <i class="fas fa-eye"></i> Lihat Berkas
-                                    </a>
+                                @if(!empty($pegawai->file_sk) && is_array($pegawai->file_sk) && count($pegawai->file_sk) > 0)
+                                    <button type="button" onclick='openFileModal("SK Kepegawaian - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_sk))' class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
+                                        <i class="fas fa-images"></i> Lihat {{ count($pegawai->file_sk) }} Berkas
+                                    </button>
                                 @else
                                     <span class="px-3 py-1.5 bg-gray-200 text-gray-500 rounded-lg text-xs font-semibold cursor-not-allowed">Belum Ada File</span>
                                 @endif
@@ -188,10 +188,10 @@
                                 </div>
                             </div>
                             <div>
-                                @if($pegawai->file_serdik)
-                                    <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
-                                        <i class="fas fa-eye"></i> Lihat Berkas
-                                    </a>
+                                @if(!empty($pegawai->file_serdik) && is_array($pegawai->file_serdik) && count($pegawai->file_serdik) > 0)
+                                    <button type="button" onclick='openFileModal("Sertifikat Pendidik - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_serdik))' class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
+                                        <i class="fas fa-images"></i> Lihat {{ count($pegawai->file_serdik) }} Berkas
+                                    </button>
                                 @else
                                     <span class="px-3 py-1.5 bg-gray-200 text-gray-500 rounded-lg text-xs font-semibold cursor-not-allowed">Belum Ada File</span>
                                 @endif
@@ -217,10 +217,10 @@
                                 </div>
                             </div>
                             <div>
-                                @if($pegawai->file_ijazah)
-                                    <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
-                                        <i class="fas fa-eye"></i> Lihat Berkas
-                                    </a>
+                                @if(!empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah) && count($pegawai->file_ijazah) > 0)
+                                    <button type="button" onclick='openFileModal("Ijazah Terakhir - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_ijazah))' class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
+                                        <i class="fas fa-images"></i> Lihat {{ count($pegawai->file_ijazah) }} Berkas
+                                    </button>
                                 @else
                                     <span class="px-3 py-1.5 bg-gray-200 text-gray-500 rounded-lg text-xs font-semibold cursor-not-allowed">Belum Ada File</span>
                                 @endif
@@ -342,4 +342,65 @@
         </div>
 
     </div>
+
+    <!-- Modal Preview Berkas -->
+    <div id="filePreviewModal" class="hidden fixed inset-0 flex items-center justify-center p-4 bg-gray-900/70 backdrop-blur-sm animate-fadeIn" style="z-index: 99999 !important;">
+        <div class="bg-white rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 class="text-sm font-bold text-gray-800" id="filePreviewTitle">Preview Berkas</h3>
+                <button onclick="closeFileModal()" class="text-gray-400 hover:text-red-500 transition-colors p-1">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/30">
+                <div id="filePreviewContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <!-- Content generated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            // Modal Logics
+            window.openFileModal = function(title, files) {
+                const modal = document.getElementById('filePreviewModal');
+                if (!modal) return;
+
+                // Move modal to body root to avoid parent z-index stacking issues
+                document.body.appendChild(modal);
+
+                document.getElementById('filePreviewTitle').innerText = title;
+                const container = document.getElementById('filePreviewContainer');
+                container.innerHTML = '';
+                
+                if (files && files.length > 0) {
+                    files.forEach(file => {
+                        const url = '{{ asset("storage") }}/' + file;
+                        container.innerHTML += `
+                            <div class="group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                                <a href="${url}" target="_blank" class="block">
+                                    <img src="${url}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 bg-gray-100">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span class="text-white text-[10px] font-bold bg-blue-600/80 px-3 py-1.5 rounded-full backdrop-blur-sm shadow-lg"><i class="fas fa-external-link-alt mr-1"></i> Buka Penuh</span>
+                                    </div>
+                                </a>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div class="col-span-full text-center text-xs text-gray-400 py-8 italic">Tidak ada berkas</div>';
+                }
+                
+                modal.classList.remove('hidden');
+            };
+
+            window.closeFileModal = function() {
+                const modal = document.getElementById('filePreviewModal');
+                if (modal) modal.classList.add('hidden');
+            };
+        </script>
+    @endpush
 @endsection

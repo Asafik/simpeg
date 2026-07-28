@@ -22,13 +22,20 @@ class DashboardController extends Controller
 
         // Scope queries if logged in as Operator Sekolah
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $user->sekolah_id) {
-            $pegawaiQuery->where('sekolah_id', $user->sekolah_id);
+            $pegawaiQuery->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id));
             $sekolahQuery->where('id', $user->sekolah_id);
         }
 
         // Summary Card Stats
         $totalSekolah = (clone $sekolahQuery)->count();
         $totalPegawai = (clone $pegawaiQuery)->count();
+        $totalMultiSekolah = (clone $pegawaiQuery)->has('sekolahs', '>', 1)->count();
+
+        // Tingkatan (Jenjang) Stats
+        $totalTK = (clone $sekolahQuery)->where('tingkatan', 'TK')->count();
+        $totalSD = (clone $sekolahQuery)->where('tingkatan', 'SD')->count();
+        $totalSMP = (clone $sekolahQuery)->where('tingkatan', 'SMP')->count();
+        $totalSMA = (clone $sekolahQuery)->where('tingkatan', 'SMA')->count();
 
         $totalPns = (clone $pegawaiQuery)->where('status_kepegawaian', 'PNS')->count();
         $totalPppk = (clone $pegawaiQuery)->where('status_kepegawaian', 'PPPK')->count();
@@ -65,11 +72,16 @@ class DashboardController extends Controller
 
         // Recent Sekolahs & Recent Pegawais List
         $recentSekolahs = (clone $sekolahQuery)->withCount('pegawais')->with('users')->latest()->take(6)->get();
-        $recentPegawais = (clone $pegawaiQuery)->with('sekolah')->latest()->take(6)->get();
+        $recentPegawais = (clone $pegawaiQuery)->with('sekolahs')->latest()->take(6)->get();
 
         return view('dashboard', compact(
             'totalSekolah',
             'totalPegawai',
+            'totalMultiSekolah',
+            'totalTK',
+            'totalSD',
+            'totalSMP',
+            'totalSMA',
             'totalPns',
             'totalPppk',
             'totalPppkPw',
