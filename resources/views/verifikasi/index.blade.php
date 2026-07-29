@@ -242,14 +242,17 @@
                                     <!-- Kelengkapan Berkas -->
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-1.5 text-[11px]">
-                                            <span class="px-2 py-0.5 rounded font-bold {{ $pegawai->file_sk ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-gray-100 text-gray-400' }}">
-                                                SK: {{ $pegawai->file_sk ? 'Ada' : 'Kosong' }}
+                                            <span class="px-2 py-0.5 rounded font-bold {{ !empty($pegawai->file_sk) ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-pointer hover:bg-emerald-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
+                                                @if(!empty($pegawai->file_sk) && is_array($pegawai->file_sk)) onclick='openFileModal("SK Kepegawaian - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_sk))' @endif>
+                                                <i class="fas fa-file-pdf mr-0.5"></i> SK: {{ !empty($pegawai->file_sk) && is_array($pegawai->file_sk) ? count($pegawai->file_sk) . ' File' : 'Kosong' }}
                                             </span>
-                                            <span class="px-2 py-0.5 rounded font-bold {{ $pegawai->file_serdik ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-100 text-gray-400' }}">
-                                                Serdik: {{ $pegawai->file_serdik ? 'Ada' : 'Kosong' }}
+                                            <span class="px-2 py-0.5 rounded font-bold {{ !empty($pegawai->file_serdik) ? 'bg-blue-50 text-blue-700 border border-blue-200 cursor-pointer hover:bg-blue-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
+                                                @if(!empty($pegawai->file_serdik) && is_array($pegawai->file_serdik)) onclick='openFileModal("Sertifikat Pendidik - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_serdik))' @endif>
+                                                <i class="fas fa-certificate mr-0.5"></i> Serdik: {{ !empty($pegawai->file_serdik) && is_array($pegawai->file_serdik) ? count($pegawai->file_serdik) . ' File' : 'Kosong' }}
                                             </span>
-                                            <span class="px-2 py-0.5 rounded font-bold {{ $pegawai->file_ijazah ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-gray-100 text-gray-400' }}">
-                                                Ijazah: {{ $pegawai->file_ijazah ? 'Ada' : 'Kosong' }}
+                                            <span class="px-2 py-0.5 rounded font-bold {{ !empty($pegawai->file_ijazah) ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 cursor-pointer hover:bg-indigo-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
+                                                @if(!empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah)) onclick='openFileModal("Ijazah - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_ijazah))' @endif>
+                                                <i class="fas fa-graduation-cap mr-0.5"></i> Ijazah: {{ !empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah) ? count($pegawai->file_ijazah) . ' File' : 'Kosong' }}
                                             </span>
                                         </div>
                                     </td>
@@ -337,55 +340,64 @@
                 </div>
             @endif
 
-        </div>
-        </div>
-
-        <!-- Pagination -->
-        <div class="pt-4">
-            {{ $pegawais->links() }}
-        </div>
-    </div>
-
-    <!-- MODAL PENOLAKAN BERKAS (Khusus Admin Dinas) -->
-    <div id="rejectModal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 class="font-bold text-gray-900 text-sm flex items-center gap-2">
-                    <i class="fas fa-circle-xmark text-rose-600"></i>
-                    Tolak Berkas Pegawai
-                </h3>
-                <button type="button" onclick="closeRejectModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-xmark"></i></button>
+        <!-- Modal Preview Berkas -->
+    <div id="filePreviewModal" class="hidden fixed inset-0 flex items-center justify-center p-4 bg-gray-900/70 backdrop-blur-sm animate-fadeIn" style="z-index: 99999 !important;">
+        <div class="bg-white rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+            <!-- Header -->
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 class="text-sm font-bold text-gray-800" id="filePreviewTitle">Preview Berkas</h3>
+                <button onclick="closeFileModal()" class="text-gray-400 hover:text-red-500 transition-colors p-1">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
             </div>
-
-            <form id="rejectForm" method="POST" action="" class="space-y-4">
-                @csrf
-                <input type="hidden" name="status" value="Ditolak">
-                
-                <p class="text-xs text-gray-600">Berikan alasan / catatan penolakan untuk pegawai <strong id="rejectPegawaiName" class="text-gray-900"></strong>:</p>
-
-                <textarea name="catatan" required rows="3" placeholder="Contoh: File SK yang diunggah buram atau bukan SK resmi..." class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-xs focus:outline-none focus:ring-2 focus:ring-rose-500/20"></textarea>
-
-                <div class="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
-                    <button type="button" onclick="closeRejectModal()" class="px-4 py-2 text-xs font-semibold text-gray-500 hover:text-gray-700">Batal</button>
-                    <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-md transition">
-                        Konfirmasi Penolakan
-                    </button>
+            <!-- Body -->
+            <div class="p-6 overflow-y-auto flex-1 bg-gray-50/30">
+                <div id="filePreviewContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    <!-- Content generated by JS -->
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            // Modal Logics
+            window.openFileModal = function(title, files) {
+                const modal = document.getElementById('filePreviewModal');
+                if (!modal) return;
+                
+                // Move modal to body root to avoid parent z-index stacking issues
+                document.body.appendChild(modal);
+
+                document.getElementById('filePreviewTitle').innerText = title;
+                const container = document.getElementById('filePreviewContainer');
+                container.innerHTML = '';
+                
+                if (files && files.length > 0) {
+                    files.forEach(file => {
+                        const url = '{{ asset("storage") }}/' + file;
+                        container.innerHTML += `
+                            <div class="group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                                <a href="${url}" target="_blank" class="block">
+                                    <img src="${url}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 bg-gray-100">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span class="text-white text-[10px] font-bold bg-blue-600/80 px-3 py-1.5 rounded-full backdrop-blur-sm shadow-lg"><i class="fas fa-external-link-alt mr-1"></i> Buka Penuh</span>
+                                    </div>
+                                </a>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div class="col-span-full text-center text-xs text-gray-400 py-8 italic">Tidak ada berkas</div>';
+                }
+                
+                modal.classList.remove('hidden');
+            };
+
+            window.closeFileModal = function() {
+                const modal = document.getElementById('filePreviewModal');
+                if (modal) modal.classList.add('hidden');
+            };
+        </script>
+    @endpush
 @endsection
-
-@push('scripts')
-<script>
-    function openRejectModal(id, name) {
-        document.getElementById('rejectPegawaiName').innerText = name;
-        document.getElementById('rejectForm').action = '/verifikasi/' + id;
-        document.getElementById('rejectModal').classList.remove('hidden');
-    }
-
-    function closeRejectModal() {
-        document.getElementById('rejectModal').classList.add('hidden');
-    }
-</script>
-@endpush

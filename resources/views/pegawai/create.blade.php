@@ -137,10 +137,50 @@
                         </div>
                     </div>
 
+                    <!-- Foto Profil -->
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-2">Foto Profil</label>
+                        <div class="flex items-center gap-4">
+                            <!-- Preview Avatar -->
+                            <div class="relative w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 flex-shrink-0 bg-gray-100 flex items-center justify-center shadow-sm">
+                                @php
+                                    $hasPhoto = isset($pegawai) && $pegawai->photo_profile;
+                                    $name = old('nama_lengkap', $pegawai->nama_lengkap ?? '');
+                                    $initials = 'PT';
+                                    if(trim($name)) {
+                                        $words = explode(' ', trim($name));
+                                        if(count($words) >= 2) {
+                                            $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                                        } else {
+                                            $initials = strtoupper(substr($words[0], 0, 2));
+                                        }
+                                    }
+                                @endphp
+                                <img id="photo_preview_img" src="{{ $hasPhoto ? $pegawai->profile_picture_url : '' }}" alt="Foto Profil" class="{{ $hasPhoto ? '' : 'hidden' }} w-full h-full object-cover">
+                                <div id="photo_preview_initials" class="{{ $hasPhoto ? 'hidden' : 'flex' }} w-full h-full bg-blue-800 text-white items-center justify-center text-xl font-bold">
+                                    {{ $initials }}
+                                </div>
+                            </div>
+                            
+                            <!-- Input Field -->
+                            <div class="flex-1">
+                                <div class="relative">
+                                    <input type="file" id="photo_profile_input" name="photo_profile" accept="image/jpeg,image/png,image/jpg,image/webp" class="hidden" onchange="previewPhoto(this)">
+                                    <input type="hidden" id="remove_photo_profile_input" name="remove_photo_profile" value="0">
+                                    <label for="photo_profile_input" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 hover:border-blue-300 hover:text-blue-700 transition">
+                                        <i class="fas fa-camera"></i> Pilih Gambar
+                                    </label>
+                                </div>
+                                <p class="text-[10px] text-gray-400 mt-1.5">Format: JPG, PNG, WEBP (Max 2MB). Kosongkan jika tidak ada.</p>
+                                <button type="button" onclick="removePhoto()" id="btn_remove_photo" class="{{ $hasPhoto ? 'inline-block' : 'hidden' }} mt-1 text-[10px] text-red-500 hover:text-red-700 font-semibold"><i class="fas fa-trash-alt"></i> Hapus Foto</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Nama Lengkap + Gelar -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Lengkap & Gelar <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $pegawai->nama_lengkap ?? '') }}" placeholder="Contoh: DIYANDIKA ANGGRAENI, S.Pd." required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <input type="text" id="nama_lengkap_input" name="nama_lengkap" value="{{ old('nama_lengkap', $pegawai->nama_lengkap ?? '') }}" placeholder="Contoh: DIYANDIKA ANGGRAENI, S.Pd." required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none" oninput="updateInitials(this.value)">
                     </div>
 
                     <!-- NIP / NIK -->
@@ -324,27 +364,32 @@
                     <div class="relative bg-gray-50/60 hover:bg-blue-50/40 border-2 border-dashed border-gray-200 hover:border-blue-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_sk_input').click()">
                         
-                        <input type="file" name="file_sk" id="file_sk_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                        <input type="file" name="file_sk[]" multiple id="file_sk_input" accept="image/*" class="hidden" onclick="event.stopPropagation()"
                                onchange="handleFileUploadPreview(this, 'file_sk_preview', 'file_sk_info', 'file_sk_icon', 'file_sk_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-blue-100/80 group-hover:bg-blue-800 text-blue-800 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
-                                <i id="file_sk_icon" class="fas fa-cloud-arrow-up text-xl"></i>
+                                <i id="file_sk_icon" class="fas fa-images text-xl"></i>
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-gray-800 group-hover:text-blue-900 transition">SK Kepegawaian</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Maks 3 Gambar (Max 2MB/file)</p>
                             </div>
 
-                            @if(isset($pegawai->file_sk) && $pegawai->file_sk)
-                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left flex items-center justify-between">
-                                    <div class="flex items-center gap-2 truncate">
+                            @if(isset($pegawai->file_sk) && is_array($pegawai->file_sk) && count($pegawai->file_sk) > 0)
+                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left">
+                                    <div class="flex items-center gap-2 mb-1">
                                         <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
-                                        <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
+                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_sk) }} Gambar Terunggah</span>
                                     </div>
-                                    <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
-                                    </a>
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($pegawai->file_sk as $idx => $path)
+                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                                Gbr {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
+                                            </a>
+                                            @if(!$loop->last) <span class="text-gray-300">|</span> @endif
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endif
 
@@ -354,12 +399,17 @@
                                         <i id="file_sk_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
                                         <span id="file_sk_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
                                     </div>
-                                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
+                                    <div class="flex items-center gap-1 flex-shrink-0">
+                                        <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Siap Upload</span>
+                                        <button type="button" onclick="clearFileUpload(event, 'file_sk_input', 'file_sk_preview', 'file_sk_icon')" class="w-5 h-5 flex items-center justify-center rounded bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition" title="Hapus Pilihan">
+                                            <i class="fas fa-times text-[10px]"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="pt-1">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-blue-300 group-hover:text-blue-800 transition">
+                                <span id="file_sk_btn_text" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-blue-300 group-hover:text-blue-800 transition">
                                     <i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas
                                 </span>
                             </div>
@@ -370,27 +420,32 @@
                     <div class="relative bg-gray-50/60 hover:bg-emerald-50/40 border-2 border-dashed border-gray-200 hover:border-emerald-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_serdik_input').click()">
                         
-                        <input type="file" name="file_serdik" id="file_serdik_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                        <input type="file" name="file_serdik[]" multiple id="file_serdik_input" accept="image/*" class="hidden" onclick="event.stopPropagation()"
                                onchange="handleFileUploadPreview(this, 'file_serdik_preview', 'file_serdik_info', 'file_serdik_icon', 'file_serdik_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-emerald-100/80 group-hover:bg-emerald-700 text-emerald-700 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
-                                <i id="file_serdik_icon" class="fas fa-certificate text-xl"></i>
+                                <i id="file_serdik_icon" class="fas fa-images text-xl"></i>
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-gray-800 group-hover:text-emerald-900 transition">Sertifikat Pendidik (Serdik)</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Maks 3 Gambar (Max 2MB/file)</p>
                             </div>
 
-                            @if(isset($pegawai->file_serdik) && $pegawai->file_serdik)
-                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left flex items-center justify-between">
-                                    <div class="flex items-center gap-2 truncate">
+                            @if(isset($pegawai->file_serdik) && is_array($pegawai->file_serdik) && count($pegawai->file_serdik) > 0)
+                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left">
+                                    <div class="flex items-center gap-2 mb-1">
                                         <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
-                                        <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
+                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_serdik) }} Gambar Terunggah</span>
                                     </div>
-                                    <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
-                                    </a>
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($pegawai->file_serdik as $idx => $path)
+                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                                Gbr {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
+                                            </a>
+                                            @if(!$loop->last) <span class="text-gray-300">|</span> @endif
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endif
 
@@ -400,12 +455,17 @@
                                         <i id="file_serdik_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
                                         <span id="file_serdik_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
                                     </div>
-                                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
+                                    <div class="flex items-center gap-1 flex-shrink-0">
+                                        <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Siap Upload</span>
+                                        <button type="button" onclick="clearFileUpload(event, 'file_serdik_input', 'file_serdik_preview', 'file_serdik_icon')" class="w-5 h-5 flex items-center justify-center rounded bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition" title="Hapus Pilihan">
+                                            <i class="fas fa-times text-[10px]"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="pt-1">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-emerald-300 group-hover:text-emerald-800 transition">
+                                <span id="file_serdik_btn_text" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-emerald-300 group-hover:text-emerald-800 transition">
                                     <i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas
                                 </span>
                             </div>
@@ -416,27 +476,32 @@
                     <div class="relative bg-gray-50/60 hover:bg-purple-50/40 border-2 border-dashed border-gray-200 hover:border-purple-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_ijazah_input').click()">
                         
-                        <input type="file" name="file_ijazah" id="file_ijazah_input" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onclick="event.stopPropagation()"
+                        <input type="file" name="file_ijazah[]" multiple id="file_ijazah_input" accept="image/*" class="hidden" onclick="event.stopPropagation()"
                                onchange="handleFileUploadPreview(this, 'file_ijazah_preview', 'file_ijazah_info', 'file_ijazah_icon', 'file_ijazah_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-purple-100/80 group-hover:bg-purple-700 text-purple-700 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
-                                <i id="file_ijazah_icon" class="fas fa-graduation-cap text-xl"></i>
+                                <i id="file_ijazah_icon" class="fas fa-images text-xl"></i>
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-gray-800 group-hover:text-purple-900 transition">Ijazah Terakhir</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Format: Foto (Max 10MB) / PDF (Max 20MB)</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">Maks 3 Gambar (Max 2MB/file)</p>
                             </div>
 
-                            @if(isset($pegawai->file_ijazah) && $pegawai->file_ijazah)
-                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left flex items-center justify-between">
-                                    <div class="flex items-center gap-2 truncate">
+                            @if(isset($pegawai->file_ijazah) && is_array($pegawai->file_ijazah) && count($pegawai->file_ijazah) > 0)
+                                <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left">
+                                    <div class="flex items-center gap-2 mb-1">
                                         <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
-                                        <span class="text-[10px] font-bold text-emerald-800 truncate">Berkas Terunggah</span>
+                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_ijazah) }} Gambar Terunggah</span>
                                     </div>
-                                    <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                        Lihat Berkas <i class="fas fa-external-link-alt text-[9px] ml-0.5"></i>
-                                    </a>
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($pegawai->file_ijazah as $idx => $path)
+                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                                Gbr {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
+                                            </a>
+                                            @if(!$loop->last) <span class="text-gray-300">|</span> @endif
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endif
 
@@ -446,12 +511,17 @@
                                         <i id="file_ijazah_preview_icon" class="fas fa-file-pdf text-rose-500 text-sm"></i>
                                         <span id="file_ijazah_info" class="text-[10px] font-bold text-gray-800 truncate"></span>
                                     </div>
-                                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 flex-shrink-0">Siap Upload</span>
+                                    <div class="flex items-center gap-1 flex-shrink-0">
+                                        <span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Siap Upload</span>
+                                        <button type="button" onclick="clearFileUpload(event, 'file_ijazah_input', 'file_ijazah_preview', 'file_ijazah_icon')" class="w-5 h-5 flex items-center justify-center rounded bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition" title="Hapus Pilihan">
+                                            <i class="fas fa-times text-[10px]"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="pt-1">
-                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-purple-300 group-hover:text-purple-800 transition">
+                                <span id="file_ijazah_btn_text" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-700 font-bold text-[10px] shadow-xs group-hover:border-purple-300 group-hover:text-purple-800 transition">
                                     <i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas
                                 </span>
                             </div>
@@ -460,6 +530,8 @@
 
                 </div>
             </div>
+
+
 
             <!-- Form Actions -->
             <div class="flex items-center justify-end gap-3 pt-2">
@@ -593,38 +665,150 @@
             }
         });
 
+        const fileAccumulators = {};
+
+        window.clearFileUpload = function(event, inputId, previewId, iconId) {
+            event.stopPropagation();
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.value = ''; // clears actual input
+                fileAccumulators[inputId] = new DataTransfer(); // reset accumulator
+            }
+            document.getElementById(previewId).classList.add('hidden');
+            document.getElementById(iconId).classList.remove('text-white');
+            document.getElementById(iconId).parentElement.classList.remove('bg-opacity-100');
+            
+            const btnTextElem = document.getElementById(inputId.replace('_input', '') + '_btn_text');
+            if (btnTextElem) {
+                btnTextElem.innerHTML = '<i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas';
+            }
+        };
+
         window.handleFileUploadPreview = function(input, previewId, infoId, iconId, previewIconId) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                const ext = file.name.split('.').pop().toLowerCase();
-                
-                const infoElem = document.getElementById(infoId);
-                const previewElem = document.getElementById(previewId);
-                const iconElem = document.getElementById(iconId);
-                const previewIconElem = document.getElementById(previewIconId);
-                
-                // Dynamic File Type Icon
-                if (previewIconElem) {
-                    if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
-                        previewIconElem.className = 'fas fa-file-image text-blue-600 text-sm';
-                    } else if (ext === 'pdf') {
-                        previewIconElem.className = 'fas fa-file-pdf text-rose-500 text-sm';
+            let dt = fileAccumulators[input.id] || new DataTransfer();
+
+            if (input.files && input.files.length > 0) {
+                // Append files
+                for (let i = 0; i < input.files.length; i++) {
+                    if (dt.items.length < 3) {
+                        dt.items.add(input.files[i]);
                     } else {
-                        previewIconElem.className = 'fas fa-file text-gray-500 text-sm';
+                        alert('Maksimal 3 file yang diizinkan! Kelebihan file diabaikan.');
+                        break;
                     }
                 }
+            }
 
-                if (infoElem) {
-                    infoElem.innerText = `${file.name} (${fileSizeMB} MB)`;
+            // Assign back to input so it's sent on submit
+            input.files = dt.files;
+            fileAccumulators[input.id] = dt;
+
+            const count = input.files.length;
+            
+            const infoElem = document.getElementById(infoId);
+            const previewElem = document.getElementById(previewId);
+            const iconElem = document.getElementById(iconId);
+            const previewIconElem = document.getElementById(previewIconId);
+            const btnTextElem = document.getElementById(input.id.replace('_input', '') + '_btn_text');
+            
+            if (count > 0) {
+                if (previewIconElem) {
+                    previewIconElem.className = 'fas fa-images text-blue-600 text-sm';
                 }
+                
+                if (infoElem) {
+                    let totalSize = 0;
+                    for (let i = 0; i < count; i++) {
+                        totalSize += input.files[i].size;
+                    }
+                    const totalSizeMB = (totalSize / (1024 * 1024)).toFixed(2);
+                    infoElem.textContent = count + ' file terpilih (' + totalSizeMB + ' MB)';
+                }
+                
                 if (previewElem) {
                     previewElem.classList.remove('hidden');
+                    previewElem.classList.add('animate-fadeIn');
                 }
                 if (iconElem) {
-                    iconElem.className = 'fas fa-circle-check text-xl text-emerald-600';
+                    iconElem.classList.add('text-white');
+                    iconElem.parentElement.classList.add('bg-opacity-100');
+                }
+
+                if (btnTextElem) {
+                    if (count < 3) {
+                        btnTextElem.innerHTML = '<i class="fas fa-plus text-[10px]"></i> Tambah Berkas';
+                    } else {
+                        btnTextElem.innerHTML = '<i class="fas fa-check text-[10px]"></i> Maksimal (3)';
+                    }
+                }
+            } else {
+                if (previewElem) previewElem.classList.add('hidden');
+                if (iconElem) {
+                    iconElem.classList.remove('text-white');
+                    iconElem.parentElement.classList.remove('bg-opacity-100');
+                }
+                if (btnTextElem) {
+                    btnTextElem.innerHTML = '<i class="fas fa-paperclip text-[10px]"></i> Pilih Berkas';
                 }
             }
         };
+
+        window.previewPhoto = function(input) {
+            const previewImg = document.getElementById('photo_preview_img');
+            const previewInitials = document.getElementById('photo_preview_initials');
+            const removeBtn = document.getElementById('btn_remove_photo');
+            const removeInput = document.getElementById('remove_photo_profile_input');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    previewImg.classList.remove('hidden');
+                    previewInitials.classList.remove('flex');
+                    previewInitials.classList.add('hidden');
+                    removeBtn.classList.remove('hidden');
+                    removeBtn.classList.add('inline-block');
+                    if (removeInput) removeInput.value = '0';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
+
+        window.removePhoto = function() {
+            const input = document.getElementById('photo_profile_input');
+            const previewImg = document.getElementById('photo_preview_img');
+            const previewInitials = document.getElementById('photo_preview_initials');
+            const removeBtn = document.getElementById('btn_remove_photo');
+            const removeInput = document.getElementById('remove_photo_profile_input');
+            
+            input.value = ''; // Hapus pilihan file
+            if (removeInput) removeInput.value = '1'; // Tandai untuk dihapus di database
+            
+            previewImg.src = '';
+            previewImg.classList.add('hidden');
+            previewInitials.classList.remove('hidden');
+            previewInitials.classList.add('flex');
+            removeBtn.classList.remove('inline-block');
+            removeBtn.classList.add('hidden');
+        };
+
+        window.updateInitials = function(name) {
+            const previewInitials = document.getElementById('photo_preview_initials');
+            if (previewInitials && !previewInitials.classList.contains('hidden')) {
+                let initials = 'PT';
+                name = name.trim();
+                if (name) {
+                    const words = name.split(' ').filter(w => w.length > 0);
+                    if (words.length >= 2) {
+                        initials = (words[0][0] + words[1][0]).toUpperCase();
+                    } else if (words.length === 1) {
+                        initials = (words[0][0] + (words[0][1] || '')).toUpperCase();
+                    }
+                }
+                previewInitials.textContent = initials;
+            }
+        };
+
+
     </script>
 @endsection

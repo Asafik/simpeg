@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'SIMPEG-SP - Dashboard Admin Dinas')</title>
-    
+    <title>@yield('title', 'GTK - Dashboard Admin Dinas')</title>
+
     <!-- Favicon Logo -->
     <link rel="icon" type="image/svg+xml" href="{{ asset('logo/logo.svg') }}">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Google Fonts (Plus Jakarta Sans & Inter) -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
@@ -49,6 +52,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/components.css') }}">
     @stack('styles')
 </head>
+
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
 
     @unless(View::hasSection('hideNav'))
@@ -57,7 +61,8 @@
     @endunless
 
     <!-- Main Content Wrapper -->
-    <main class="{{ (View::hasSection('hideNav') || Request::is('login')) ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col">
+    <main
+        class="{{ (View::hasSection('hideNav') || Request::is('login')) ? 'w-full' : 'md:ml-[270px]' }} min-h-screen bg-gray-50 flex flex-col">
         @unless(View::hasSection('hideNav') || Request::is('login'))
             <!-- Top Navbar Partial -->
             @include('layouts.navbar')
@@ -75,4 +80,5 @@
     <script src="{{ asset('assets/js/calendar.js') }}"></script>
     @stack('scripts')
 </body>
+
 </html>

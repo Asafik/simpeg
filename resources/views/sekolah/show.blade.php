@@ -149,6 +149,29 @@
                     </div>
 
                     <div>
+                        <p class="text-gray-400 font-medium">Tingkatan / Jenjang</p>
+                        <div class="mt-1">
+                            @php
+                                $tingkatanBadge = match($sekolah->tingkatan) {
+                                    'TK' => 'bg-pink-100 text-pink-800',
+                                    'SD' => 'bg-sky-100 text-sky-800',
+                                    'SMP' => 'bg-violet-100 text-violet-800',
+                                    'SMA' => 'bg-orange-100 text-orange-800',
+                                    default => 'bg-gray-100 text-gray-600',
+                                };
+                                $tingkatanLabel = match($sekolah->tingkatan) {
+                                    'TK' => 'TK (Taman Kanak-Kanak)',
+                                    'SD' => 'SD (Sekolah Dasar)',
+                                    'SMP' => 'SMP (Sekolah Menengah Pertama)',
+                                    'SMA' => 'SMA (Sekolah Menengah Atas)',
+                                    default => $sekolah->tingkatan ?? '-',
+                                };
+                            @endphp
+                            <span class="badge-custom {{ $tingkatanBadge }} font-bold text-[10px]">{{ $tingkatanLabel }}</span>
+                        </div>
+                    </div>
+
+                    <div>
                         <p class="text-gray-400 font-medium">Kecamatan</p>
                         <p class="text-gray-800 font-bold mt-0.5">
                             <i class="fas fa-location-dot text-blue-800 mr-1"></i>{{ $sekolah->kecamatan }}

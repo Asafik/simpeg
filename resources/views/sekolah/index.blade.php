@@ -174,14 +174,15 @@
                     </select>
                 </div>
 
-                <!-- Jenjang Filter -->
+                <!-- Jenjang/Tingkatan Filter -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Jenjang Sekolah</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">Tingkatan / Jenjang</label>
                     <select name="jenjang" class="js-auto-filter w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
-                        <option value="">Semua Jenjang (SD/SMP/TK)</option>
-                        <option value="SD" {{ $jenjang == 'SD' ? 'selected' : '' }}>SD / SDN</option>
-                        <option value="SMP" {{ $jenjang == 'SMP' ? 'selected' : '' }}>SMP / SMPN</option>
-                        <option value="TK" {{ $jenjang == 'TK' ? 'selected' : '' }}>TK / TKN</option>
+                        <option value="">Semua Tingkatan</option>
+                        <option value="TK" {{ $jenjang == 'TK' ? 'selected' : '' }}>TK (Taman Kanak-Kanak)</option>
+                        <option value="SD" {{ $jenjang == 'SD' ? 'selected' : '' }}>SD (Sekolah Dasar)</option>
+                        <option value="SMP" {{ $jenjang == 'SMP' ? 'selected' : '' }}>SMP (Sekolah Menengah Pertama)</option>
+                        <option value="SMA" {{ $jenjang == 'SMA' ? 'selected' : '' }}>SMA (Sekolah Menengah Atas)</option>
                     </select>
                 </div>
 
@@ -225,6 +226,7 @@
                             <th class="px-4 py-3.5 text-center">No.</th>
                             <th class="px-6 py-3.5">NPSN</th>
                             <th class="px-6 py-3.5">Nama Sekolah</th>
+                            <th class="px-6 py-3.5">Tingkatan</th>
                             <th class="px-6 py-3.5">Kecamatan</th>
                             <th class="px-6 py-3.5 text-center">Jumlah Pegawai</th>
                             <th class="px-6 py-3.5">Kepala Sekolah</th>
@@ -245,6 +247,20 @@
                                     <td class="px-6 py-4">
                                         <p class="font-bold text-gray-900 text-xs">{{ $sekolah->nama_sekolah }}</p>
                                         <p class="text-[10px] text-gray-400">{{ $sekolah->email_sekolah }}</p>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        @php
+                                            $tingkatanBadge = match($sekolah->tingkatan) {
+                                                'TK' => 'bg-pink-100 text-pink-800 border-pink-200',
+                                                'SD' => 'bg-sky-100 text-sky-800 border-sky-200',
+                                                'SMP' => 'bg-violet-100 text-violet-800 border-violet-200',
+                                                'SMA' => 'bg-orange-100 text-orange-800 border-orange-200',
+                                                default => 'bg-gray-100 text-gray-600 border-gray-200',
+                                            };
+                                        @endphp
+                                        <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold border {{ $tingkatanBadge }}">
+                                            {{ $sekolah->tingkatan ?? '-' }}
+                                        </span>
                                     </td>
                                     <td class="px-6 py-4 text-xs text-gray-700 font-semibold">
                                         <span class="px-2.5 py-1 rounded-md bg-gray-100 text-gray-700 text-[11px]">
@@ -299,7 +315,7 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="8" class="px-6 py-8 text-center text-xs text-gray-400 font-medium">
+                                <td colspan="9" class="px-6 py-8 text-center text-xs text-gray-400 font-medium">
                                     Tidak ada data sekolah yang ditemukan.
                                 </td>
                             </tr>

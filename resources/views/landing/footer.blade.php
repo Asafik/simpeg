@@ -1,17 +1,18 @@
 <!-- Official System Theme Footer (Modular Landing Component) -->
 <footer class="bg-blue-950 text-white mt-auto border-t border-blue-900">
     <div class="px-6 md:px-16 py-12 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-xs">
-        
+
         <div class="space-y-3 md:col-span-2">
             <div class="flex items-center gap-3">
                 <img src="{{ asset('logo/logo.svg') }}" alt="SIMPEG-SP Logo" class="w-9 h-9 object-contain">
                 <div>
-                    <h2 class="font-bold text-base text-white">SIMPEG-SP</h2>
+                    <h2 class="font-bold text-base text-white">GTK</h2>
                     <p class="text-[10px] uppercase text-blue-300 font-medium">Dinas Pendidikan</p>
                 </div>
             </div>
             <p class="text-blue-200/80 leading-relaxed max-w-md">
-                Sistem Informasi Manajemen Pegawai Satuan Pendidikan — Platform pemusatan data kepegawaian resmi Dinas Pendidikan.
+                Sistem Informasi Manajemen Pegawai Satuan Pendidikan — Platform pemusatan data kepegawaian resmi Dinas
+                Pendidikan.
             </p>
         </div>
 

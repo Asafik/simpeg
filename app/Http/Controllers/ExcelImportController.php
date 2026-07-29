@@ -101,10 +101,9 @@ class ExcelImportController extends Controller
                             $pendidikan = $this->normalizePendidikan($this->extractValue($rowData, ['tingkat_pendidikan', 'pendidikan', 'pendidikan_terakhir']));
                             $tglLahir = $this->normalizeTanggalLahir($this->extractValue($rowData, ['tanggal_lahir', 'tgl_lahir', 'tgl']));
 
-                            Pegawai::updateOrCreate(
+                            $pegawaiRecord = Pegawai::updateOrCreate(
                                 ['nip_nik' => $nipNik],
                                 [
-                                    'sekolah_id' => $sekolah->id,
                                     'nama_lengkap' => $namaPegawai,
                                     'status_kepegawaian' => $statusKepegawaian,
                                     'jabatan_fungsional' => $jabatan ?: 'Guru Ahli Pertama',
@@ -115,6 +114,12 @@ class ExcelImportController extends Controller
                                     'tanggal_lahir' => $tglLahir,
                                 ]
                             );
+
+                            // Attach sekolah via pivot if not already attached
+                            if (!$pegawaiRecord->sekolahs()->where('sekolahs.id', $sekolah->id)->exists()) {
+                                $isPrimary = $pegawaiRecord->sekolahs()->count() === 0;
+                                $pegawaiRecord->sekolahs()->attach($sekolah->id, ['is_primary' => $isPrimary]);
+                            }
                         }
 
                         $processedRows++;

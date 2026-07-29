@@ -16,17 +16,11 @@ class VerificationController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
-        // Redirect Operator Sekolah to their dedicated verifikasi upload page
-        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
-            return redirect()->route('operator.verifikasi.index');
-        }
-
-        $query = Pegawai::whereNotNull('sekolah_id')->with(['sekolah', 'verifier']);
+        $query = Pegawai::has('sekolahs')->with(['sekolahs', 'verifier']);
 
         // Scope query for Operator Sekolah
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
-            $query->where('sekolah_id', $user->sekolah_id);
+            $query->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id));
         }
 
         // Search Filter (NIP, NIK, Nama Pegawai, Nama Sekolah)
@@ -36,7 +30,7 @@ class VerificationController extends Controller
                 $q->where('nama_lengkap', 'like', "%{$search}%")
                   ->orWhere('nip_nik', 'like', "%{$search}%")
                   ->orWhere('nik', 'like', "%{$search}%")
-                  ->orWhereHas('sekolah', function ($qSekolah) use ($search) {
+                  ->orWhereHas('sekolahs', function ($qSekolah) use ($search) {
                       $qSekolah->where('nama_sekolah', 'like', "%{$search}%")
                                ->orWhere('npsn', 'like', "%{$search}%");
                   });
@@ -50,7 +44,7 @@ class VerificationController extends Controller
 
         // Sekolah Filter
         if ($request->filled('sekolah_id')) {
-            $query->where('sekolah_id', $request->sekolah_id);
+            $query->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $request->sekolah_id));
         }
 
         // Pagination
@@ -59,16 +53,17 @@ class VerificationController extends Controller
         // Calculate Summary Metrics based on role
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
             $sekolahId = $user->sekolah_id;
-            $totalCount = Pegawai::where('sekolah_id', $sekolahId)->count();
-            $menungguCount = Pegawai::where('sekolah_id', $sekolahId)->whereIn('status_verifikasi', ['MENUNGGU', 'DRAFT'])->count();
-            $revisiCount = Pegawai::where('sekolah_id', $sekolahId)->where('status_verifikasi', 'REVISI')->count();
-            $disetujuiCount = Pegawai::where('sekolah_id', $sekolahId)->where('status_verifikasi', 'DISETUJUI')->count();
-            $sekolahs = collect(); // Operator doesn't need school list filter
+            $scopeFn = fn($q) => $q->whereHas('sekolahs', fn($sq) => $sq->where('sekolahs.id', $sekolahId));
+            $totalCount = Pegawai::where($scopeFn)->count();
+            $menungguCount = Pegawai::where($scopeFn)->whereIn('status_verifikasi', ['MENUNGGU', 'DRAFT'])->count();
+            $revisiCount = Pegawai::where($scopeFn)->where('status_verifikasi', 'REVISI')->count();
+            $disetujuiCount = Pegawai::where($scopeFn)->where('status_verifikasi', 'DISETUJUI')->count();
+            $sekolahs = collect();
         } else {
-            $totalCount = Pegawai::whereNotNull('sekolah_id')->count();
-            $menungguCount = Pegawai::whereNotNull('sekolah_id')->whereIn('status_verifikasi', ['MENUNGGU', 'DRAFT'])->count();
-            $revisiCount = Pegawai::whereNotNull('sekolah_id')->where('status_verifikasi', 'REVISI')->count();
-            $disetujuiCount = Pegawai::whereNotNull('sekolah_id')->where('status_verifikasi', 'DISETUJUI')->count();
+            $totalCount = Pegawai::has('sekolahs')->count();
+            $menungguCount = Pegawai::has('sekolahs')->whereIn('status_verifikasi', ['MENUNGGU', 'DRAFT'])->count();
+            $revisiCount = Pegawai::has('sekolahs')->where('status_verifikasi', 'REVISI')->count();
+            $disetujuiCount = Pegawai::has('sekolahs')->where('status_verifikasi', 'DISETUJUI')->count();
             $sekolahs = Sekolah::orderBy('nama_sekolah')->get(['id', 'nama_sekolah', 'npsn']);
         }
 
@@ -83,48 +78,18 @@ class VerificationController extends Controller
     }
 
     /**
-     * Process verification approval or rejection (Strictly Admin Dinas).
-     */
-    public function verify(Request $request, $id)
-    {
-        $user = Auth::user();
-
-        // Enforce strict Admin Dinas check
-        if (!$user || !method_exists($user, 'isAdminDinas') || !$user->isAdminDinas()) {
-            abort(403, 'Akses Ditolak: Hanya Administrator Dinas yang berhak memverifikasi atau menolak berkas.');
-        }
-
-        $request->validate([
-            'status' => 'required|in:Disetujui,Ditolak',
-            'catatan' => 'nullable|string|max:500',
-        ]);
-
-        $pegawai = Pegawai::findOrFail($id);
-        $pegawai->update([
-            'status_verifikasi' => $request->status,
-            'catatan_verifikasi' => $request->catatan,
-        ]);
-
-        $msg = $request->status === 'Disetujui' 
-            ? "Berkas dokumen atas nama '{$pegawai->nama_lengkap}' berhasil disetujui."
-            : "Berkas dokumen atas nama '{$pegawai->nama_lengkap}' ditolak dengan catatan.";
-
-        return back()->with('success', $msg);
-    }
-
-    /**
      * Show dedicated document review page for a specific employee.
      */
     public function show(Pegawai $pegawai)
     {
         $user = Auth::user();
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
-            if ($pegawai->sekolah_id !== $user->sekolah_id) {
+            if (!$pegawai->sekolahs()->where('sekolahs.id', $user->sekolah_id)->exists()) {
                 abort(403, 'Anda tidak memiliki akses untuk melihat berkas pegawai dari sekolah lain.');
             }
         }
 
-        $pegawai->load(['sekolah', 'verifier']);
+        $pegawai->load(['sekolahs', 'verifier']);
         return view('verifikasi.show', compact('pegawai'));
     }
 
