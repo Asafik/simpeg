@@ -207,6 +207,29 @@
                             @endif
                         </div>
                     </div>
+
+                    @if(isset($otherSchools) && $otherSchools->count() > 0)
+                        <div class="mt-4 p-3 bg-blue-50/80 border border-blue-200 rounded-xl text-xs space-y-2">
+                            <p class="font-bold text-blue-950 flex items-center gap-1.5">
+                                <i class="fas fa-link text-blue-700"></i> Riwayat Penugasan / Sekolah Lain Kepsek Ini:
+                            </p>
+                            <div class="space-y-1.5">
+                                @foreach($otherSchools as $oSch)
+                                    <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-blue-100 shadow-2xs">
+                                        <div>
+                                            <a href="{{ route('sekolah.show', $oSch->id) }}" class="font-bold text-blue-900 hover:underline">
+                                                {{ $oSch->nama_sekolah }}
+                                            </a>
+                                            <p class="text-[10px] text-gray-500">Kecamatan {{ $oSch->kecamatan }}</p>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-extrabold {{ $oSch->status_kepala_sekolah === 'Plt' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800' }}">
+                                            {{ $oSch->status_kepala_sekolah === 'Plt' ? 'Plt' : 'Definitif' }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 

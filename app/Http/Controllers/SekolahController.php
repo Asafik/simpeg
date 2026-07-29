@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sekolah;
+use App\Models\Pegawai;
 use App\Models\User;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
@@ -151,7 +152,21 @@ class SekolahController extends Controller
     public function show($id)
     {
         $sekolah = Sekolah::with('users', 'pegawais')->findOrFail($id);
-        return view('sekolah.show', compact('sekolah'));
+
+        $kepsekPegawai = null;
+        $otherSchools = collect();
+
+        if (!empty($sekolah->nip_kepala_sekolah)) {
+            $kepsekPegawai = Pegawai::with('sekolahs')->where('nip_nik', $sekolah->nip_kepala_sekolah)->first();
+        } elseif (!empty($sekolah->nama_kepala_sekolah)) {
+            $kepsekPegawai = Pegawai::with('sekolahs')->where('nama_lengkap', $sekolah->nama_kepala_sekolah)->first();
+        }
+
+        if ($kepsekPegawai) {
+            $otherSchools = $kepsekPegawai->sekolahs->where('id', '!=', $sekolah->id);
+        }
+
+        return view('sekolah.show', compact('sekolah', 'kepsekPegawai', 'otherSchools'));
     }
 
     /**

@@ -612,7 +612,7 @@
             </div>
 
             <!-- Modal Form Body -->
-            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4" onsubmit="if (typeof showLoadingOverlay === 'function') { showLoadingOverlay('Memproses Impor Data Pegawai...', 'Sistem sedang mengurai berkas Excel dan menyelaraskan data pegawai...'); }">
                 @csrf
                 
                 <div class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 space-y-1">
@@ -622,7 +622,7 @@
                     <ul class="list-disc list-inside text-[11px] space-y-0.5 text-blue-800">
                         <li>Gunakan template resmi untuk menyesuaikan kolom data.</li>
                         <li>Kolom <strong>NIP_NIK</strong> &amp; <strong>Nama_Lengkap</strong> wajib diisi.</li>
-                        <li>Jika NPSN diisi, sistem akan mencocokkan sekolah secara otomatis.</li>
+                        <li>Jika data NIP/NIK sudah ada di DB, data akan otomatis di-update / ketimpa (tanpa duplikat).</li>
                     </ul>
                 </div>
 
@@ -645,7 +645,7 @@
                     <button type="button" onclick="closeImportModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-100 transition">
                         Batal
                     </button>
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition flex items-center gap-2">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer">
                         <i class="fas fa-cloud-arrow-up text-xs"></i>
                         <span>Upload &amp; Proses Import</span>
                     </button>
@@ -654,6 +654,98 @@
         </div>
         </div>
     </div>
+
+    @if(session('import_summary'))
+        @php $summary = session('import_summary'); @endphp
+        <!-- Modal Result Summary Import Pegawai (Executive Hope UI Clean Light Design) -->
+        <div id="importSummaryResultModal" class="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fadeIn">
+            <div class="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]">
+                <!-- Modal Header -->
+                <div class="px-6 py-4.5 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white flex items-center justify-between shadow-md">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-emerald-400 border border-white/20 shadow-inner">
+                            <i class="fas fa-file-circle-check text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-base text-white tracking-tight">Ringkasan Hasil Impor Pegawai</h3>
+                            <p class="text-xs text-blue-200 opacity-90">Pemrosesan berkas Excel selesai 100%</p>
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('importSummaryResultModal').remove()" class="text-blue-200 hover:text-white text-lg w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
+                        <i class="fas fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="p-6 overflow-y-auto space-y-6">
+                    <!-- Stat Badges Cards (Clean Light Cards) -->
+                    <div class="grid grid-cols-3 gap-3.5">
+                        <div class="bg-slate-50 border border-gray-200 rounded-xl p-3.5 text-center shadow-xs">
+                            <p class="text-[11px] text-gray-500 font-bold uppercase tracking-wider">Total Diproses</p>
+                            <p class="text-2xl font-black text-gray-900 mt-1">{{ $summary['total_processed'] ?? 0 }}</p>
+                        </div>
+                        <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-3.5 text-center shadow-xs">
+                            <p class="text-[11px] text-blue-800 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                                <i class="fas fa-user-plus text-blue-600"></i> Baru Ditambahkan
+                            </p>
+                            <p class="text-2xl font-black text-blue-950 mt-1">{{ $summary['added_count'] ?? 0 }}</p>
+                        </div>
+                        <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3.5 text-center shadow-xs">
+                            <p class="text-[11px] text-amber-800 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                                <i class="fas fa-database text-amber-600"></i> Data Sudah Ada
+                            </p>
+                            <p class="text-2xl font-black text-amber-950 mt-1">{{ $summary['skipped_count'] ?? 0 }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Details Table / List (Clean Light Design) -->
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                <i class="fas fa-list-check text-blue-800"></i> Rincian Status Per Pegawai
+                            </h4>
+                            <span class="text-[11px] font-semibold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full border border-gray-200">
+                                {{ count($summary['details'] ?? []) }} Pegawai
+                            </span>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-xl overflow-hidden shadow-xs bg-white">
+                            <div class="max-h-60 overflow-y-auto divide-y divide-gray-100">
+                                @if(!empty($summary['details']))
+                                    @foreach($summary['details'] as $detail)
+                                        <div class="flex items-center justify-between px-4 py-2.5 hover:bg-slate-50/80 transition text-xs">
+                                            <div class="flex items-center gap-3 overflow-hidden">
+                                                <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 {{ $detail['status'] === 'NEW' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700' }}">
+                                                    <i class="fas {{ $detail['status'] === 'NEW' ? 'fa-user-plus' : 'fa-database' }} text-xs"></i>
+                                                </div>
+                                                <div class="truncate">
+                                                    <p class="font-bold text-gray-900 truncate">{{ $detail['nama'] }}</p>
+                                                    <p class="text-[11px] text-gray-400 font-mono">NIP/NIK: {{ $detail['nip'] }}</p>
+                                                </div>
+                                            </div>
+                                            <span class="flex-shrink-0 text-[11px] font-bold px-3 py-1 rounded-full border {{ $detail['status'] === 'NEW' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200' }}">
+                                                {{ $detail['status'] === 'NEW' ? '✓ Baru Ditambahkan' : 'Data Sudah Ada' }}
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="text-gray-400 italic text-center py-6 text-xs">Tidak ada data rincian tambahan</div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="px-6 py-3.5 bg-gray-50 border-t border-gray-100 flex items-center justify-end">
+                    <button onclick="document.getElementById('importSummaryResultModal').remove()" type="button" class="px-6 py-2.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white text-xs font-bold shadow-md shadow-blue-950/20 transition cursor-pointer">
+                        Tutup Ringkasan
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
     
     <!-- Modal Preview Berkas -->
     <div id="filePreviewModal" class="hidden fixed inset-0 flex items-center justify-center p-4 bg-gray-900/70 backdrop-blur-sm animate-fadeIn" style="z-index: 99999 !important;">

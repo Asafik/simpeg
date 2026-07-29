@@ -120,10 +120,9 @@ class PegawaiSeeder extends Seeder
 
         foreach ($samplePegawai as $idx => $data) {
             $targetSekolah = $sekolahs[$idx % count($sekolahs)];
-            Pegawai::updateOrCreate(
+            $pegawai = Pegawai::updateOrCreate(
                 ['nip_nik' => $data['nip_nik']],
                 [
-                    'sekolah_id' => $targetSekolah->id,
                     'nama_lengkap' => $data['nama_lengkap'],
                     'status_kepegawaian' => $data['status_kepegawaian'],
                     'jabatan_fungsional' => $data['jabatan_fungsional'],
@@ -134,6 +133,9 @@ class PegawaiSeeder extends Seeder
                     'tanggal_lahir' => $data['tanggal_lahir'],
                 ]
             );
+            if (!$pegawai->sekolahs()->where('sekolahs.id', $targetSekolah->id)->exists()) {
+                $pegawai->sekolahs()->attach($targetSekolah->id, ['is_primary' => true]);
+            }
         }
     }
 }
