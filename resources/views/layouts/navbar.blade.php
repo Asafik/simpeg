@@ -1,5 +1,5 @@
 <!-- ===== TOPBAR (Mentok Atas & Full Width) ===== -->
-<header class="bg-white border-b border-gray-200/80 px-4 md:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-30">
+<header class="bg-white border-b border-gray-200/80 px-4 md:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-40">
     <div class="flex items-center gap-3">
         <!-- Mobile Toggle -->
         <button class="md:hidden text-gray-700 text-xl w-9 h-9 rounded-lg hover:bg-gray-100 flex items-center justify-center transition" id="mobileToggle">

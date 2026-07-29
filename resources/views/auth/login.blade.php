@@ -90,9 +90,10 @@
                     </button>
                 </form>
 
-                <p class="text-xs text-gray-400 text-center mt-6 font-medium">
-                    Belum punya akun? <a href="#" class="text-blue-800 font-bold hover:underline">Hubungi Admin Dinas</a>
-                </p>
+                <div class="text-xs text-gray-400 text-center mt-6 font-medium flex flex-col gap-3">
+                    <p>Belum punya akun? <a href="#" class="text-blue-800 font-bold hover:underline">Hubungi Admin Dinas</a></p>
+                    <p><a href="{{ route('landing.home') }}" class="text-gray-500 hover:text-blue-800 hover:underline transition"><i class="fas fa-arrow-left mr-1"></i> Kembali ke Beranda</a></p>
+                </div>
             </div>
 
             <!-- Footer -->

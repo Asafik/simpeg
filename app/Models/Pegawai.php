@@ -170,6 +170,10 @@ class Pegawai extends Model
             $query->where('jabatan_fungsional', $filters['jabatan_fungsional']);
         }
 
+        if (!empty($filters['jabatan_ptk'])) {
+            $query->where('jabatan_fungsional', $filters['jabatan_ptk']);
+        }
+
         if (isset($filters['is_serdik']) && $filters['is_serdik'] !== null && $filters['is_serdik'] !== '') {
             $query->where('is_serdik', (int) $filters['is_serdik']);
         }

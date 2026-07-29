@@ -60,10 +60,11 @@ class PegawaiController extends Controller
                     : collect();
                 $kecamatans = Sekolah::distinct()->pluck('kecamatan')->sort()->values();
 
-                $jabatanList = ['Guru Ahli Pertama', 'Guru Ahli Muda', 'Guru Ahli Madya', 'Guru Ahli Utama', 'Kepala Sekolah', 'Penilik', 'Staf Administrasi', 'Laboran', 'Pustakawan'];
+                $jabatanFungsionalList = ['Guru Ahli Pertama', 'Guru Ahli Muda', 'Guru Ahli Madya', 'Guru Ahli Utama'];
+                $jabatanPtkList = ['Kepala Sekolah', 'Penilik', 'Staf Administrasi', 'Laboran', 'Pustakawan'];
                 $jenisGuruList = ['Guru Kelas', 'Guru Mata Pelajaran', 'Guru BK', 'Guru Inklusi', 'Tidak Mengajar'];
 
-                return view('pegawai.index', compact('pegawais', 'sekolahs', 'kecamatans', 'jabatanList', 'jenisGuruList', 'filters', 'totalPegawaiCount', 'totalPnsCount', 'totalPppkCount', 'totalSerdikCount', 'totalMultiSekolahCount'));
+                return view('pegawai.index', compact('pegawais', 'sekolahs', 'kecamatans', 'jabatanFungsionalList', 'jabatanPtkList', 'jenisGuruList', 'filters', 'totalPegawaiCount', 'totalPnsCount', 'totalPppkCount', 'totalSerdikCount', 'totalMultiSekolahCount'));
             }
         } catch (\Throwable $e) {
             // Safe fallback for UI preview mode

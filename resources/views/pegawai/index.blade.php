@@ -148,16 +148,16 @@
 
         </div>
 
-        <!-- 7 KRITERIA MULTI-FILTER BAR -->
-        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-30">
+        <!-- 9 KRITERIA MULTI-FILTER BAR -->
+        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-20">
             <div class="flex items-center justify-between pb-3 border-b border-gray-100">
                 <h3 class="text-xs font-extrabold uppercase tracking-wider text-blue-800 flex items-center gap-2">
                     <i class="fas fa-filter"></i>
-                    Multi-Filter Kombinasi (7 Kriteria PRD)
+                    Multi-Filter Kombinasi (9 Kriteria PRD)
                 </h3>
             </div>
 
-            <!-- Filter Grid 7 Dropdowns + Search Form -->
+            <!-- Filter Grid 9 Dropdowns + Search Form -->
             <form action="{{ url('/pegawai') }}" method="GET" id="pegawaiFilterForm" onsubmit="handlePegawaiSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
                 
                 <!-- Search Keyword -->
@@ -189,23 +189,42 @@
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">2. Jabatan Fungsional</label>
                     <select name="jabatan_fungsional" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
-                        <option value="">Semua Jabatan</option>
-                        @if(isset($jabatanList))
-                            @foreach($jabatanList as $jbt)
+                        <option value="">Semua Jabatan Fungsional</option>
+                        @if(isset($jabatanFungsionalList))
+                            @foreach($jabatanFungsionalList as $jbt)
                                 <option value="{{ $jbt }}" {{ request('jabatan_fungsional') == $jbt ? 'selected' : '' }}>{{ $jbt }}</option>
                             @endforeach
                         @else
                             <option value="Guru Ahli Pertama" {{ request('jabatan_fungsional') == 'Guru Ahli Pertama' ? 'selected' : '' }}>Guru Ahli Pertama</option>
                             <option value="Guru Ahli Muda" {{ request('jabatan_fungsional') == 'Guru Ahli Muda' ? 'selected' : '' }}>Guru Ahli Muda</option>
-                            <option value="Kepala Sekolah" {{ request('jabatan_fungsional') == 'Kepala Sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
-                            <option value="Penilik" {{ request('jabatan_fungsional') == 'Penilik' ? 'selected' : '' }}>Penilik</option>
+                            <option value="Guru Ahli Madya" {{ request('jabatan_fungsional') == 'Guru Ahli Madya' ? 'selected' : '' }}>Guru Ahli Madya</option>
+                            <option value="Guru Ahli Utama" {{ request('jabatan_fungsional') == 'Guru Ahli Utama' ? 'selected' : '' }}>Guru Ahli Utama</option>
                         @endif
                     </select>
                 </div>
 
-                <!-- 3. Sertifikasi Pendidik (Serdik) -->
+                <!-- 3. Jabatan PTK -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">3. Sertifikasi (Serdik)</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">3. Jabatan PTK</label>
+                    <select name="jabatan_ptk" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
+                        <option value="">Semua Jabatan PTK</option>
+                        @if(isset($jabatanPtkList))
+                            @foreach($jabatanPtkList as $jbt)
+                                <option value="{{ $jbt }}" {{ request('jabatan_ptk') == $jbt ? 'selected' : '' }}>{{ $jbt }}</option>
+                            @endforeach
+                        @else
+                            <option value="Kepala Sekolah" {{ request('jabatan_ptk') == 'Kepala Sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                            <option value="Penilik" {{ request('jabatan_ptk') == 'Penilik' ? 'selected' : '' }}>Penilik</option>
+                            <option value="Staf Administrasi" {{ request('jabatan_ptk') == 'Staf Administrasi' ? 'selected' : '' }}>Staf Administrasi</option>
+                            <option value="Laboran" {{ request('jabatan_ptk') == 'Laboran' ? 'selected' : '' }}>Laboran</option>
+                            <option value="Pustakawan" {{ request('jabatan_ptk') == 'Pustakawan' ? 'selected' : '' }}>Pustakawan</option>
+                        @endif
+                    </select>
+                </div>
+
+                <!-- 4. Sertifikasi Pendidik (Serdik) -->
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">4. Sertifikasi (Serdik)</label>
                     <select name="serdik" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Status Serdik</option>
                         <option value="1" {{ (request('serdik') === '1' || request('is_serdik') === '1') ? 'selected' : '' }}>Sudah Serdik</option>
@@ -213,9 +232,9 @@
                     </select>
                 </div>
 
-                <!-- 4. Jenis PTK -->
+                <!-- 5. Jenis PTK -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">4. Jenis PTK</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">5. Jenis PTK</label>
                     <select name="jenis_ptk" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua PTK</option>
                         <option value="Pendidik" {{ request('jenis_ptk') == 'Pendidik' ? 'selected' : '' }}>Pendidik (Guru)</option>
@@ -223,9 +242,9 @@
                     </select>
                 </div>
 
-                <!-- 5. Jenis Guru -->
+                <!-- 6. Jenis Guru -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">5. Jenis Guru</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">6. Jenis Guru</label>
                     <select name="jenis_guru" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Jenis Guru</option>
                         <option value="Guru Kelas" {{ request('jenis_guru') == 'Guru Kelas' ? 'selected' : '' }}>Guru Kelas</option>
@@ -234,9 +253,9 @@
                     </select>
                 </div>
 
-                <!-- 6. Tingkat Pendidikan -->
+                <!-- 7. Tingkat Pendidikan -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">6. Tingkat Pendidikan</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">7. Tingkat Pendidikan</label>
                     <select name="tingkat_pendidikan" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Tingkat (SMA/S1/S2)</option>
                         <option value="SMA/K" {{ request('tingkat_pendidikan') == 'SMA/K' ? 'selected' : '' }}>SMA/K</option>
@@ -247,9 +266,9 @@
                     </select>
                 </div>
 
-                <!-- 7. Kelompok Usia -->
+                <!-- 8. Kelompok Usia -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">7. Kelompok Usia</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">8. Kelompok Usia</label>
                     <select name="kelompok_usia" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Kelompok Usia</option>
                         <option value="<30" {{ request('kelompok_usia') == '<30' ? 'selected' : '' }}>&lt; 30 Tahun</option>
@@ -259,9 +278,9 @@
                     </select>
                 </div>
 
-                <!-- 8. Penugasan / Multi-Sekolah -->
+                <!-- 9. Penugasan / Multi-Sekolah -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">8. Penugasan Sekolah</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">9. Penugasan Sekolah</label>
                     <select name="multi_sekolah" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Penugasan Sekolah</option>
                         <option value="1" {{ (request('multi_sekolah') == '1' || request('multi_sekolah') == 'ya') ? 'selected' : '' }}>&gt; 1 Sekolah (Multi-Sekolah) [{{ $totalMultiSekolahCount ?? 176 }}]</option>
