@@ -24,16 +24,29 @@ Route::get('/landing', [LandingController::class, 'index'])->name('landing');
 
 // Secure File Serving Route (Bypasses Hostinger physical /storage 403 block)
 $fileServerHandler = function ($path) {
-    $cleanPath = preg_replace('#^(storage/|public/|app/public/)#', '', $path);
-    $filePath = storage_path('app/public/' . $cleanPath);
+    $path = str_replace('..', '', $path);
+    $cleanPath = preg_replace('#^(storage/|public/|app/public/|app/)#', '', ltrim($path, '/'));
 
-    if (!file_exists($filePath)) {
-        $filePathAlt = storage_path($cleanPath);
-        if (file_exists($filePathAlt)) {
-            $filePath = $filePathAlt;
-        } else {
-            abort(404, 'File tidak ditemukan.');
+    $possiblePaths = [
+        storage_path('app/public/' . $cleanPath),
+        storage_path('app/' . $cleanPath),
+        storage_path($cleanPath),
+        public_path('storage/' . $cleanPath),
+        public_path($cleanPath),
+        base_path('storage/app/public/' . $cleanPath),
+        base_path('storage/app/' . $cleanPath),
+    ];
+
+    $filePath = null;
+    foreach ($possiblePaths as $candidate) {
+        if (file_exists($candidate) && !is_dir($candidate)) {
+            $filePath = $candidate;
+            break;
         }
+    }
+
+    if (!$filePath) {
+        abort(404, 'File tidak ditemukan di server.');
     }
 
     $mimeType = @mime_content_type($filePath) ?: 'application/octet-stream';
