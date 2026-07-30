@@ -830,17 +830,34 @@
             const removeInput = document.getElementById('remove_photo_profile_input');
             
             if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    previewImg.classList.remove('hidden');
-                    previewInitials.classList.remove('flex');
-                    previewInitials.classList.add('hidden');
+                const file = input.files[0];
+                if (removeInput) removeInput.value = '0';
+                if (removeBtn) {
                     removeBtn.classList.remove('hidden');
                     removeBtn.classList.add('inline-block');
-                    if (removeInput) removeInput.value = '0';
                 }
-                reader.readAsDataURL(input.files[0]);
+
+                if (file.type === 'application/pdf') {
+                    if (previewImg) previewImg.classList.add('hidden');
+                    if (previewInitials) {
+                        previewInitials.classList.remove('hidden');
+                        previewInitials.classList.add('flex');
+                        previewInitials.innerHTML = '<i class="fas fa-file-pdf text-rose-300 text-2xl"></i>';
+                    }
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (previewImg) {
+                            previewImg.src = e.target.result;
+                            previewImg.classList.remove('hidden');
+                        }
+                        if (previewInitials) {
+                            previewInitials.classList.remove('flex');
+                            previewInitials.classList.add('hidden');
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
             }
         };
 
