@@ -21,6 +21,15 @@ use App\Http\Controllers\AnnouncementController;
 Route::get('/', [LandingController::class, 'index'])->name('landing.home');
 Route::get('/landing', [LandingController::class, 'index'])->name('landing');
 
+// Storage File Serving Fallback (Ensures storage files/photos work on Hostinger subdomains without symlinks)
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*');
+
 // Clean Public URLs with Controller Methods
 Route::get('/statistik', [LandingController::class, 'statistik'])->name('landing.statistik');
 Route::get('/layanan', [LandingController::class, 'layanan'])->name('landing.layanan');
