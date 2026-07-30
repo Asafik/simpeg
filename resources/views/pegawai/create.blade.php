@@ -165,13 +165,13 @@
                             <!-- Input Field -->
                             <div class="flex-1">
                                 <div class="relative">
-                                    <input type="file" id="photo_profile_input" name="photo_profile" accept="image/jpeg,image/png,image/jpg,image/webp" class="hidden" onchange="previewPhoto(this)">
+                                    <input type="file" id="photo_profile_input" name="photo_profile" accept="image/jpeg,image/png,image/jpg,image/webp,application/pdf" class="hidden" onchange="previewPhoto(this)">
                                     <input type="hidden" id="remove_photo_profile_input" name="remove_photo_profile" value="0">
                                     <label for="photo_profile_input" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 hover:border-blue-300 hover:text-blue-700 transition">
-                                        <i class="fas fa-camera"></i> Pilih Gambar
+                                        <i class="fas fa-camera"></i> Pilih Berkas / Foto
                                     </label>
                                 </div>
-                                <p class="text-[10px] text-gray-400 mt-1.5">Format: JPG, PNG, WEBP (Max 2MB). Kosongkan jika tidak ada.</p>
+                                <p class="text-[10px] text-gray-400 mt-1.5">Format: JPG, PNG, WEBP, PDF (Max 20MB). Kosongkan jika tidak ada.</p>
                                 <button type="button" onclick="removePhoto()" id="btn_remove_photo" class="{{ $hasPhoto ? 'inline-block' : 'hidden' }} mt-1 text-[10px] text-red-500 hover:text-red-700 font-semibold"><i class="fas fa-trash-alt"></i> Hapus Foto</button>
                             </div>
                         </div>
@@ -204,7 +204,7 @@
                     <!-- Tanggal Lahir -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Tanggal Lahir <span class="text-red-500">*</span></label>
-                        <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', isset($pegawai->tanggal_lahir) ? Carbon\Carbon::parse($pegawai->tanggal_lahir)->format('Y-m-d') : '') }}" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', isset($pegawai->tanggal_lahir) ? Carbon\Carbon::parse($pegawai->tanggal_lahir)->format('Y-m-d') : '') }}" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none font-medium">
                     </div>
 
                     <!-- Jenis Kelamin -->
@@ -250,8 +250,77 @@
 
                     <!-- Pangkat / Golongan -->
                     <div>
-                        <label class="block text-xs font-semibold text-gray-700 mb-1">Pangkat / Golongan</label>
-                        <input type="text" name="pangkat_golongan" value="{{ old('pangkat_golongan', $pegawai->pangkat_golongan ?? '') }}" placeholder="Contoh: IX / Penata Muda (III/a)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Pangkat / Golongan Ruang</label>
+                        @php
+                            $currentPangkat = old('pangkat_golongan', $pegawai->pangkat_golongan ?? '');
+                            $pangkatOptions = [
+                                'Non-ASN / Honorer' => [
+                                    '-' => '- (Non-ASN / Honorer)',
+                                ],
+                                'PPPK (Pegawai Pemerintah dengan Perjanjian Kerja)' => [
+                                    'IX' => 'Golongan IX (PPPK - S1 / Sarjana)',
+                                    'X' => 'Golongan X (PPPK - S2 / Magister)',
+                                    'XI' => 'Golongan XI (PPPK - S3 / Doktor)',
+                                    'V' => 'Golongan V (PPPK - D3)',
+                                    'VII' => 'Golongan VII (PPPK - Sarjana Muda)',
+                                    'VIII' => 'Golongan VIII (PPPK)',
+                                    'I' => 'Golongan I (PPPK)',
+                                    'II' => 'Golongan II (PPPK)',
+                                    'III' => 'Golongan III (PPPK)',
+                                    'IV' => 'Golongan IV (PPPK)',
+                                    'VI' => 'Golongan VI (PPPK)',
+                                    'XII' => 'Golongan XII (PPPK)',
+                                    'XIII' => 'Golongan XIII (PPPK)',
+                                    'XIV' => 'Golongan XIV (PPPK)',
+                                    'XV' => 'Golongan XV (PPPK)',
+                                    'XVI' => 'Golongan XVI (PPPK)',
+                                    'XVII' => 'Golongan XVII (PPPK)',
+                                ],
+                                'PNS - Golongan III (Penata)' => [
+                                    'Penata Muda (III/a)' => 'Penata Muda (III/a)',
+                                    'Penata Muda Tk. I, III/b' => 'Penata Muda Tingkat I (III/b)',
+                                    'Penata, III/c' => 'Penata (III/c)',
+                                    'Penata Tk. I, III/d' => 'Penata Tingkat I (III/d)',
+                                ],
+                                'PNS - Golongan IV (Pembina)' => [
+                                    'Pembina, IV/a' => 'Pembina (IV/a)',
+                                    'Pembina Tk. I, IV/b' => 'Pembina Tingkat I (IV/b)',
+                                    'Pembina Utama Muda, IV/c' => 'Pembina Utama Muda (IV/c)',
+                                    'Pembina Utama Madya (IV/d)' => 'Pembina Utama Madya (IV/d)',
+                                    'Pembina Utama (IV/e)' => 'Pembina Utama (IV/e)',
+                                ],
+                                'PNS - Golongan II (Pengatur)' => [
+                                    'Pengatur Muda, II/a' => 'Pengatur Muda (II/a)',
+                                    'Pengatur Muda Tk. I, II/b' => 'Pengatur Muda Tingkat I (II/b)',
+                                    'Pengatur, II/c' => 'Pengatur (II/c)',
+                                    'Pengatur Tk. I, II/d' => 'Pengatur Tingkat I (II/d)',
+                                ],
+                                'PNS - Golongan I (Juru)' => [
+                                    'Juru Muda (I/a)' => 'Juru Muda (I/a)',
+                                    'Juru Muda Tingkat I (I/b)' => 'Juru Muda Tingkat I (I/b)',
+                                    'Juru (I/c)' => 'Juru (I/c)',
+                                    'Juru Tingkat I (I/d)' => 'Juru Tingkat I (I/d)',
+                                ],
+                            ];
+                            $matchedOption = false;
+                        @endphp
+                        <select name="pangkat_golongan" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                            <option value="">-- Pilih Pangkat / Golongan --</option>
+                            @foreach($pangkatOptions as $groupLabel => $options)
+                                <optgroup label="{{ $groupLabel }}">
+                                    @foreach($options as $val => $label)
+                                        @php
+                                            $isSelected = ($currentPangkat === $val || (strlen($currentPangkat) > 0 && strtolower(trim($currentPangkat)) === strtolower(trim($val))));
+                                            if ($isSelected) $matchedOption = true;
+                                        @endphp
+                                        <option value="{{ $val }}" {{ $isSelected ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                            @if(!empty($currentPangkat) && !$matchedOption)
+                                <option value="{{ $currentPangkat }}" selected>{{ $currentPangkat }} (Custom)</option>
+                            @endif
+                        </select>
                     </div>
 
                     <!-- Jabatan Fungsional -->
@@ -305,9 +374,10 @@
                     <!-- Jenis PTK -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Jenis PTK <span class="text-red-500">*</span></label>
-                        <select name="jenis_ptk" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="jenis_ptk" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none font-medium">
                             <option value="Pendidik" {{ old('jenis_ptk', $pegawai->jenis_ptk ?? '') == 'Pendidik' ? 'selected' : '' }}>Pendidik (Guru)</option>
-                            <option value="Tenaga Kependidikan" {{ old('jenis_ptk', $pegawai->jenis_ptk ?? '') == 'Tenaga Kependidikan' ? 'selected' : '' }}>Tenaga Kependidikan (TU/Laboran)</option>
+                            <option value="Tenaga Kependidikan" {{ old('jenis_ptk', $pegawai->jenis_ptk ?? '') == 'Tenaga Kependidikan' ? 'selected' : '' }}>Tenaga Kependidikan (Staf TU / Administrasi / Laboran)</option>
+                            <option value="Penjaga Sekolah" {{ old('jenis_ptk', $pegawai->jenis_ptk ?? '') == 'Penjaga Sekolah' ? 'selected' : '' }}>Penjaga Sekolah / Kebersihan / Keamanan</option>
                         </select>
                     </div>
 
@@ -364,28 +434,28 @@
                     <div class="relative bg-gray-50/60 hover:bg-blue-50/40 border-2 border-dashed border-gray-200 hover:border-blue-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_sk_input').click()">
                         
-                        <input type="file" name="file_sk[]" multiple id="file_sk_input" accept="image/*" class="hidden" onclick="event.stopPropagation()"
+                        <input type="file" name="file_sk[]" multiple id="file_sk_input" accept="image/*,.pdf" class="hidden" onclick="event.stopPropagation()"
                                onchange="handleFileUploadPreview(this, 'file_sk_preview', 'file_sk_info', 'file_sk_icon', 'file_sk_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-blue-100/80 group-hover:bg-blue-800 text-blue-800 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
-                                <i id="file_sk_icon" class="fas fa-images text-xl"></i>
+                                <i id="file_sk_icon" class="fas fa-file-pdf text-xl"></i>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-gray-800 group-hover:text-blue-900 transition">SK Kepegawaian</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Maks 3 Gambar (Max 2MB/file)</p>
+                                <p class="text-xs font-bold text-gray-800 group-hover:text-blue-900 transition">SK Kepegawaian (SK Terakhir)</p>
+                                <p class="text-[10px] text-gray-500 mt-0.5 leading-tight">Unggah SK Terakhir (Bisa lebih dari 1 file berkas/foto/PDF, maks 3 file @ 20MB)</p>
                             </div>
 
                             @if(isset($pegawai->file_sk) && is_array($pegawai->file_sk) && count($pegawai->file_sk) > 0)
                                 <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left">
                                     <div class="flex items-center gap-2 mb-1">
                                         <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
-                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_sk) }} Gambar Terunggah</span>
+                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_sk) }} Berkas Terunggah</span>
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_sk as $idx => $path)
                                             <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                                Gbr {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
+                                                File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif
                                         @endforeach
@@ -420,28 +490,28 @@
                     <div class="relative bg-gray-50/60 hover:bg-emerald-50/40 border-2 border-dashed border-gray-200 hover:border-emerald-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_serdik_input').click()">
                         
-                        <input type="file" name="file_serdik[]" multiple id="file_serdik_input" accept="image/*" class="hidden" onclick="event.stopPropagation()"
+                        <input type="file" name="file_serdik[]" multiple id="file_serdik_input" accept="image/*,.pdf" class="hidden" onclick="event.stopPropagation()"
                                onchange="handleFileUploadPreview(this, 'file_serdik_preview', 'file_serdik_info', 'file_serdik_icon', 'file_serdik_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-emerald-100/80 group-hover:bg-emerald-700 text-emerald-700 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
-                                <i id="file_serdik_icon" class="fas fa-images text-xl"></i>
+                                <i id="file_serdik_icon" class="fas fa-award text-xl"></i>
                             </div>
                             <div>
                                 <p class="text-xs font-bold text-gray-800 group-hover:text-emerald-900 transition">Sertifikat Pendidik (Serdik)</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Maks 3 Gambar (Max 2MB/file)</p>
+                                <p class="text-[10px] text-gray-500 mt-0.5 leading-tight">Unggah Serdik (Bisa lebih dari 1 file berkas/foto/PDF, maks 3 file @ 20MB)</p>
                             </div>
 
                             @if(isset($pegawai->file_serdik) && is_array($pegawai->file_serdik) && count($pegawai->file_serdik) > 0)
                                 <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left">
                                     <div class="flex items-center gap-2 mb-1">
                                         <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
-                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_serdik) }} Gambar Terunggah</span>
+                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_serdik) }} Berkas Terunggah</span>
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_serdik as $idx => $path)
                                             <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                                Gbr {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
+                                                File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif
                                         @endforeach
@@ -476,28 +546,28 @@
                     <div class="relative bg-gray-50/60 hover:bg-purple-50/40 border-2 border-dashed border-gray-200 hover:border-purple-500 rounded-2xl p-5 text-center transition duration-200 group cursor-pointer"
                          onclick="document.getElementById('file_ijazah_input').click()">
                         
-                        <input type="file" name="file_ijazah[]" multiple id="file_ijazah_input" accept="image/*" class="hidden" onclick="event.stopPropagation()"
+                        <input type="file" name="file_ijazah[]" multiple id="file_ijazah_input" accept="image/*,.pdf" class="hidden" onclick="event.stopPropagation()"
                                onchange="handleFileUploadPreview(this, 'file_ijazah_preview', 'file_ijazah_info', 'file_ijazah_icon', 'file_ijazah_preview_icon')">
 
                         <div class="space-y-2">
                             <div class="w-12 h-12 rounded-2xl bg-purple-100/80 group-hover:bg-purple-700 text-purple-700 group-hover:text-white mx-auto flex items-center justify-center transition duration-200 shadow-sm">
-                                <i id="file_ijazah_icon" class="fas fa-images text-xl"></i>
+                                <i id="file_ijazah_icon" class="fas fa-graduation-cap text-xl"></i>
                             </div>
                             <div>
-                                <p class="text-xs font-bold text-gray-800 group-hover:text-purple-900 transition">Ijazah Terakhir</p>
-                                <p class="text-[10px] text-gray-400 mt-0.5">Maks 3 Gambar (Max 2MB/file)</p>
+                                <p class="text-xs font-bold text-gray-800 group-hover:text-purple-900 transition">Ijazah (S1 / S2 / S3)</p>
+                                <p class="text-[10px] text-gray-500 mt-0.5 leading-tight">Unggah Ijazah (Jika S2/S3, bisa upload S1 & S2/S3 sekaligus, maks 3 file @ 20MB)</p>
                             </div>
 
                             @if(isset($pegawai->file_ijazah) && is_array($pegawai->file_ijazah) && count($pegawai->file_ijazah) > 0)
                                 <div class="mt-2 bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-left">
                                     <div class="flex items-center gap-2 mb-1">
                                         <i class="fas fa-file-circle-check text-emerald-600 text-sm"></i>
-                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_ijazah) }} Gambar Terunggah</span>
+                                        <span class="text-[10px] font-bold text-emerald-800">{{ count($pegawai->file_ijazah) }} Berkas Terunggah</span>
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_ijazah as $idx => $path)
                                             <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
-                                                Gbr {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
+                                                File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif
                                         @endforeach
@@ -809,6 +879,24 @@
             }
         };
 
+        window.syncTanggalLahir = function() {
+            const day = document.getElementById('dob_day').value;
+            const month = document.getElementById('dob_month').value;
+            const year = document.getElementById('dob_year').value;
+            const hiddenInput = document.getElementById('tanggal_lahir_hidden');
 
+            if (day && month && year) {
+                hiddenInput.value = `${year}-${month}-${day}`;
+            } else {
+                hiddenInput.value = '';
+            }
+        };
+
+        // Run sync once on page load if values pre-filled
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof syncTanggalLahir === 'function') {
+                syncTanggalLahir();
+            }
+        });
     </script>
 @endsection

@@ -60,10 +60,11 @@ class PegawaiController extends Controller
                     : collect();
                 $kecamatans = Sekolah::distinct()->pluck('kecamatan')->sort()->values();
 
-                $jabatanList = ['Guru Ahli Pertama', 'Guru Ahli Muda', 'Guru Ahli Madya', 'Guru Ahli Utama', 'Kepala Sekolah', 'Penilik', 'Staf Administrasi', 'Laboran', 'Pustakawan'];
+                $jabatanFungsionalList = ['Guru Ahli Pertama', 'Guru Ahli Muda', 'Guru Ahli Madya', 'Guru Ahli Utama'];
+                $jabatanPtkList = ['Kepala Sekolah', 'Penilik', 'Staf Administrasi', 'Laboran', 'Pustakawan'];
                 $jenisGuruList = ['Guru Kelas', 'Guru Mata Pelajaran', 'Guru BK', 'Guru Inklusi', 'Tidak Mengajar'];
 
-                return view('pegawai.index', compact('pegawais', 'sekolahs', 'kecamatans', 'jabatanList', 'jenisGuruList', 'filters', 'totalPegawaiCount', 'totalPnsCount', 'totalPppkCount', 'totalSerdikCount', 'totalMultiSekolahCount'));
+                return view('pegawai.index', compact('pegawais', 'sekolahs', 'kecamatans', 'jabatanFungsionalList', 'jabatanPtkList', 'jenisGuruList', 'filters', 'totalPegawaiCount', 'totalPnsCount', 'totalPppkCount', 'totalSerdikCount', 'totalMultiSekolahCount'));
             }
         } catch (\Throwable $e) {
             // Safe fallback for UI preview mode
@@ -111,7 +112,7 @@ class PegawaiController extends Controller
             'is_serdik' => 'required|boolean',
             'no_serdik' => 'nullable|string|max:100',
             'tgl_serdik' => 'nullable|string|max:50',
-            'jenis_ptk' => 'required|in:Pendidik,Tenaga Kependidikan',
+            'jenis_ptk' => 'required|in:Pendidik,Tenaga Kependidikan,Penjaga Sekolah',
             'jenis_guru' => 'nullable|string|max:100',
             'jumlah_jp' => 'nullable|string|max:30',
             'nuptk' => 'nullable|string|max:30',
@@ -121,25 +122,24 @@ class PegawaiController extends Controller
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'nullable|in:Laki-Laki,Perempuan',
             'agama' => 'nullable|string|max:50',
-            'photo_profile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'photo_profile' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:20480',
             'file_sk' => 'nullable|array|max:3',
-            'file_sk.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'file_sk.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:20480',
             'file_serdik' => 'nullable|array|max:3',
-            'file_serdik.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'file_serdik.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:20480',
             'file_ijazah' => 'nullable|array|max:3',
-            'file_ijazah.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'file_ijazah.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:20480',
         ], [
-            'photo_profile.image' => 'Foto profil harus berupa gambar.',
-            'photo_profile.max' => 'Ukuran foto profil tidak boleh melebihi 2 MB.',
-            'file_sk.max' => 'Maksimal 3 gambar untuk SK Kepegawaian.',
-            'file_sk.*.max' => 'Ukuran berkas SK Kepegawaian tidak boleh melebihi 2 MB.',
-            'file_sk.*.image' => 'Format berkas SK Kepegawaian harus JPG, JPEG, PNG, atau WEBP.',
-            'file_serdik.max' => 'Maksimal 3 gambar untuk Sertifikat Pendidik.',
-            'file_serdik.*.max' => 'Ukuran berkas Sertifikat Pendidik tidak boleh melebihi 2 MB.',
-            'file_serdik.*.image' => 'Format berkas Sertifikat Pendidik harus JPG, JPEG, PNG, atau WEBP.',
-            'file_ijazah.max' => 'Maksimal 3 gambar untuk Ijazah.',
-            'file_ijazah.*.max' => 'Ukuran berkas Ijazah tidak boleh melebihi 2 MB.',
-            'file_ijazah.*.image' => 'Format berkas Ijazah harus JPG, JPEG, PNG, atau WEBP.',
+            'photo_profile.max' => 'Ukuran foto profil tidak boleh melebihi 20 MB.',
+            'file_sk.max' => 'Maksimal 3 berkas untuk SK Kepegawaian.',
+            'file_sk.*.max' => 'Ukuran berkas SK Kepegawaian tidak boleh melebihi 20 MB.',
+            'file_sk.*.mimes' => 'Format berkas SK Kepegawaian harus PDF, JPG, JPEG, PNG, atau WEBP.',
+            'file_serdik.max' => 'Maksimal 3 berkas untuk Sertifikat Pendidik.',
+            'file_serdik.*.max' => 'Ukuran berkas Sertifikat Pendidik tidak boleh melebihi 20 MB.',
+            'file_serdik.*.mimes' => 'Format berkas Sertifikat Pendidik harus PDF, JPG, JPEG, PNG, atau WEBP.',
+            'file_ijazah.max' => 'Maksimal 3 berkas untuk Ijazah.',
+            'file_ijazah.*.max' => 'Ukuran berkas Ijazah tidak boleh melebihi 20 MB.',
+            'file_ijazah.*.mimes' => 'Format berkas Ijazah harus PDF, JPG, JPEG, PNG, atau WEBP.',
         ]);
 
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $sekolahId != $user->sekolah_id) {
@@ -256,7 +256,7 @@ class PegawaiController extends Controller
             'is_serdik' => 'required|boolean',
             'no_serdik' => 'nullable|string|max:100',
             'tgl_serdik' => 'nullable|string|max:50',
-            'jenis_ptk' => 'required|in:Pendidik,Tenaga Kependidikan',
+            'jenis_ptk' => 'required|in:Pendidik,Tenaga Kependidikan,Penjaga Sekolah',
             'jenis_guru' => 'nullable|string|max:100',
             'jumlah_jp' => 'nullable|string|max:30',
             'nuptk' => 'nullable|string|max:30',
@@ -266,25 +266,24 @@ class PegawaiController extends Controller
             'tanggal_lahir' => 'required|date',
             'jenis_kelamin' => 'nullable|in:Laki-Laki,Perempuan',
             'agama' => 'nullable|string|max:50',
-            'photo_profile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'photo_profile' => 'nullable|file|mimes:jpeg,png,jpg,webp,pdf|max:20480',
             'file_sk' => 'nullable|array|max:3',
-            'file_sk.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'file_sk.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:20480',
             'file_serdik' => 'nullable|array|max:3',
-            'file_serdik.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'file_serdik.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:20480',
             'file_ijazah' => 'nullable|array|max:3',
-            'file_ijazah.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'file_ijazah.*' => 'file|mimes:jpg,jpeg,png,webp,pdf|max:20480',
         ], [
-            'photo_profile.image' => 'Foto profil harus berupa gambar.',
-            'photo_profile.max' => 'Ukuran foto profil tidak boleh melebihi 2 MB.',
-            'file_sk.max' => 'Maksimal 3 gambar untuk SK Kepegawaian.',
-            'file_sk.*.max' => 'Ukuran berkas SK Kepegawaian tidak boleh melebihi 2 MB.',
-            'file_sk.*.image' => 'Format berkas SK Kepegawaian harus JPG, JPEG, PNG, atau WEBP.',
-            'file_serdik.max' => 'Maksimal 3 gambar untuk Sertifikat Pendidik.',
-            'file_serdik.*.max' => 'Ukuran berkas Sertifikat Pendidik tidak boleh melebihi 2 MB.',
-            'file_serdik.*.image' => 'Format berkas Sertifikat Pendidik harus JPG, JPEG, PNG, atau WEBP.',
-            'file_ijazah.max' => 'Maksimal 3 gambar untuk Ijazah.',
-            'file_ijazah.*.max' => 'Ukuran berkas Ijazah tidak boleh melebihi 2 MB.',
-            'file_ijazah.*.image' => 'Format berkas Ijazah harus JPG, JPEG, PNG, atau WEBP.',
+            'photo_profile.max' => 'Ukuran foto profil tidak boleh melebihi 20 MB.',
+            'file_sk.max' => 'Maksimal 3 berkas untuk SK Kepegawaian.',
+            'file_sk.*.max' => 'Ukuran berkas SK Kepegawaian tidak boleh melebihi 20 MB.',
+            'file_sk.*.mimes' => 'Format berkas SK Kepegawaian harus PDF, JPG, JPEG, PNG, atau WEBP.',
+            'file_serdik.max' => 'Maksimal 3 berkas untuk Sertifikat Pendidik.',
+            'file_serdik.*.max' => 'Ukuran berkas Sertifikat Pendidik tidak boleh melebihi 20 MB.',
+            'file_serdik.*.mimes' => 'Format berkas Sertifikat Pendidik harus PDF, JPG, JPEG, PNG, atau WEBP.',
+            'file_ijazah.max' => 'Maksimal 3 berkas untuk Ijazah.',
+            'file_ijazah.*.max' => 'Ukuran berkas Ijazah tidak boleh melebihi 20 MB.',
+            'file_ijazah.*.mimes' => 'Format berkas Ijazah harus PDF, JPG, JPEG, PNG, atau WEBP.',
         ]);
 
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $sekolahId != $user->sekolah_id) {
@@ -626,11 +625,21 @@ class PegawaiController extends Controller
 
         if (in_array($ext, ['xlsx', 'xls']) && class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class)) {
             try {
-                $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($path);
+                if (method_exists($reader, 'setReadDataOnly')) {
+                    $reader->setReadDataOnly(true);
+                }
+                $spreadsheet = $reader->load($path);
                 $worksheet = $spreadsheet->getActiveSheet();
-                $rows = $worksheet->toArray();
+                $rows = $worksheet->toArray(null, false, false, false);
             } catch (\Throwable $e) {
-                return back()->with('error', 'Gagal membaca file Excel: ' . $e->getMessage());
+                try {
+                    $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+                    $worksheet = $spreadsheet->getActiveSheet();
+                    $rows = $worksheet->toArray(null, false, false, false);
+                } catch (\Throwable $e2) {
+                    return back()->with('error', 'Gagal membaca file Excel: ' . $e2->getMessage());
+                }
             }
         } else {
             // Read CSV
@@ -657,6 +666,9 @@ class PegawaiController extends Controller
         $user = Auth::user();
         $processedCount = 0;
         $errors = [];
+        $addedNew = [];
+        $skippedExisting = [];
+        $importDetails = [];
 
         // Dynamic Header Row Finder (look for row containing 'NIP' or 'NAMA PEGAWAI' or 'NPSN')
         $headerRowIndex = 0;
@@ -765,19 +777,14 @@ class PegawaiController extends Controller
                 continue;
             }
 
-            // NPSN school lookup
+            // NPSN school lookup (completely optional - Operator automatically gets assigned their school)
             $npsn = trim((string)($row[$colMap['npsn']] ?? ''));
-            $sekolahId = $defaultSekolahId;
+            $sekolahId = ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) ? $user->sekolah_id : null;
             if (!empty($npsn)) {
                 $sekolah = Sekolah::where('npsn', $npsn)->first();
                 if ($sekolah) {
                     $sekolahId = $sekolah->id;
                 }
-            }
-
-            if (!$sekolahId) {
-                $errors[] = "Baris " . ($i + 1) . ": Sekolah NPSN {$npsn} tidak ditemukan.";
-                continue;
             }
 
             // Map Status Kepegawaian
@@ -862,79 +869,75 @@ class PegawaiController extends Controller
                 ? ['nip_nik' => $nipNik]
                 : ['nama_lengkap' => $namaLengkap];
 
-            $wasRecentlyCreated = false;
             $existingPegawai = Pegawai::where($matchAttr)->first();
-            if (!$existingPegawai) {
-                $wasRecentlyCreated = true;
+
+            // If Pegawai ALREADY EXISTS in DB: SKIP UPDATING, just attach to school if needed
+            if ($existingPegawai) {
+                if ($sekolahId && !$existingPegawai->sekolahs()->where('sekolahs.id', $sekolahId)->exists()) {
+                    $isPrimary = $existingPegawai->sekolahs()->count() === 0;
+                    $existingPegawai->sekolahs()->attach($sekolahId, ['is_primary' => $isPrimary]);
+                }
+
+                $skippedExisting[] = $existingPegawai;
+                $importDetails[] = [
+                    'nama' => $namaLengkap,
+                    'nip' => $nipNik ?: '-',
+                    'status' => 'SKIPPED',
+                    'message' => 'Data Sudah Ada'
+                ];
+                $processedCount++;
+                continue;
             }
 
-            $pegawaiRecord = Pegawai::updateOrCreate(
-                $matchAttr,
-                [
-                    'nip_nik' => $nipNik ?: null,
-                    'nik' => (!empty($nik) && $nik !== '-') ? preg_replace('/[^0-9]/', '', $nik) : null,
-                    'nama_lengkap' => $namaLengkap,
-                    'status_kepegawaian' => $statusKepegawaian,
-                    'pangkat_golongan' => trim((string)($row[$colMap['pangkat_golongan']] ?? '')) ?: null,
-                    'jabatan_fungsional' => $jabatan,
-                    'no_sk_jabfung' => trim((string)($row[$colMap['no_sk_jabfung']] ?? '')) ?: null,
-                    'tmt_jabfung' => trim((string)($row[$colMap['tmt_jabfung']] ?? '')) ?: null,
-                    'is_serdik' => $isSerdik,
-                    'no_serdik' => trim((string)($row[$colMap['no_serdik']] ?? '')) ?: null,
-                    'tgl_serdik' => trim((string)($row[$colMap['tgl_serdik']] ?? '')) ?: null,
-                    'jenis_ptk' => $jenisPtk,
-                    'jenis_guru' => $jenisGuru,
-                    'jumlah_jp' => trim((string)($row[$colMap['jumlah_jp']] ?? '')) ?: null,
-                    'nuptk' => trim((string)($row[$colMap['nuptk']] ?? '')) ?: null,
-                    'tingkat_pendidikan' => $tingkatPendidikan,
-                    'jurusan_prodi' => trim((string)($row[$colMap['jurusan_prodi']] ?? '')) ?: null,
-                    'tempat_lahir' => trim((string)($row[$colMap['tempat_lahir']] ?? '')) ?: null,
-                    'tanggal_lahir' => $tglLahir,
-                    'jenis_kelamin' => $jenisKelamin,
-                    'agama' => trim((string)($row[$colMap['agama']] ?? '')) ?: null,
-                ]
-            );
+            // Clean long string fields to prevent SQL truncation errors
+            $rawJp = trim((string)($row[$colMap['jumlah_jp']] ?? ''));
+            if (str_starts_with($rawJp, '=')) $rawJp = ltrim($rawJp, '=-');
+            $jumlahJp = !empty($rawJp) ? substr($rawJp, 0, 255) : null;
 
-            // Attach sekolah via pivot if not already attached
+            $rawProdi = trim((string)($row[$colMap['jurusan_prodi']] ?? ''));
+            if (str_starts_with($rawProdi, '=')) $rawProdi = ltrim($rawProdi, '=-');
+            $jurusanProdi = !empty($rawProdi) ? substr($rawProdi, 0, 255) : null;
+
+            // Create New Pegawai
+            $pegawaiRecord = Pegawai::create([
+                'nip_nik' => $nipNik ?: null,
+                'nik' => (!empty($nik) && $nik !== '-') ? preg_replace('/[^0-9]/', '', $nik) : null,
+                'nama_lengkap' => $namaLengkap,
+                'status_kepegawaian' => $statusKepegawaian,
+                'pangkat_golongan' => trim((string)($row[$colMap['pangkat_golongan']] ?? '')) ? substr(trim((string)$row[$colMap['pangkat_golongan']]), 0, 50) : null,
+                'jabatan_fungsional' => $jabatan ? substr($jabatan, 0, 255) : null,
+                'no_sk_jabfung' => trim((string)($row[$colMap['no_sk_jabfung']] ?? '')) ? substr(trim((string)$row[$colMap['no_sk_jabfung']]), 0, 255) : null,
+                'tmt_jabfung' => trim((string)($row[$colMap['tmt_jabfung']] ?? '')) ? substr(trim((string)$row[$colMap['tmt_jabfung']]), 0, 50) : null,
+                'is_serdik' => $isSerdik,
+                'no_serdik' => trim((string)($row[$colMap['no_serdik']] ?? '')) ? substr(trim((string)$row[$colMap['no_serdik']]), 0, 255) : null,
+                'tgl_serdik' => trim((string)($row[$colMap['tgl_serdik']] ?? '')) ? substr(trim((string)$row[$colMap['tgl_serdik']]), 0, 50) : null,
+                'jenis_ptk' => $jenisPtk,
+                'jenis_guru' => $jenisGuru ? substr($jenisGuru, 0, 100) : null,
+                'jumlah_jp' => $jumlahJp,
+                'nuptk' => trim((string)($row[$colMap['nuptk']] ?? '')) ? substr(trim((string)$row[$colMap['nuptk']]), 0, 50) : null,
+                'tingkat_pendidikan' => $tingkatPendidikan,
+                'jurusan_prodi' => $jurusanProdi,
+                'tempat_lahir' => trim((string)($row[$colMap['tempat_lahir']] ?? '')) ? substr(trim((string)$row[$colMap['tempat_lahir']]), 0, 100) : null,
+                'tanggal_lahir' => $tglLahir,
+                'jenis_kelamin' => $jenisKelamin,
+                'agama' => trim((string)($row[$colMap['agama']] ?? '')) ? substr(trim((string)$row[$colMap['agama']]), 0, 50) : null,
+            ]);
+
+            // Attach sekolah via pivot
             if ($sekolahId && !$pegawaiRecord->sekolahs()->where('sekolahs.id', $sekolahId)->exists()) {
-                // If this is the first sekolah, set as primary
                 $isPrimary = $pegawaiRecord->sekolahs()->count() === 0;
                 $pegawaiRecord->sekolahs()->attach($sekolahId, ['is_primary' => $isPrimary]);
             }
 
-            // Log created via import with all fields
-            if ($wasRecentlyCreated) {
-                $allFields = [];
-                foreach (['nama_lengkap','nip_nik','nik','status_kepegawaian','pangkat_golongan','jabatan_fungsional','no_sk_jabfung','tmt_jabfung','is_serdik','no_serdik','tgl_serdik','jenis_ptk','jenis_guru','jumlah_jp','nuptk','tingkat_pendidikan','jurusan_prodi','tempat_lahir','tanggal_lahir','jenis_kelamin','agama'] as $f) {
-                    $val = $pegawaiRecord->$f;
-                    if (!is_null($val) && $val !== '') {
-                        $allFields[$f] = ['data' => ($val === true ? 'Ya' : ($val === false ? 'Tidak' : (string)$val))];
-                    }
-                }
-                ActivityLog::record($pegawaiRecord, 'imported', $allFields, 'Data Pegawai Pertama Kali Dimasukkan via Import Excel');
-            }
+            $addedNew[] = $pegawaiRecord;
+            $importDetails[] = [
+                'nama' => $namaLengkap,
+                'nip' => $nipNik ?: '-',
+                'status' => 'NEW',
+                'message' => 'Berhasil Ditambahkan (Baru)'
+            ];
 
-            $importedPegawaiIds[] = $pegawaiRecord->id;
             $processedCount++;
-        }
-
-        // Auto-clean: Delete old/misplaced pegawais for schools touched during this import
-        // Note: With many-to-many, we only detach from the school, not delete the pegawai
-        if (!empty($importedPegawaiIds) && $sekolahId) {
-            // Find pegawais attached to this school but NOT in the import
-            $toDetach = Pegawai::whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $sekolahId))
-                ->whereNotIn('id', $importedPegawaiIds)
-                ->pluck('id');
-            foreach ($toDetach as $detachId) {
-                $p = Pegawai::find($detachId);
-                if ($p) {
-                    $p->sekolahs()->detach($sekolahId);
-                    // If pegawai has no more schools, delete entirely
-                    if ($p->sekolahs()->count() === 0) {
-                        $p->delete();
-                    }
-                }
-            }
         }
 
         if (class_exists(ExcelImport::class)) {
@@ -945,18 +948,21 @@ class PegawaiController extends Controller
                     'imported_by' => Auth::id() ?? 1,
                     'rows_processed' => $processedCount,
                     'status' => 'success',
-                    'notes' => 'Import sukses ' . $processedCount . ' data pegawai dari template resmi.',
+                    'notes' => 'Import sukses ' . $processedCount . ' data pegawai (' . count($addedNew) . ' baru, ' . count($skippedExisting) . ' data sudah ada).',
                 ]);
             } catch (\Throwable $e) {
                 // Ignore
             }
         }
 
-        $msg = "Berhasil mengimpor {$processedCount} data pegawai dari template resmi Dinas Pendidikan.";
-        if (count($errors) > 0) {
-            $msg .= " Catatan: " . implode(', ', array_slice($errors, 0, 3));
-        }
+        $summaryData = [
+            'total_processed' => $processedCount,
+            'added_count' => count($addedNew),
+            'skipped_count' => count($skippedExisting),
+            'details' => array_slice($importDetails, 0, 50),
+            'errors' => $errors
+        ];
 
-        return redirect()->route('pegawai.index')->with('success', $msg);
+        return redirect()->route('pegawai.index')->with('import_summary', $summaryData)->with('success', "Berhasil memproses {$processedCount} data pegawai (" . count($addedNew) . " Baru Ditambahkan, " . count($skippedExisting) . " Data Sudah Ada).");
     }
 }

@@ -52,8 +52,24 @@ class AuthController extends Controller
         ]);
 
         $fieldType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $loginInput = trim($credentials['login']);
+        $password = $credentials['password'];
+        $remember = $request->has('remember');
 
-        if (Auth::attempt([$fieldType => $credentials['login'], 'password' => $credentials['password']], $request->remember)) {
+        $authenticated = Auth::attempt([$fieldType => $loginInput, 'password' => $password], $remember);
+
+        // Fallback 1: If input is pure numeric NPSN (e.g. 20523594), try 'ops_' prefix
+        if (!$authenticated && is_numeric($loginInput)) {
+            $authenticated = Auth::attempt(['username' => 'ops_' . $loginInput, 'password' => $password], $remember);
+        }
+
+        // Fallback 2: If input starts with 'ops_' (e.g. ops_20524798), try pure NPSN
+        if (!$authenticated && str_starts_with($loginInput, 'ops_')) {
+            $pureNpsn = preg_replace('/^ops_/', '', $loginInput);
+            $authenticated = Auth::attempt(['username' => $pureNpsn, 'password' => $password], $remember);
+        }
+
+        if ($authenticated) {
             $request->session()->regenerate();
             $user = Auth::user();
 

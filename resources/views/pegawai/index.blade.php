@@ -148,16 +148,16 @@
 
         </div>
 
-        <!-- 7 KRITERIA MULTI-FILTER BAR -->
-        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-30">
+        <!-- 9 KRITERIA MULTI-FILTER BAR -->
+        <div class="bg-white rounded-xl p-5 border border-gray-100 shadow-xl shadow-gray-200/50 space-y-4 relative z-20">
             <div class="flex items-center justify-between pb-3 border-b border-gray-100">
                 <h3 class="text-xs font-extrabold uppercase tracking-wider text-blue-800 flex items-center gap-2">
                     <i class="fas fa-filter"></i>
-                    Multi-Filter Kombinasi (7 Kriteria PRD)
+                    Multi-Filter Kombinasi (9 Kriteria PRD)
                 </h3>
             </div>
 
-            <!-- Filter Grid 7 Dropdowns + Search Form -->
+            <!-- Filter Grid 9 Dropdowns + Search Form -->
             <form action="{{ url('/pegawai') }}" method="GET" id="pegawaiFilterForm" onsubmit="handlePegawaiSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
                 
                 <!-- Search Keyword -->
@@ -189,23 +189,42 @@
                 <div>
                     <label class="block text-[11px] font-semibold text-gray-500 mb-1">2. Jabatan Fungsional</label>
                     <select name="jabatan_fungsional" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
-                        <option value="">Semua Jabatan</option>
-                        @if(isset($jabatanList))
-                            @foreach($jabatanList as $jbt)
+                        <option value="">Semua Jabatan Fungsional</option>
+                        @if(isset($jabatanFungsionalList))
+                            @foreach($jabatanFungsionalList as $jbt)
                                 <option value="{{ $jbt }}" {{ request('jabatan_fungsional') == $jbt ? 'selected' : '' }}>{{ $jbt }}</option>
                             @endforeach
                         @else
                             <option value="Guru Ahli Pertama" {{ request('jabatan_fungsional') == 'Guru Ahli Pertama' ? 'selected' : '' }}>Guru Ahli Pertama</option>
                             <option value="Guru Ahli Muda" {{ request('jabatan_fungsional') == 'Guru Ahli Muda' ? 'selected' : '' }}>Guru Ahli Muda</option>
-                            <option value="Kepala Sekolah" {{ request('jabatan_fungsional') == 'Kepala Sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
-                            <option value="Penilik" {{ request('jabatan_fungsional') == 'Penilik' ? 'selected' : '' }}>Penilik</option>
+                            <option value="Guru Ahli Madya" {{ request('jabatan_fungsional') == 'Guru Ahli Madya' ? 'selected' : '' }}>Guru Ahli Madya</option>
+                            <option value="Guru Ahli Utama" {{ request('jabatan_fungsional') == 'Guru Ahli Utama' ? 'selected' : '' }}>Guru Ahli Utama</option>
                         @endif
                     </select>
                 </div>
 
-                <!-- 3. Sertifikasi Pendidik (Serdik) -->
+                <!-- 3. Jabatan PTK -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">3. Sertifikasi (Serdik)</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">3. Jabatan PTK</label>
+                    <select name="jabatan_ptk" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
+                        <option value="">Semua Jabatan PTK</option>
+                        @if(isset($jabatanPtkList))
+                            @foreach($jabatanPtkList as $jbt)
+                                <option value="{{ $jbt }}" {{ request('jabatan_ptk') == $jbt ? 'selected' : '' }}>{{ $jbt }}</option>
+                            @endforeach
+                        @else
+                            <option value="Kepala Sekolah" {{ request('jabatan_ptk') == 'Kepala Sekolah' ? 'selected' : '' }}>Kepala Sekolah</option>
+                            <option value="Penilik" {{ request('jabatan_ptk') == 'Penilik' ? 'selected' : '' }}>Penilik</option>
+                            <option value="Staf Administrasi" {{ request('jabatan_ptk') == 'Staf Administrasi' ? 'selected' : '' }}>Staf Administrasi</option>
+                            <option value="Laboran" {{ request('jabatan_ptk') == 'Laboran' ? 'selected' : '' }}>Laboran</option>
+                            <option value="Pustakawan" {{ request('jabatan_ptk') == 'Pustakawan' ? 'selected' : '' }}>Pustakawan</option>
+                        @endif
+                    </select>
+                </div>
+
+                <!-- 4. Sertifikasi Pendidik (Serdik) -->
+                <div>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">4. Sertifikasi (Serdik)</label>
                     <select name="serdik" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Status Serdik</option>
                         <option value="1" {{ (request('serdik') === '1' || request('is_serdik') === '1') ? 'selected' : '' }}>Sudah Serdik</option>
@@ -213,9 +232,9 @@
                     </select>
                 </div>
 
-                <!-- 4. Jenis PTK -->
+                <!-- 5. Jenis PTK -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">4. Jenis PTK</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">5. Jenis PTK</label>
                     <select name="jenis_ptk" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua PTK</option>
                         <option value="Pendidik" {{ request('jenis_ptk') == 'Pendidik' ? 'selected' : '' }}>Pendidik (Guru)</option>
@@ -223,9 +242,9 @@
                     </select>
                 </div>
 
-                <!-- 5. Jenis Guru -->
+                <!-- 6. Jenis Guru -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">5. Jenis Guru</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">6. Jenis Guru</label>
                     <select name="jenis_guru" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Jenis Guru</option>
                         <option value="Guru Kelas" {{ request('jenis_guru') == 'Guru Kelas' ? 'selected' : '' }}>Guru Kelas</option>
@@ -234,9 +253,9 @@
                     </select>
                 </div>
 
-                <!-- 6. Tingkat Pendidikan -->
+                <!-- 7. Tingkat Pendidikan -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">6. Tingkat Pendidikan</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">7. Tingkat Pendidikan</label>
                     <select name="tingkat_pendidikan" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Tingkat (SMA/S1/S2)</option>
                         <option value="SMA/K" {{ request('tingkat_pendidikan') == 'SMA/K' ? 'selected' : '' }}>SMA/K</option>
@@ -247,9 +266,9 @@
                     </select>
                 </div>
 
-                <!-- 7. Kelompok Usia -->
+                <!-- 8. Kelompok Usia -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">7. Kelompok Usia</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">8. Kelompok Usia</label>
                     <select name="kelompok_usia" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Kelompok Usia</option>
                         <option value="<30" {{ request('kelompok_usia') == '<30' ? 'selected' : '' }}>&lt; 30 Tahun</option>
@@ -259,9 +278,9 @@
                     </select>
                 </div>
 
-                <!-- 8. Penugasan / Multi-Sekolah -->
+                <!-- 9. Penugasan / Multi-Sekolah -->
                 <div>
-                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">8. Penugasan Sekolah</label>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1">9. Penugasan Sekolah</label>
                     <select name="multi_sekolah" onchange="triggerPegawaiFilter(this)" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium">
                         <option value="">Semua Penugasan Sekolah</option>
                         <option value="1" {{ (request('multi_sekolah') == '1' || request('multi_sekolah') == 'ya') ? 'selected' : '' }}>&gt; 1 Sekolah (Multi-Sekolah) [{{ $totalMultiSekolahCount ?? 176 }}]</option>
@@ -593,7 +612,7 @@
             </div>
 
             <!-- Modal Form Body -->
-            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4">
+            <form action="{{ route('pegawai.import') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-4" onsubmit="if (typeof showLoadingOverlay === 'function') { showLoadingOverlay('Memproses Impor Data Pegawai...', 'Sistem sedang mengurai berkas Excel dan menyelaraskan data pegawai...'); }">
                 @csrf
                 
                 <div class="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 space-y-1">
@@ -603,7 +622,7 @@
                     <ul class="list-disc list-inside text-[11px] space-y-0.5 text-blue-800">
                         <li>Gunakan template resmi untuk menyesuaikan kolom data.</li>
                         <li>Kolom <strong>NIP_NIK</strong> &amp; <strong>Nama_Lengkap</strong> wajib diisi.</li>
-                        <li>Jika NPSN diisi, sistem akan mencocokkan sekolah secara otomatis.</li>
+                        <li>Jika data NIP/NIK sudah ada di DB, data akan otomatis di-update / ketimpa (tanpa duplikat).</li>
                     </ul>
                 </div>
 
@@ -626,7 +645,7 @@
                     <button type="button" onclick="closeImportModal()" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-100 transition">
                         Batal
                     </button>
-                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition flex items-center gap-2">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2 rounded-xl shadow-md transition flex items-center gap-2 cursor-pointer">
                         <i class="fas fa-cloud-arrow-up text-xs"></i>
                         <span>Upload &amp; Proses Import</span>
                     </button>
@@ -635,6 +654,98 @@
         </div>
         </div>
     </div>
+
+    @if(session('import_summary'))
+        @php $summary = session('import_summary'); @endphp
+        <!-- Modal Result Summary Import Pegawai (Executive Hope UI Clean Light Design) -->
+        <div id="importSummaryResultModal" class="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-fadeIn">
+            <div class="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl border border-gray-100 flex flex-col max-h-[90vh]">
+                <!-- Modal Header -->
+                <div class="px-6 py-4.5 bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white flex items-center justify-between shadow-md">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-emerald-400 border border-white/20 shadow-inner">
+                            <i class="fas fa-file-circle-check text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-base text-white tracking-tight">Ringkasan Hasil Impor Pegawai</h3>
+                            <p class="text-xs text-blue-200 opacity-90">Pemrosesan berkas Excel selesai 100%</p>
+                        </div>
+                    </div>
+                    <button onclick="document.getElementById('importSummaryResultModal').remove()" class="text-blue-200 hover:text-white text-lg w-8 h-8 rounded-lg hover:bg-white/10 flex items-center justify-center transition cursor-pointer">
+                        <i class="fas fa-xmark"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="p-6 overflow-y-auto space-y-6">
+                    <!-- Stat Badges Cards (Clean Light Cards) -->
+                    <div class="grid grid-cols-3 gap-3.5">
+                        <div class="bg-slate-50 border border-gray-200 rounded-xl p-3.5 text-center shadow-xs">
+                            <p class="text-[11px] text-gray-500 font-bold uppercase tracking-wider">Total Diproses</p>
+                            <p class="text-2xl font-black text-gray-900 mt-1">{{ $summary['total_processed'] ?? 0 }}</p>
+                        </div>
+                        <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-3.5 text-center shadow-xs">
+                            <p class="text-[11px] text-blue-800 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                                <i class="fas fa-user-plus text-blue-600"></i> Baru Ditambahkan
+                            </p>
+                            <p class="text-2xl font-black text-blue-950 mt-1">{{ $summary['added_count'] ?? 0 }}</p>
+                        </div>
+                        <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3.5 text-center shadow-xs">
+                            <p class="text-[11px] text-amber-800 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                                <i class="fas fa-database text-amber-600"></i> Data Sudah Ada
+                            </p>
+                            <p class="text-2xl font-black text-amber-950 mt-1">{{ $summary['skipped_count'] ?? 0 }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Details Table / List (Clean Light Design) -->
+                    <div class="space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                <i class="fas fa-list-check text-blue-800"></i> Rincian Status Per Pegawai
+                            </h4>
+                            <span class="text-[11px] font-semibold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full border border-gray-200">
+                                {{ count($summary['details'] ?? []) }} Pegawai
+                            </span>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-xl overflow-hidden shadow-xs bg-white">
+                            <div class="max-h-60 overflow-y-auto divide-y divide-gray-100">
+                                @if(!empty($summary['details']))
+                                    @foreach($summary['details'] as $detail)
+                                        <div class="flex items-center justify-between px-4 py-2.5 hover:bg-slate-50/80 transition text-xs">
+                                            <div class="flex items-center gap-3 overflow-hidden">
+                                                <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 {{ $detail['status'] === 'NEW' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700' }}">
+                                                    <i class="fas {{ $detail['status'] === 'NEW' ? 'fa-user-plus' : 'fa-database' }} text-xs"></i>
+                                                </div>
+                                                <div class="truncate">
+                                                    <p class="font-bold text-gray-900 truncate">{{ $detail['nama'] }}</p>
+                                                    <p class="text-[11px] text-gray-400 font-mono">NIP/NIK: {{ $detail['nip'] }}</p>
+                                                </div>
+                                            </div>
+                                            <span class="flex-shrink-0 text-[11px] font-bold px-3 py-1 rounded-full border {{ $detail['status'] === 'NEW' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' : 'bg-amber-50 text-amber-800 border-amber-200' }}">
+                                                {{ $detail['status'] === 'NEW' ? '✓ Baru Ditambahkan' : 'Data Sudah Ada' }}
+                                            </span>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="text-gray-400 italic text-center py-6 text-xs">Tidak ada data rincian tambahan</div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="px-6 py-3.5 bg-gray-50 border-t border-gray-100 flex items-center justify-end">
+                    <button onclick="document.getElementById('importSummaryResultModal').remove()" type="button" class="px-6 py-2.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white text-xs font-bold shadow-md shadow-blue-950/20 transition cursor-pointer">
+                        Tutup Ringkasan
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
     
     <!-- Modal Preview Berkas -->
     <div id="filePreviewModal" class="hidden fixed inset-0 flex items-center justify-center p-4 bg-gray-900/70 backdrop-blur-sm animate-fadeIn" style="z-index: 99999 !important;">
