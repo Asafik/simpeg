@@ -1,11 +1,8 @@
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
     RewriteEngine On
 
-    # Redirect /storage/ requests to storage/app/public/ (Fix for Hostinger subdomain file access)
+    # Prevent infinite loop & map /storage/ to storage/app/public/
+    RewriteCond %{REQUEST_URI} !^/storage/app/public/
     RewriteRule ^storage/(.*)$ storage/app/public/$1 [L]
 
     # Handle Authorization Header
