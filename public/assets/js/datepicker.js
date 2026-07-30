@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const wrapper = document.createElement('div');
             wrapper.className = 'custom-datepicker-wrapper relative w-full';
+            if (input.dataset.startView) {
+                wrapper.dataset.startView = input.dataset.startView;
+            }
 
             const name = input.name || '';
             const id = input.id || '';
@@ -332,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.addEventListener('click', function(e) {
                     e.stopPropagation();
                     viewYear = parseInt(this.getAttribute('data-year'));
-                    viewMode = 'days';
+                    viewMode = 'months'; // Flow: Year -> Month -> Day
                     renderCalendar();
                 });
             });
@@ -349,13 +352,26 @@ document.addEventListener('DOMContentLoaded', function() {
         // Toggle Popup
         displayInput.addEventListener('click', function(e) {
             e.stopPropagation();
-            
+
+            const isOpening = popup.classList.contains('hidden');
+
             // Close other open datepickers
             document.querySelectorAll('.custom-datepicker-popup').forEach(p => {
                 if (p !== popup) p.classList.add('hidden');
             });
 
-            viewMode = 'days';
+            if (isOpening) {
+                const isBirthDate = (hiddenInput.name && hiddenInput.name.includes('lahir')) || 
+                                   (hiddenInput.id && hiddenInput.id.includes('lahir')) || 
+                                   (wrapper.dataset && wrapper.dataset.startView === 'years');
+
+                if (isBirthDate && !selectedDate) {
+                    viewMode = 'years';
+                } else {
+                    viewMode = 'days';
+                }
+            }
+
             renderCalendar();
             popup.classList.toggle('hidden');
         });
