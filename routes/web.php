@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\OperatorDashboardController;
@@ -29,6 +30,42 @@ Route::get('/storage/{path}', function ($path) {
     }
     return response()->file($filePath);
 })->where('path', '.*');
+
+// Production System Optimization & Cache Clear Route
+Route::get('/optimize-clear', function () {
+    try {
+        Artisan::call('optimize:clear');
+        $output = Artisan::output();
+        
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('route:clear');
+        Artisan::call('cache:clear');
+
+        return '<div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 50px auto; padding: 30px; border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">'
+            . '<h2 style="margin-top:0; color: #15803d; font-size: 20px; display: flex; items-center: center; gap: 8px;">⚡ System Optimization Cache Cleared!</h2>'
+            . '<p style="font-size: 14px; color: #166534; line-height: 1.5;">Seluruh cache aplikasi Laravel (config, routes, views, event, dan cache terkompilasi) berhasil dibersihkan untuk lingkungan produksi.</p>'
+            . '<pre style="background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #dcfce7; font-size: 12px; overflow-x: auto; color: #14532d;">' . htmlspecialchars($output ?: "optimize:clear completed successfully.") . '</pre>'
+            . '<div style="margin-top: 20px; display: flex; gap: 10px;">'
+            . '<a href="' . url('/dashboard') . '" style="background: #15803d; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-size: 13px; display: inline-block;">Ke Dashboard Admin</a>'
+            . '<a href="' . url('/pegawai/create') . '" style="background: #fff; color: #15803d; border: 1px solid #bbf7d0; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-size: 13px; display: inline-block;">Ke Form Pegawai</a>'
+            . '</div>'
+            . '</div>';
+    } catch (\Exception $e) {
+        return '<div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 50px auto; padding: 30px; border-radius: 16px; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;">'
+            . '<h2 style="margin-top:0; color: #dc2626; font-size: 20px;">❌ Error Clearing Cache</h2>'
+            . '<p style="font-size: 14px;">' . htmlspecialchars($e->getMessage()) . '</p>'
+            . '</div>';
+    }
+})->name('system.optimize-clear');
+
+Route::get('/clear-cache', function () {
+    return redirect('/optimize-clear');
+});
+
+Route::get('/optimize', function () {
+    return redirect('/optimize-clear');
+});
 
 // Clean Public URLs with Controller Methods
 Route::get('/statistik', [LandingController::class, 'statistik'])->name('landing.statistik');
