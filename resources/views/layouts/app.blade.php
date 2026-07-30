@@ -178,14 +178,14 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- Main System JS in public/ -->
-    <script src="{{ asset('app.js') }}"></script>
+    <script src="{{ asset('app.js') }}?v={{ @filemtime(public_path('app.js')) }}"></script>
 
     <!-- Component JS Assets in public/assets/js/ -->
-    <script src="{{ asset('assets/js/charts.js') }}"></script>
-    <script src="{{ asset('assets/js/calendar.js') }}"></script>
-    <script src="{{ asset('assets/js/dropdown.js') }}"></script>
-    <script src="{{ asset('assets/js/datepicker.js') }}"></script>
-    <script src="{{ asset('assets/js/tables.js') }}"></script>
+    <script src="{{ asset('assets/js/charts.js') }}?v={{ @filemtime(public_path('assets/js/charts.js')) }}"></script>
+    <script src="{{ asset('assets/js/calendar.js') }}?v={{ @filemtime(public_path('assets/js/calendar.js')) }}"></script>
+    <script src="{{ asset('assets/js/dropdown.js') }}?v={{ @filemtime(public_path('assets/js/dropdown.js')) }}"></script>
+    <script src="{{ asset('assets/js/datepicker.js') }}?v={{ @filemtime(public_path('assets/js/datepicker.js')) }}"></script>
+    <script src="{{ asset('assets/js/tables.js') }}?v={{ @filemtime(public_path('assets/js/tables.js')) }}"></script>
     <script>
         $(document).ready(function() {
             function initSelect2() {
