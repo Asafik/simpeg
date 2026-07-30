@@ -5,7 +5,9 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Pegawai extends Model
@@ -13,7 +15,6 @@ class Pegawai extends Model
     use HasFactory;
 
     protected $fillable = [
-        'sekolah_id',
         'nip_nik',
         'nik',
         'nama_lengkap',
@@ -35,6 +36,7 @@ class Pegawai extends Model
         'tanggal_lahir',
         'jenis_kelamin',
         'agama',
+        'photo_profile',
         'file_sk',
         'file_serdik',
         'file_ijazah',
@@ -48,14 +50,47 @@ class Pegawai extends Model
         'is_serdik' => 'boolean',
         'tanggal_lahir' => 'date',
         'tgl_verifikasi' => 'datetime',
+        'file_sk' => 'array',
+        'file_serdik' => 'array',
+        'file_ijazah' => 'array',
     ];
 
-    protected $appends = ['usia'];
+    protected $appends = ['usia', 'initials', 'profile_picture_url'];
 
-    public function sekolah(): BelongsTo
+    /**
+     * Many-to-Many: Pegawai bisa bertugas di banyak sekolah.
+     */
+    public function sekolahs(): BelongsToMany
     {
-        return $this->belongsTo(Sekolah::class, 'sekolah_id');
+        return $this->belongsToMany(Sekolah::class, 'pegawai_sekolah')
+                    ->withPivot('is_primary')
+                    ->withTimestamps();
     }
+
+    /**
+     * Accessor: Mendapatkan sekolah utama (primary) pegawai.
+     * Backward-compatible — kode lama yang pakai $pegawai->sekolah tetap berfungsi.
+     */
+    public function getSekolahAttribute()
+    {
+        if ($this->relationLoaded('sekolahs')) {
+            return $this->sekolahs->where('pivot.is_primary', true)->first()
+                ?? $this->sekolahs->first();
+        }
+
+        return $this->sekolahs()->wherePivot('is_primary', true)->first()
+            ?? $this->sekolahs()->first();
+    }
+
+    /**
+     * Accessor: Mendapatkan sekolah_id utama (untuk backward compatibility).
+     */
+    public function getSekolahIdAttribute()
+    {
+        return $this->sekolah?->id;
+    }
+
+
 
     public function verifier(): BelongsTo
     {
@@ -65,6 +100,31 @@ class Pegawai extends Model
     public function getUsiaAttribute(): int
     {
         return $this->tanggal_lahir ? Carbon::parse($this->tanggal_lahir)->age : 0;
+    }
+
+    public function getInitialsAttribute(): string
+    {
+        $name = trim($this->nama_lengkap);
+        if (empty($name)) {
+            return 'U';
+        }
+
+        $words = explode(' ', $name);
+        $initials = '';
+        foreach ($words as $word) {
+            if (!empty($word)) {
+                $initials .= strtoupper(substr($word, 0, 1));
+            }
+        }
+        return substr($initials, 0, 2);
+    }
+
+    public function getProfilePictureUrlAttribute(): ?string
+    {
+        if ($this->photo_profile) {
+            return asset('storage/' . $this->photo_profile);
+        }
+        return null;
     }
 
     public function activityLogs(): MorphMany
@@ -82,7 +142,7 @@ class Pegawai extends Model
                 $q->where('nama_lengkap', 'like', "%{$search}%")
                   ->orWhereRaw("REPLACE(LOWER(nama_lengkap), ' ', '') LIKE ?", ["%{$cleanSearch}%"])
                   ->orWhere('nip_nik', 'like', "%{$search}%")
-                  ->orWhereHas('sekolah', function ($qSekolah) use ($search, $cleanSearch) {
+                  ->orWhereHas('sekolahs', function ($qSekolah) use ($search, $cleanSearch) {
                       $qSekolah->where('nama_sekolah', 'like', "%{$search}%")
                                ->orWhereRaw("REPLACE(LOWER(nama_sekolah), ' ', '') LIKE ?", ["%{$cleanSearch}%"])
                                ->orWhere('npsn', 'like', "%{$search}%");
@@ -91,11 +151,13 @@ class Pegawai extends Model
         }
 
         if (!empty($filters['sekolah_id'])) {
-            $query->where('sekolah_id', $filters['sekolah_id']);
+            $query->whereHas('sekolahs', function ($q) use ($filters) {
+                $q->where('sekolahs.id', $filters['sekolah_id']);
+            });
         }
 
         if (!empty($filters['kecamatan'])) {
-            $query->whereHas('sekolah', function ($q) use ($filters) {
+            $query->whereHas('sekolahs', function ($q) use ($filters) {
                 $q->where('kecamatan', $filters['kecamatan']);
             });
         }
@@ -106,6 +168,10 @@ class Pegawai extends Model
 
         if (!empty($filters['jabatan_fungsional'])) {
             $query->where('jabatan_fungsional', $filters['jabatan_fungsional']);
+        }
+
+        if (!empty($filters['jabatan_ptk'])) {
+            $query->where('jabatan_fungsional', $filters['jabatan_ptk']);
         }
 
         if (isset($filters['is_serdik']) && $filters['is_serdik'] !== null && $filters['is_serdik'] !== '') {
@@ -152,6 +218,14 @@ class Pegawai extends Model
                 case '>55':
                     $query->where('tanggal_lahir', '<=', $today->copy()->subYears(50));
                     break;
+            }
+        }
+
+        if (isset($filters['multi_sekolah']) && $filters['multi_sekolah'] !== '' && $filters['multi_sekolah'] !== null) {
+            if ($filters['multi_sekolah'] === '1' || $filters['multi_sekolah'] === 'ya') {
+                $query->has('sekolahs', '>', 1);
+            } elseif ($filters['multi_sekolah'] === '0' || $filters['multi_sekolah'] === 'tidak') {
+                $query->has('sekolahs', '=', 1);
             }
         }
 

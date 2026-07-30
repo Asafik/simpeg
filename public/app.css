@@ -78,30 +78,39 @@ body {
 
 /* ===== HOPE UI MINI SIDEBAR STYLES ===== */
 @media (min-width: 768px) {
+    #sidebar {
+        transition: width 0.3s ease-in-out;
+    }
+
     #sidebar.mini-sidebar {
         width: 80px !important;
+    }
+
+    #sidebar.mini-sidebar ~ #mainContent {
+        margin-left: 80px !important;
     }
 
     #sidebar.mini-sidebar .sidebar-text {
         display: none !important;
     }
 
-    #sidebar.mini-sidebar .brand-container {
-        justify-content: center !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
-
-    #sidebar.mini-sidebar nav a {
-        justify-content: center !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
-
+    #sidebar.mini-sidebar .brand-container,
+    #sidebar.mini-sidebar nav a,
+    #sidebar.mini-sidebar nav button,
     #sidebar.mini-sidebar .user-footer-container {
         justify-content: center !important;
         padding-left: 0 !important;
         padding-right: 0 !important;
+    }
+
+    #sidebar.mini-sidebar .sidebar-accordion-submenu {
+        display: none !important;
+    }
+}
+
+@media (max-width: 767px) {
+    #mainContent {
+        margin-left: 0 !important;
     }
 }
 

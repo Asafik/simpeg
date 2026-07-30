@@ -14,7 +14,7 @@ class ExportController extends Controller
         $user = Auth::user();
         $filters = $request->all();
 
-        $query = Pegawai::with('sekolah')->latest();
+        $query = Pegawai::with('sekolahs')->latest();
 
         if ($user->isOperatorSekolah() && $user->sekolah_id) {
             $filters['sekolah_id'] = $user->sekolah_id;
@@ -83,7 +83,7 @@ class ExportController extends Controller
         $user = Auth::user();
         $filters = $request->all();
 
-        $query = Pegawai::with('sekolah')->latest();
+        $query = Pegawai::with('sekolahs')->latest();
 
         if ($user->isOperatorSekolah() && $user->sekolah_id) {
             $filters['sekolah_id'] = $user->sekolah_id;

@@ -123,6 +123,81 @@
             </div>
         </div>
 
+        <!-- ===== PROMINENT ANALISIS BEZETING & KEBUTUHAN BANNER (PETA JABATAN) ===== -->
+        <div class="bg-white rounded-2xl border border-gray-200/80 shadow-xl p-5 md:p-6 space-y-4 relative z-20">
+            <div class="flex flex-wrap items-center justify-between pb-3 border-b border-gray-100 gap-2">
+                <div>
+                    <h3 class="text-sm font-extrabold text-blue-950 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fas fa-chart-pie text-blue-800"></i> Analisis Formasi Kebutuhan &amp; Bezeting (Peta Jabatan)
+                    </h3>
+                    <p class="text-xs text-gray-500 mt-0.5">Perbandingan jumlah pegawai eksisting (B) dengan standar kebutuhan ideal (K) di {{ $sekolah->nama_sekolah }}</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 text-xs font-bold">
+                    <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                        <i class="fas fa-circle-check text-[10px] mr-1"></i> B = Bezeting (Eksisting)
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 border border-blue-200">
+                        <i class="fas fa-list-check text-[10px] mr-1"></i> K = Kebutuhan Ideal
+                    </span>
+                </div>
+            </div>
+
+            <!-- Prominent Alert Box if Any Deficiency Exists -->
+            @if(!empty($kekuranganList) && count($kekuranganList) > 0)
+                <div class="bg-gradient-to-r from-amber-500/10 via-rose-50 to-amber-50 border-l-4 border-rose-500 p-4 rounded-xl shadow-xs space-y-2">
+                    <div class="flex items-center gap-2 text-rose-900 font-extrabold text-xs">
+                        <i class="fas fa-triangle-exclamation text-rose-600 text-base"></i>
+                        <span>PERHATIAN: REKAPITULASI KEKURANGAN FORMASI PEGAWAI DI SEKOLAH INI:</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2.5 pt-1">
+                        @foreach($kekuranganList as $kek)
+                            <div class="bg-white/90 p-3 rounded-lg border border-rose-200 shadow-2xs flex items-center justify-between text-xs">
+                                <div>
+                                    <p class="font-bold text-gray-900">{{ $kek['jabatan'] }}</p>
+                                    <p class="text-[11px] text-gray-500">Eksisting (B): <strong class="text-gray-800">{{ $kek['bezeting'] }}</strong> | Ideal (K): <strong class="text-blue-800">{{ $kek['kebutuhan'] }}</strong></p>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-lg font-black text-xs bg-rose-100 text-rose-800 border border-rose-300">
+                                    Kekurangan {{ abs($kek['selisih']) }}
+                                </span>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @else
+                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-xl shadow-xs flex items-center justify-between text-xs text-emerald-900 font-bold">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-circle-check text-emerald-600 text-base"></i>
+                        <span>SELURUH FORMASI JABATAN FUNGSIONAL DI SEKOLAH INI SUDAH TERPENUHI &amp; MENCUKUPI!</span>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-emerald-200/80 text-emerald-900 font-black">Formasi Terpenuhi</span>
+                </div>
+            @endif
+
+            <!-- Complete Breakdown Grid per Jabatan -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 pt-2">
+                @foreach($analisisBezeting as $item)
+                    <div class="p-3.5 rounded-xl border {{ $item['selisih'] < 0 ? 'bg-amber-50/40 border-amber-200' : 'bg-emerald-50/40 border-emerald-200' }} shadow-2xs space-y-1.5">
+                        <div class="flex items-center justify-between gap-1">
+                            <span class="font-extrabold text-xs text-gray-900 truncate">{{ $item['jabatan'] }}</span>
+                            @if($item['selisih'] < 0)
+                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-100 text-rose-800 border border-rose-200 flex-shrink-0">
+                                    Kekurangan {{ abs($item['selisih']) }}
+                                </span>
+                            @else
+                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200 flex-shrink-0">
+                                    Terpenuhi
+                                </span>
+                            @endif
+                        </div>
+                        <div class="flex items-center justify-between text-xs pt-1 border-t border-gray-100">
+                            <span class="text-gray-500">Bezeting (B): <strong class="text-gray-900">{{ $item['bezeting'] }}</strong></span>
+                            <span class="text-gray-500">Kebutuhan (K): <strong class="text-blue-900">{{ $item['kebutuhan'] }}</strong></span>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
         <!-- Detail Cards Section -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
@@ -146,6 +221,29 @@
                     <div>
                         <p class="text-gray-400 font-medium">NPSN (Nomor Pokok Sekolah Nasional)</p>
                         <p class="text-blue-800 font-mono font-bold text-sm mt-0.5">{{ $sekolah->npsn }}</p>
+                    </div>
+
+                    <div>
+                        <p class="text-gray-400 font-medium">Tingkatan / Jenjang</p>
+                        <div class="mt-1">
+                            @php
+                                $tingkatanBadge = match($sekolah->tingkatan) {
+                                    'TK' => 'bg-pink-100 text-pink-800',
+                                    'SD' => 'bg-sky-100 text-sky-800',
+                                    'SMP' => 'bg-violet-100 text-violet-800',
+                                    'SMA' => 'bg-orange-100 text-orange-800',
+                                    default => 'bg-gray-100 text-gray-600',
+                                };
+                                $tingkatanLabel = match($sekolah->tingkatan) {
+                                    'TK' => 'TK (Taman Kanak-Kanak)',
+                                    'SD' => 'SD (Sekolah Dasar)',
+                                    'SMP' => 'SMP (Sekolah Menengah Pertama)',
+                                    'SMA' => 'SMA (Sekolah Menengah Atas)',
+                                    default => $sekolah->tingkatan ?? '-',
+                                };
+                            @endphp
+                            <span class="badge-custom {{ $tingkatanBadge }} font-bold text-[10px]">{{ $tingkatanLabel }}</span>
+                        </div>
                     </div>
 
                     <div>
@@ -184,6 +282,29 @@
                             @endif
                         </div>
                     </div>
+
+                    @if(isset($otherSchools) && $otherSchools->count() > 0)
+                        <div class="mt-4 p-3 bg-blue-50/80 border border-blue-200 rounded-xl text-xs space-y-2">
+                            <p class="font-bold text-blue-950 flex items-center gap-1.5">
+                                <i class="fas fa-link text-blue-700"></i> Riwayat Penugasan / Sekolah Lain Kepsek Ini:
+                            </p>
+                            <div class="space-y-1.5">
+                                @foreach($otherSchools as $oSch)
+                                    <div class="flex items-center justify-between bg-white p-2 rounded-lg border border-blue-100 shadow-2xs">
+                                        <div>
+                                            <a href="{{ route('sekolah.show', $oSch->id) }}" class="font-bold text-blue-900 hover:underline">
+                                                {{ $oSch->nama_sekolah }}
+                                            </a>
+                                            <p class="text-[10px] text-gray-500">Kecamatan {{ $oSch->kecamatan }}</p>
+                                        </div>
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-extrabold {{ $oSch->status_kepala_sekolah === 'Plt' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800' }}">
+                                            {{ $oSch->status_kepala_sekolah === 'Plt' ? 'Plt' : 'Definitif' }}
+                                        </span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 

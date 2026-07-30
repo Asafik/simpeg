@@ -65,13 +65,13 @@
                         </h3>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <!-- NPSN -->
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">
-                                NPSN (8 Digit) <span class="text-red-500">*</span>
+                                NPSN <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="npsn" value="{{ old('npsn', $sekolah->npsn) }}" required maxlength="20" placeholder="Contoh: 20524929"
+                            <input type="text" name="npsn" value="{{ old('npsn', $sekolah->npsn) }}" required maxlength="50" placeholder="Masukkan NPSN Sekolah"
                                    class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-mono @error('npsn') border-red-500 @enderror">
                             @error('npsn')
                                 <p class="text-[11px] text-red-500 mt-1 font-medium">{{ $message }}</p>
@@ -86,6 +86,23 @@
                             <input type="text" name="nama_sekolah" value="{{ old('nama_sekolah', $sekolah->nama_sekolah) }}" required placeholder="Contoh: SDN Ajung 01"
                                    class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-medium @error('nama_sekolah') border-red-500 @enderror">
                             @error('nama_sekolah')
+                                <p class="text-[11px] text-red-500 mt-1 font-medium">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Tingkatan -->
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">
+                                Tingkatan / Jenjang <span class="text-red-500">*</span>
+                            </label>
+                            <select name="tingkatan" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-700 rounded-lg px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-800/20 cursor-pointer font-medium @error('tingkatan') border-red-500 @enderror">
+                                <option value="">Pilih Tingkatan...</option>
+                                <option value="TK" {{ old('tingkatan', $sekolah->tingkatan) == 'TK' ? 'selected' : '' }}>TK (Taman Kanak-Kanak)</option>
+                                <option value="SD" {{ old('tingkatan', $sekolah->tingkatan) == 'SD' ? 'selected' : '' }}>SD (Sekolah Dasar)</option>
+                                <option value="SMP" {{ old('tingkatan', $sekolah->tingkatan) == 'SMP' ? 'selected' : '' }}>SMP (Sekolah Menengah Pertama)</option>
+                                <option value="SMA" {{ old('tingkatan', $sekolah->tingkatan) == 'SMA' ? 'selected' : '' }}>SMA (Sekolah Menengah Atas)</option>
+                            </select>
+                            @error('tingkatan')
                                 <p class="text-[11px] text-red-500 mt-1 font-medium">{{ $message }}</p>
                             @enderror
                         </div>

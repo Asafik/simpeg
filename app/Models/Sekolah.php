@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -14,6 +15,7 @@ class Sekolah extends Model
     protected $fillable = [
         'npsn',
         'nama_sekolah',
+        'tingkatan',
         'kecamatan',
         'nama_kepala_sekolah',
         'nip_kepala_sekolah',
@@ -22,9 +24,11 @@ class Sekolah extends Model
         'alamat',
     ];
 
-    public function pegawais(): HasMany
+    public function pegawais(): BelongsToMany
     {
-        return $this->hasMany(Pegawai::class, 'sekolah_id');
+        return $this->belongsToMany(Pegawai::class, 'pegawai_sekolah')
+                    ->withPivot('is_primary')
+                    ->withTimestamps();
     }
 
     public function users(): HasMany

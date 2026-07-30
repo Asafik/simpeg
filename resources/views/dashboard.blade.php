@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'SIMPEG-SP - Dashboard Admin Dinas')
+@section('title', 'GTK - Dashboard Admin Dinas')
 
 @section('content')
     <!-- ===== HERO BLUE WELCOME BANNER (Hope UI Design - Deep Blue) ===== -->
@@ -26,7 +26,7 @@
                     Halo, {{ Auth::user()->name ?? 'Administrator Dinas' }}! 👋
                 </h2>
                 <p class="text-blue-100 text-xs md:text-sm font-normal leading-relaxed opacity-90">
-                    Selamat datang di SIMPEG-SP. Pantau persebaran <strong>{{ number_format($totalSekolah) }} Satuan Pendidikan</strong>, data Kepala Sekolah, serta status akun Operator Sekolah secara real-time.
+                    Selamat datang di GTK. Pantau persebaran <strong>{{ number_format($totalSekolah) }} Satuan Pendidikan</strong>, data Kepala Sekolah, serta status akun Operator Sekolah secara real-time.
                 </p>
             </div>
             <a href="{{ route('sekolah.index') }}" class="bg-white text-blue-950 hover:bg-blue-50 text-xs font-bold px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 transition transform hover:-translate-y-0.5">
@@ -113,6 +113,89 @@
                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                 </a>
             </div>
+        </div>
+
+        <!-- ===== TINGKATAN / JENJANG SUMMARY CARDS & MULTI-SEKOLAH (5 CARDS PAS) ===== -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6 relative z-20">
+            <!-- Card TK -->
+            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-pink-500 flex items-center justify-center text-pink-600 font-bold bg-pink-50/50 flex-shrink-0">
+                        <i class="fas fa-child text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">TK (Taman Kanak-Kanak)</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalTK) }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('sekolah.index', ['jenjang' => 'TK']) }}" class="p-1 hover:text-pink-700 transition">
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                </a>
+            </div>
+
+            <!-- Card SD -->
+            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-sky-500 flex items-center justify-center text-sky-600 font-bold bg-sky-50/50 flex-shrink-0">
+                        <i class="fas fa-book-open text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">SD (Sekolah Dasar)</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSD) }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('sekolah.index', ['jenjang' => 'SD']) }}" class="p-1 hover:text-sky-700 transition">
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                </a>
+            </div>
+
+            <!-- Card SMP -->
+            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-violet-500 flex items-center justify-center text-violet-600 font-bold bg-violet-50/50 flex-shrink-0">
+                        <i class="fas fa-graduation-cap text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">SMP (Menengah Pertama)</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSMP) }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('sekolah.index', ['jenjang' => 'SMP']) }}" class="p-1 hover:text-violet-700 transition">
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                </a>
+            </div>
+
+            <!-- Card SMA -->
+            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-orange-500 flex items-center justify-center text-orange-600 font-bold bg-orange-50/50 flex-shrink-0">
+                        <i class="fas fa-building-columns text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium">SMA (Menengah Atas)</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSMA) }}</p>
+                    </div>
+                </div>
+                <a href="{{ route('sekolah.index', ['jenjang' => 'SMA']) }}" class="p-1 hover:text-orange-700 transition">
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                </a>
+            </div>
+
+            <!-- Card Multi-Sekolah (> 1 Sekolah) -->
+            <a href="{{ route('pegawai.index', ['multi_sekolah' => '1']) }}" class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3 hover:border-amber-300 hover:shadow-amber-100 transition group cursor-pointer" title="Klik untuk lihat daftar 176 Pegawai yang Bertugas di > 1 Sekolah">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0 group-hover:scale-105 transition">
+                        <i class="fas fa-layer-group text-base"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium group-hover:text-amber-800 transition">Multi-Sekolah (&gt;1)</p>
+                        <p class="text-xl md:text-2xl font-extrabold text-amber-700 mt-0.5">{{ number_format($totalMultiSekolah) }}</p>
+                    </div>
+                </div>
+                <div class="p-1 text-gray-300 group-hover:text-amber-600 transition">
+                    <i class="fas fa-chevron-right text-[10px]"></i>
+                </div>
+            </a>
         </div>
 
         <!-- ===== CHARTS ROW (DISTRIBUSI KECAMATAN & STATUS KEPALA SEKOLAH) ===== -->

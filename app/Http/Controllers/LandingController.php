@@ -99,7 +99,7 @@ class LandingController extends Controller
         $pegawai = null;
 
         if (!empty($keyword)) {
-            $pegawai = Pegawai::with('sekolah')
+            $pegawai = Pegawai::with('sekolahs')
                 ->where('nip', $keyword)
                 ->orWhere('nik', $keyword)
                 ->first();

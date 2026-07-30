@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sekolah;
+use App\Models\Pegawai;
 use App\Models\User;
 use App\Models\ActivityLog;
 use Illuminate\Http\Request;
@@ -72,24 +73,9 @@ class SekolahController extends Controller
             $query->where('status_kepala_sekolah', $statusKepsek);
         }
 
-        // 4. Jenjang Sekolah Filter (Supports SD/SDN, SMP/SMPN, TK/TKN)
+        // 4. Jenjang/Tingkatan Filter (Uses tingkatan column directly)
         if (!empty($jenjang)) {
-            if ($jenjang === 'SD') {
-                $query->where(function ($q) {
-                    $q->where('nama_sekolah', 'like', 'SD%')
-                      ->orWhere('nama_sekolah', 'like', '%SDN%');
-                });
-            } elseif ($jenjang === 'SMP') {
-                $query->where(function ($q) {
-                    $q->where('nama_sekolah', 'like', 'SMP%')
-                      ->orWhere('nama_sekolah', 'like', '%SMPN%');
-                });
-            } elseif ($jenjang === 'TK') {
-                $query->where(function ($q) {
-                    $q->where('nama_sekolah', 'like', 'TK%')
-                      ->orWhere('nama_sekolah', 'like', '%TKN%');
-                });
-            }
+            $query->where('tingkatan', $jenjang);
         }
 
         // Paginate results preserving all query parameters
@@ -124,6 +110,7 @@ class SekolahController extends Controller
         $validated = $request->validate([
             'npsn' => ['required', 'string', 'max:20', 'unique:sekolahs,npsn'],
             'nama_sekolah' => ['required', 'string', 'max:255'],
+            'tingkatan' => ['required', 'string', Rule::in(['TK', 'SD', 'SMP', 'SMA'])],
             'kecamatan' => ['required', 'string', 'max:100'],
             'email_sekolah' => ['nullable', 'email', 'max:255'],
             'nama_kepala_sekolah' => ['nullable', 'string', 'max:255'],
@@ -135,7 +122,7 @@ class SekolahController extends Controller
 
         // Capture all field values for initial created log
         $allFields = [];
-        foreach (['nama_sekolah','npsn','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'] as $f) {
+        foreach (['nama_sekolah','npsn','tingkatan','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'] as $f) {
             $val = $sekolah->$f;
             if (!is_null($val) && $val !== '') {
                 $allFields[$f] = ['data' => (string)$val];
@@ -170,7 +157,92 @@ class SekolahController extends Controller
     public function show($id)
     {
         $sekolah = Sekolah::with('users', 'pegawais')->findOrFail($id);
-        return view('sekolah.show', compact('sekolah'));
+
+        $kepsekPegawai = null;
+        $otherSchools = collect();
+
+        if (!empty($sekolah->nip_kepala_sekolah)) {
+            $kepsekPegawai = Pegawai::with('sekolahs')->where('nip_nik', $sekolah->nip_kepala_sekolah)->first();
+        } elseif (!empty($sekolah->nama_kepala_sekolah)) {
+            $kepsekPegawai = Pegawai::with('sekolahs')->where('nama_lengkap', $sekolah->nama_kepala_sekolah)->first();
+        }
+
+        if ($kepsekPegawai) {
+            $otherSchools = $kepsekPegawai->sekolahs->where('id', '!=', $sekolah->id);
+        }
+
+        // --- ANALISIS BEZETING (B) & KEBUTUHAN FORMASI (K) PETA JABATAN ---
+        $pegawais = $sekolah->pegawais;
+
+        // Count Bezeting per Jabatan
+        $bPertama = $pegawais->filter(fn($p) => str_contains(strtolower($p->jabatan_fungsional ?? ''), 'pertama'))->count();
+        $bMuda = $pegawais->filter(fn($p) => str_contains(strtolower($p->jabatan_fungsional ?? ''), 'muda'))->count();
+        $bMadya = $pegawais->filter(fn($p) => str_contains(strtolower($p->jabatan_fungsional ?? ''), 'madya'))->count();
+        $bTendik = $pegawais->filter(fn($p) => 
+            str_contains(strtolower($p->jabatan_fungsional ?? ''), 'operator') ||
+            str_contains(strtolower($p->jabatan_fungsional ?? ''), 'administrasi') ||
+            str_contains(strtolower($p->jabatan_fungsional ?? ''), 'pengelola') ||
+            str_contains(strtolower($p->jabatan_fungsional ?? ''), 'tendik')
+        )->count();
+
+        // Read exact Formasi Kebutuhan (K) from Peta Jabatan Excel JSON map in public directory
+        $formasiJsonPath = public_path('peta_jabatan_formasi.json');
+        $formasiData = [];
+        if (file_exists($formasiJsonPath)) {
+            $formasiData = json_decode(file_get_contents($formasiJsonPath), true) ?: [];
+        }
+
+        // Fuzzy match school name in JSON map
+        $normSch = preg_replace('/[^a-z0-9]/', '', strtolower(str_replace(['sd negeri', 'sdn', 'smp negeri', 'smpn', 'tk negeri', 'tkn'], ['sdn', 'sdn', 'smpn', 'smpn', 'tkn', 'tkn'], $sekolah->nama_sekolah)));
+        
+        $matchedFormasi = null;
+        foreach ($formasiData as $nameInExcel => $f) {
+            $normEx = preg_replace('/[^a-z0-9]/', '', strtolower(str_replace(['sd negeri', 'sdn', 'smp negeri', 'smpn', 'tk negeri', 'tkn'], ['sdn', 'sdn', 'smpn', 'smpn', 'tkn', 'tkn'], $nameInExcel)));
+            if ($normSch === $normEx) {
+                $matchedFormasi = $f;
+                break;
+            }
+        }
+
+        $isSmp = $sekolah->tingkatan === 'SMP';
+        $isTk = $sekolah->tingkatan === 'TK';
+
+        $kPertama = isset($matchedFormasi['pertama']) && $matchedFormasi['pertama'] > 0 ? $matchedFormasi['pertama'] : ($isSmp ? 8 : ($isTk ? 2 : 4));
+        $kMuda = isset($matchedFormasi['muda']) && $matchedFormasi['muda'] > 0 ? $matchedFormasi['muda'] : ($isSmp ? 4 : ($isTk ? 1 : 2));
+        $kMadya = isset($matchedFormasi['madya']) && $matchedFormasi['madya'] > 0 ? $matchedFormasi['madya'] : ($isSmp ? 2 : ($isTk ? 0 : 1));
+        $kTendik = isset($matchedFormasi['tendik']) && $matchedFormasi['tendik'] > 0 ? $matchedFormasi['tendik'] : ($isSmp ? 2 : 1);
+
+        $analisisBezeting = [
+            [
+                'jabatan' => 'Guru Kelas Ahli Pertama',
+                'bezeting' => $bPertama,
+                'kebutuhan' => $kPertama,
+                'selisih' => $bPertama - $kPertama,
+            ],
+            [
+                'jabatan' => 'Guru Kelas Ahli Muda',
+                'bezeting' => $bMuda,
+                'kebutuhan' => $kMuda,
+                'selisih' => $bMuda - $kMuda,
+            ],
+            [
+                'jabatan' => 'Guru Kelas Ahli Madya',
+                'bezeting' => $bMadya,
+                'kebutuhan' => $kMadya,
+                'selisih' => $bMadya - $kMadya,
+            ],
+            [
+                'jabatan' => 'Guru Kelas Ahli Utama',
+                'bezeting' => $bUtama ?? 0,
+                'kebutuhan' => $matchedFormasi['utama'] ?? 0,
+                'selisih' => ($bUtama ?? 0) - ($matchedFormasi['utama'] ?? 0),
+            ],
+        ];
+
+        // Filter all deficiencies for prominent notifications
+        $kekuranganList = array_filter($analisisBezeting, fn($a) => $a['selisih'] < 0);
+
+        return view('sekolah.show', compact('sekolah', 'kepsekPegawai', 'otherSchools', 'analisisBezeting', 'kekuranganList'));
     }
 
     /**
@@ -193,6 +265,7 @@ class SekolahController extends Controller
         $validated = $request->validate([
             'npsn' => ['required', 'string', 'max:20', Rule::unique('sekolahs', 'npsn')->ignore($sekolah->id)],
             'nama_sekolah' => ['required', 'string', 'max:255'],
+            'tingkatan' => ['required', 'string', Rule::in(['TK', 'SD', 'SMP', 'SMA'])],
             'kecamatan' => ['required', 'string', 'max:100'],
             'email_sekolah' => ['nullable', 'email', 'max:255'],
             'nama_kepala_sekolah' => ['nullable', 'string', 'max:255'],
@@ -201,7 +274,7 @@ class SekolahController extends Controller
         ]);
 
         // Capture changes before update
-        $trackableFields = ['npsn','nama_sekolah','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'];
+        $trackableFields = ['npsn','nama_sekolah','tingkatan','kecamatan','nama_kepala_sekolah','nip_kepala_sekolah','status_kepala_sekolah','email_sekolah','alamat'];
         $changes = [];
         foreach ($trackableFields as $field) {
             $oldVal = $sekolah->getOriginal($field);

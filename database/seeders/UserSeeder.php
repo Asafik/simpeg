@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
             ['username' => 'admin'],
             [
                 'name' => 'Administrator Dinas Pendidikan',
-                'email' => 'admin@dinas.go.id',
+                'email' => 'admin@mail.com',
                 'password' => Hash::make('password'),
                 'role' => 'ADMIN_DINAS',
                 'sekolah_id' => null,
