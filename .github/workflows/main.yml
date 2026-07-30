@@ -3,7 +3,7 @@ name: Deploy Laravel via FTP (Hostinger)
 on:
   push:
     branches:
-      - prod
+      - production
 
 jobs:
   ftp-deploy:
@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: ./
+          server-dir: /home/u910477049/domains/simpeg.aleena.co.id/public_html/
           dangerous-clean-slate: false
           exclude: |
             **/.git*
