@@ -308,7 +308,7 @@
                     @if(!empty($pegawai->file_sk) && is_array($pegawai->file_sk))
                         <div class="flex flex-wrap gap-2">
                             @foreach($pegawai->file_sk as $idx => $file)
-                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-blue-800 text-white rounded-lg text-[10px] font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-1">
+                            <a href="{{ asset('files/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-blue-800 text-white rounded-lg text-[10px] font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-1">
                                 <i class="fas fa-image"></i> Gbr {{ $idx+1 }}
                             </a>
                             @endforeach
@@ -336,7 +336,7 @@
                     @if(!empty($pegawai->file_serdik) && is_array($pegawai->file_serdik))
                         <div class="flex flex-wrap gap-2">
                             @foreach($pegawai->file_serdik as $idx => $file)
-                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-emerald-700 text-white rounded-lg text-[10px] font-semibold hover:bg-emerald-800 transition flex items-center justify-center gap-1">
+                            <a href="{{ asset('files/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-emerald-700 text-white rounded-lg text-[10px] font-semibold hover:bg-emerald-800 transition flex items-center justify-center gap-1">
                                 <i class="fas fa-image"></i> Gbr {{ $idx+1 }}
                             </a>
                             @endforeach
@@ -364,7 +364,7 @@
                     @if(!empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah))
                         <div class="flex flex-wrap gap-2">
                             @foreach($pegawai->file_ijazah as $idx => $file)
-                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-blue-800 text-white rounded-lg text-[10px] font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-1">
+                            <a href="{{ asset('files/' . $file) }}" target="_blank" class="flex-1 min-w-0 py-2 bg-blue-800 text-white rounded-lg text-[10px] font-semibold hover:bg-blue-900 transition flex items-center justify-center gap-1">
                                 <i class="fas fa-image"></i> Gbr {{ $idx+1 }}
                             </a>
                             @endforeach

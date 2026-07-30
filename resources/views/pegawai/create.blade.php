@@ -454,7 +454,7 @@
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_sk as $idx => $path)
-                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                            <a href="{{ asset('files/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
                                                 File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif
@@ -510,7 +510,7 @@
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_serdik as $idx => $path)
-                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                            <a href="{{ asset('files/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
                                                 File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif
@@ -566,7 +566,7 @@
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_ijazah as $idx => $path)
-                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                            <a href="{{ asset('files/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
                                                 File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif

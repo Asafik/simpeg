@@ -22,14 +22,29 @@ use App\Http\Controllers\AnnouncementController;
 Route::get('/', [LandingController::class, 'index'])->name('landing.home');
 Route::get('/landing', [LandingController::class, 'index'])->name('landing');
 
-// Storage File Serving Fallback (Ensures storage files/photos work on Hostinger subdomains without symlinks)
-Route::get('/storage/{path}', function ($path) {
-    $filePath = storage_path('app/public/' . $path);
+// Secure File Serving Route (Bypasses Hostinger physical /storage 403 block)
+$fileServerHandler = function ($path) {
+    $cleanPath = preg_replace('#^(storage/|public/|app/public/)#', '', $path);
+    $filePath = storage_path('app/public/' . $cleanPath);
+
     if (!file_exists($filePath)) {
-        abort(404);
+        $filePathAlt = storage_path($cleanPath);
+        if (file_exists($filePathAlt)) {
+            $filePath = $filePathAlt;
+        } else {
+            abort(404, 'File tidak ditemukan.');
+        }
     }
-    return response()->file($filePath);
-})->where('path', '.*');
+
+    $mimeType = @mime_content_type($filePath) ?: 'application/octet-stream';
+    return response()->file($filePath, [
+        'Content-Type' => $mimeType,
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+};
+
+Route::get('/files/{path}', $fileServerHandler)->where('path', '.*')->name('files.serve');
+Route::get('/storage/{path}', $fileServerHandler)->where('path', '.*');
 
 // Production System Optimization & Cache Clear Route
 Route::get('/optimize-clear', function () {

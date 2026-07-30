@@ -185,7 +185,7 @@
                         </div>
                     </div>
                     @if($pegawai->file_sk)
-                        <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-3 py-1.5 rounded-lg border border-rose-200 transition">Lihat</a>
+                        <a href="{{ asset('files/' . $pegawai->file_sk) }}" target="_blank" class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-3 py-1.5 rounded-lg border border-rose-200 transition">Lihat</a>
                     @endif
                 </div>
 
@@ -199,7 +199,7 @@
                         </div>
                     </div>
                     @if($pegawai->file_serdik)
-                        <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg border border-emerald-200 transition">Lihat</a>
+                        <a href="{{ asset('files/' . $pegawai->file_serdik) }}" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg border border-emerald-200 transition">Lihat</a>
                     @endif
                 </div>
 
@@ -213,7 +213,7 @@
                         </div>
                     </div>
                     @if($pegawai->file_ijazah)
-                        <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-lg border border-blue-200 transition">Lihat</a>
+                        <a href="{{ asset('files/' . $pegawai->file_ijazah) }}" target="_blank" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-lg border border-blue-200 transition">Lihat</a>
                     @endif
                 </div>
             </div>

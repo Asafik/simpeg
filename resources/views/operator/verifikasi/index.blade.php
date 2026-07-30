@@ -140,7 +140,7 @@
                                         SK Kepegawaian
                                     </span>
                                     @if($pegawai->file_sk)
-                                        <a href="{{ asset('storage/' . $pegawai->file_sk) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
+                                        <a href="{{ asset('files/' . $pegawai->file_sk) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
                                     @else
                                         <span class="text-rose-500 text-[10px] font-semibold">Belum Diunggah</span>
                                     @endif
@@ -152,7 +152,7 @@
                                         Sertifikat Pendidik (Serdik)
                                     </span>
                                     @if($pegawai->file_serdik)
-                                        <a href="{{ asset('storage/' . $pegawai->file_serdik) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
+                                        <a href="{{ asset('files/' . $pegawai->file_serdik) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
                                     @else
                                         <span class="text-gray-400 text-[10px]">Belum Diunggah</span>
                                     @endif
@@ -164,7 +164,7 @@
                                         Ijazah Terakhir
                                     </span>
                                     @if($pegawai->file_ijazah)
-                                        <a href="{{ asset('storage/' . $pegawai->file_ijazah) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
+                                        <a href="{{ asset('files/' . $pegawai->file_ijazah) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
                                     @else
                                         <span class="text-gray-400 text-[10px]">Belum Diunggah</span>
                                     @endif
