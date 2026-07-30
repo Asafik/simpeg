@@ -45,15 +45,37 @@ $fileServerHandler = function ($path) {
         }
     }
 
-    if (!$filePath) {
-        abort(404, 'File tidak ditemukan di server.');
+    if ($filePath) {
+        $mimeType = @mime_content_type($filePath) ?: 'application/octet-stream';
+        return response()->file($filePath, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=31536000',
+        ]);
     }
 
-    $mimeType = @mime_content_type($filePath) ?: 'application/octet-stream';
-    return response()->file($filePath, [
-        'Content-Type' => $mimeType,
-        'Cache-Control' => 'public, max-age=31536000',
-    ]);
+    // Fallback for missing files
+    $ext = strtolower(pathinfo($cleanPath, PATHINFO_EXTENSION));
+    
+    if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'])) {
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">'
+             . '<rect width="400" height="300" fill="#f8fafc" rx="16"/>'
+             . '<circle cx="200" cy="120" r="40" fill="#e2e8f0"/>'
+             . '<path d="M160 210 Q200 170 240 210" stroke="#cbd5e1" stroke-width="8" fill="none" stroke-linecap="round"/>'
+             . '<text x="200" y="245" font-family="sans-serif" font-size="13" font-weight="bold" fill="#64748b" text-anchor="middle">Gambar Belum Terunggah / Tidak Ditemukan</text>'
+             . '</svg>';
+        return response($svg, 200, ['Content-Type' => 'image/svg+xml']);
+    }
+
+    if ($ext === 'pdf') {
+        $html = '<div style="font-family:system-ui,sans-serif; text-align:center; padding:60px 20px; color:#475569; max-width:500px; margin:40px auto; background:#f8fafc; border-radius:16px; border:1px solid #e2e8f0;">'
+              . '<div style="font-size:48px; margin-bottom:16px;">📄</div>'
+              . '<h3 style="color:#1e293b; margin:0 0 8px 0;">Berkas PDF Tidak Ditemukan</h3>'
+              . '<p style="font-size:13px; color:#64748b; margin:0;">File PDF ini belum terunggah atau tidak ditemukan di server produksi.</p>'
+              . '</div>';
+        return response($html, 200, ['Content-Type' => 'text/html']);
+    }
+
+    abort(404, 'File tidak ditemukan di server.');
 };
 
 Route::get('/files/{path}', $fileServerHandler)->where('path', '.*')->name('files.serve');
