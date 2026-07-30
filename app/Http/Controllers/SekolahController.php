@@ -166,7 +166,78 @@ class SekolahController extends Controller
             $otherSchools = $kepsekPegawai->sekolahs->where('id', '!=', $sekolah->id);
         }
 
-        return view('sekolah.show', compact('sekolah', 'kepsekPegawai', 'otherSchools'));
+        // --- ANALISIS BEZETING (B) & KEBUTUHAN FORMASI (K) PETA JABATAN ---
+        $pegawais = $sekolah->pegawais;
+
+        // Count Bezeting per Jabatan
+        $bPertama = $pegawais->filter(fn($p) => str_contains(strtolower($p->jabatan_fungsional ?? ''), 'pertama'))->count();
+        $bMuda = $pegawais->filter(fn($p) => str_contains(strtolower($p->jabatan_fungsional ?? ''), 'muda'))->count();
+        $bMadya = $pegawais->filter(fn($p) => str_contains(strtolower($p->jabatan_fungsional ?? ''), 'madya'))->count();
+        $bTendik = $pegawais->filter(fn($p) => 
+            str_contains(strtolower($p->jabatan_fungsional ?? ''), 'operator') ||
+            str_contains(strtolower($p->jabatan_fungsional ?? ''), 'administrasi') ||
+            str_contains(strtolower($p->jabatan_fungsional ?? ''), 'pengelola') ||
+            str_contains(strtolower($p->jabatan_fungsional ?? ''), 'tendik')
+        )->count();
+
+        // Read exact Formasi Kebutuhan (K) from Peta Jabatan Excel JSON map in public directory
+        $formasiJsonPath = public_path('peta_jabatan_formasi.json');
+        $formasiData = [];
+        if (file_exists($formasiJsonPath)) {
+            $formasiData = json_decode(file_get_contents($formasiJsonPath), true) ?: [];
+        }
+
+        // Fuzzy match school name in JSON map
+        $normSch = preg_replace('/[^a-z0-9]/', '', strtolower(str_replace(['sd negeri', 'sdn', 'smp negeri', 'smpn', 'tk negeri', 'tkn'], ['sdn', 'sdn', 'smpn', 'smpn', 'tkn', 'tkn'], $sekolah->nama_sekolah)));
+        
+        $matchedFormasi = null;
+        foreach ($formasiData as $nameInExcel => $f) {
+            $normEx = preg_replace('/[^a-z0-9]/', '', strtolower(str_replace(['sd negeri', 'sdn', 'smp negeri', 'smpn', 'tk negeri', 'tkn'], ['sdn', 'sdn', 'smpn', 'smpn', 'tkn', 'tkn'], $nameInExcel)));
+            if ($normSch === $normEx) {
+                $matchedFormasi = $f;
+                break;
+            }
+        }
+
+        $isSmp = $sekolah->tingkatan === 'SMP';
+        $isTk = $sekolah->tingkatan === 'TK';
+
+        $kPertama = isset($matchedFormasi['pertama']) && $matchedFormasi['pertama'] > 0 ? $matchedFormasi['pertama'] : ($isSmp ? 8 : ($isTk ? 2 : 4));
+        $kMuda = isset($matchedFormasi['muda']) && $matchedFormasi['muda'] > 0 ? $matchedFormasi['muda'] : ($isSmp ? 4 : ($isTk ? 1 : 2));
+        $kMadya = isset($matchedFormasi['madya']) && $matchedFormasi['madya'] > 0 ? $matchedFormasi['madya'] : ($isSmp ? 2 : ($isTk ? 0 : 1));
+        $kTendik = isset($matchedFormasi['tendik']) && $matchedFormasi['tendik'] > 0 ? $matchedFormasi['tendik'] : ($isSmp ? 2 : 1);
+
+        $analisisBezeting = [
+            [
+                'jabatan' => 'Guru Kelas Ahli Pertama',
+                'bezeting' => $bPertama,
+                'kebutuhan' => $kPertama,
+                'selisih' => $bPertama - $kPertama,
+            ],
+            [
+                'jabatan' => 'Guru Kelas Ahli Muda',
+                'bezeting' => $bMuda,
+                'kebutuhan' => $kMuda,
+                'selisih' => $bMuda - $kMuda,
+            ],
+            [
+                'jabatan' => 'Guru Kelas Ahli Madya',
+                'bezeting' => $bMadya,
+                'kebutuhan' => $kMadya,
+                'selisih' => $bMadya - $kMadya,
+            ],
+            [
+                'jabatan' => 'Guru Kelas Ahli Utama',
+                'bezeting' => $bUtama ?? 0,
+                'kebutuhan' => $matchedFormasi['utama'] ?? 0,
+                'selisih' => ($bUtama ?? 0) - ($matchedFormasi['utama'] ?? 0),
+            ],
+        ];
+
+        // Filter all deficiencies for prominent notifications
+        $kekuranganList = array_filter($analisisBezeting, fn($a) => $a['selisih'] < 0);
+
+        return view('sekolah.show', compact('sekolah', 'kepsekPegawai', 'otherSchools', 'analisisBezeting', 'kekuranganList'));
     }
 
     /**

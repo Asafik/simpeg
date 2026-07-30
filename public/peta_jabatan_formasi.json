@@ -1,0 +1,2082 @@
+{
+  "SDN BALUNGKULON 03 1 1": {
+    "pertama": 924,
+    "muda": 103,
+    "madya": 127,
+    "utama": 2,
+    "b_pertama": 556,
+    "b_muda": 103,
+    "b_madya": 126,
+    "b_utama": 2
+  },
+  "SDN AJUNG 01 KECAMATAN KALISAT": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN Ajung 02 KECAMATAN KALISAT": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN AJUNG 03 KECAMATAN KALISAT": {
+    "pertama": 0,
+    "muda": 1,
+    "madya": 1,
+    "utama": 4,
+    "b_pertama": 0,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 4
+  },
+  "SDN AJUNG 04 KECAMATAN KALISAT": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN AJUNG 05 KECAMATAN KALISAT": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN AJUNG 06 KECAMATAN KALISAT": {
+    "pertama": 3,
+    "muda": 2,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 2,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN GAMBIRAN 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GAMBIRAN 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GAMBIRAN 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GLAGAHWERO 01": {
+    "pertama": 8,
+    "muda": 2,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 2,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN GLAGAHWERO 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GUMUKSARI 01": {
+    "pertama": 6,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GUMUKSARI 02": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN GUMUKSARI 03": {
+    "pertama": 4,
+    "muda": 0,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN KALISAT 01": {
+    "pertama": 18,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 14,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KALISAT 02": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KALISAT 03": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KALISAT 04": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN PATEMPURAN 01": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN Patempuran 02": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN PLALANGAN 01": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN Plalangan 02": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN PLALANGAN 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN PLALANGAN 04": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN PLALANGAN 05": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN PLALANGAN 06": {
+    "pertama": 4,
+    "muda": 0,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN SEBANEN 01": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SEBANEN 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUKORENO 01": {
+    "pertama": 4,
+    "muda": 0,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN SUKORENO 02": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUKORENO 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBER JERUK 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBER JERUK 02": {
+    "pertama": 4,
+    "muda": 2,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 2,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBER JERUK 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBER KALONG 01": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBER KALONG 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBER KETEMPA 01 KALISAT": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBER KETEMPA 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBER KETEMPA 03": {
+    "pertama": 0,
+    "muda": 5,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 3,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN SUMBER KETEMPA 04": {
+    "pertama": 200,
+    "muda": 24,
+    "madya": 17,
+    "utama": 0,
+    "b_pertama": 138,
+    "b_muda": 24,
+    "b_madya": 17,
+    "b_utama": 0
+  },
+  "SDN CAKRU 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN CAKRU 02": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN CAKRU 03": {
+    "pertama": 4,
+    "muda": 0,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN CAKRU 04": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KENCONG 01": {
+    "pertama": 12,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 7,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KENCONG 02": {
+    "pertama": 11,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KENCONG 03": {
+    "pertama": 4,
+    "muda": 2,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 2,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KENCONG 04": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KENCONG 05": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KENCONG 06": {
+    "pertama": 4,
+    "muda": 0,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN KENCONG 07": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KENCONG 08": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KRATON 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KRATON 02": {
+    "pertama": 4,
+    "muda": 0,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN KRATON 03": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KRATON 04": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN PASEBAN 01": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN PASEBAN 02": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN PASEBAN 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN WONOREJO 01": {
+    "pertama": 9,
+    "muda": 2,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 7,
+    "b_muda": 2,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN WONOREJO 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN WONOREJO 03": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN WONOREJO 04": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN WONOREJO 05": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN WONOREJO 06": {
+    "pertama": 208,
+    "muda": 9,
+    "madya": 12,
+    "utama": 0,
+    "b_pertama": 93,
+    "b_muda": 9,
+    "b_madya": 12,
+    "b_utama": 0
+  },
+  "SDN MAYANG 01": {
+    "pertama": 12,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN MAYANG 02": {
+    "pertama": 7,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN MAYANG 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN MAYANG 04": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN MRAWAN 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN MRAWAN 02": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN MRAWAN 03": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN MRAWAN 04": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN MRAWAN 05": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN SEPUTIH 01": {
+    "pertama": 11,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SEPUTIH 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SEPUTIH 03": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN SIDOMUKTI 01": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SIDOMUKTI 02": {
+    "pertama": 10,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KEJAYAN 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KEJAYAN 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KEJAYAN 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KEJAYAN 04": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN TEGALREJO 01": {
+    "pertama": 10,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN TEGALWARU 01": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN TEGALWARU 02": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN TEGALWARU 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN TEGALWARU 04": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KARANG KEDAWUNG 01": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KARANG KEDAWUNG 02": {
+    "pertama": 12,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 11,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KARANG KEDAWUNG 03": {
+    "pertama": 6,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KAWANGREJO 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN LAMPEJI 01": {
+    "pertama": 14,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 9,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN LAMPEJI 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN LENGKONG 01": {
+    "pertama": 10,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN LENGKONG 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN LENGKONG 03": {
+    "pertama": 10,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN LENGKONG 04": {
+    "pertama": 10,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN MUMBULSARI 01": {
+    "pertama": 9,
+    "muda": 2,
+    "madya": 3,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 2,
+    "b_madya": 3,
+    "b_utama": 0
+  },
+  "SDN MUMBULSARI 02": {
+    "pertama": 10,
+    "muda": 1,
+    "madya": 3,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 3,
+    "b_utama": 0
+  },
+  "SDN MUMBULSARI 03": {
+    "pertama": 10,
+    "muda": 0,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 0,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN MUMBULSARI 04": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUCO 01": {
+    "pertama": 11,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUCO 02": {
+    "pertama": 10,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUCO 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUCO 04": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN Tamansari 01": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN TAMANSARI 02": {
+    "pertama": 9,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN BEDADUNG 01": {
+    "pertama": 10,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 7,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN JATIAN 01": {
+    "pertama": 4,
+    "muda": 2,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 2,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN JATIAN 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN JATIAN 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KERTOSARI 01": {
+    "pertama": 6,
+    "muda": 2,
+    "madya": 4,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 2,
+    "b_madya": 4,
+    "b_utama": 0
+  },
+  "SDN KERTOSARI 02": {
+    "pertama": 5,
+    "muda": 2,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 2,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN KERTOSARI 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN PAKUSARI 01": {
+    "pertama": 10,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN PAKUSARI 02": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN PATEMON 01": {
+    "pertama": 2,
+    "muda": 2,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 2,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN SUBO 01": {
+    "pertama": 2,
+    "muda": 1,
+    "madya": 3,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 1,
+    "b_madya": 3,
+    "b_utama": 0
+  },
+  "SDN SUBO 02": {
+    "pertama": 3,
+    "muda": 1,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 1,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN SUBO 03": {
+    "pertama": 4,
+    "muda": 2,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 2,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBERPINANG 01": {
+    "pertama": 3,
+    "muda": 0,
+    "madya": 3,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 3,
+    "b_utama": 0
+  },
+  "SDN SUMBERPINANG 02": {
+    "pertama": 8,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUMBERPINANG 03": {
+    "pertama": 136,
+    "muda": 13,
+    "madya": 17,
+    "utama": 2,
+    "b_pertama": 80,
+    "b_muda": 13,
+    "b_madya": 17,
+    "b_utama": 2
+  },
+  "SDN BANJARSENGON 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN BANJARSENGON 02": {
+    "pertama": 9,
+    "muda": 1,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 7,
+    "b_muda": 1,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN BARATAN 01": {
+    "pertama": 10,
+    "muda": 2,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 2,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN BARATAN 02": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN BARATAN 03": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN BINTORO 01": {
+    "pertama": 11,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 9,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN BINTORO 02": {
+    "pertama": 7,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 7,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN BINTORO 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN BINTORO 04": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN BINTORO 05": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GEBANG 01": {
+    "pertama": 6,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GEBANG 02": {
+    "pertama": 7,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GEBANG 03": {
+    "pertama": 10,
+    "muda": 0,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 0,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN GEBANG 04": {
+    "pertama": 9,
+    "muda": 3,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 6,
+    "b_muda": 3,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN GEBANG 05": {
+    "pertama": 6,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN JEMBERLOR 01": {
+    "pertama": 21,
+    "muda": 2,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 17,
+    "b_muda": 2,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN JEMBERLOR 02": {
+    "pertama": 14,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 8,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN JEMBERLOR 03": {
+    "pertama": 16,
+    "muda": 1,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 10,
+    "b_muda": 1,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN JEMBERLOR 04": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN JEMBERLOR 05": {
+    "pertama": 10,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN JEMBERLOR 06": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN JUMERTO 01": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN JUMERTO 02": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN PATRANG 01": {
+    "pertama": 12,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN PATRANG 02": {
+    "pertama": 9,
+    "muda": 7,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 7,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN SLAWU 01": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SLAWU 02": {
+    "pertama": 3,
+    "muda": 2,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 2,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN SLAWU 03": {
+    "pertama": 699,
+    "muda": 91,
+    "madya": 84,
+    "utama": 1,
+    "b_pertama": 425,
+    "b_muda": 91,
+    "b_madya": 84,
+    "b_utama": 1
+  },
+  "SDN SIDOMULYO 01": {
+    "pertama": 10,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 8,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SIDOMULYO 02": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SIDOMULYO 03": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SIDOMULYO 04": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SIDOMULYO 05": {
+    "pertama": 11,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN SIDOMULYO 06": {
+    "pertama": 5,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 4,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SIDOMULYO 07": {
+    "pertama": 6,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 1,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SIDOMULYO 09": {
+    "pertama": 231,
+    "muda": 17,
+    "madya": 23,
+    "utama": 0,
+    "b_pertama": 124,
+    "b_muda": 17,
+    "b_madya": 20,
+    "b_utama": 0
+  },
+  "SDN SUKOREJO 01": {
+    "pertama": 12,
+    "muda": 1,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 8,
+    "b_muda": 1,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SDN SUKOREJO 02": {
+    "pertama": 586,
+    "muda": 28,
+    "madya": 35,
+    "utama": 0,
+    "b_pertama": 291,
+    "b_muda": 28,
+    "b_madya": 33,
+    "b_utama": 0
+  },
+  "SDN KARANGREJO 01": {
+    "pertama": 6,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 3,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN Karangrejo 02": {
+    "pertama": 10,
+    "muda": 1,
+    "madya": 2,
+    "utama": 0,
+    "b_pertama": 5,
+    "b_muda": 1,
+    "b_madya": 2,
+    "b_utama": 0
+  },
+  "SDN KARANGREJO 03": {
+    "pertama": 13,
+    "muda": 2,
+    "madya": 3,
+    "utama": 0,
+    "b_pertama": 7,
+    "b_muda": 2,
+    "b_madya": 3,
+    "b_utama": 0
+  },
+  "SDN KARANGREJO 04": {
+    "pertama": 4,
+    "muda": 1,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 1,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KARANGREJO 05": {
+    "pertama": 5,
+    "muda": 0,
+    "madya": 1,
+    "utama": 0,
+    "b_pertama": 2,
+    "b_muda": 0,
+    "b_madya": 1,
+    "b_utama": 0
+  },
+  "SDN KARANGREJO 06": {
+    "pertama": 934,
+    "muda": 114,
+    "madya": 124,
+    "utama": 3,
+    "b_pertama": 536,
+    "b_muda": 108,
+    "b_madya": 118,
+    "b_utama": 3
+  },
+  "SMPN 1 JOMBANG": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 JOMBANG": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 KENCONG": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 KENCONG": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 MAYANG": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 MAYANG": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 MUMBULSARI": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 MUMBULSARI": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 PAKUSARI": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 01 PANTI": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 PANTI": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 10 JEMBER": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 13 JEMBER": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 15 JEMBER": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 JEMBER": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 4 JEMBER": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 7 JEMBER": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 ARJASA": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 ARJASA": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 3 ARJASA": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 KALISAT": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 KALISAT": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 3 KALISAT": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 4 KALISAT": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 JELBUK": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 Jelbuk": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 3 JELBUK": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 SUKOWONO": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 SUKOWONO": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 3 SUKOWONO": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 4 SUKOWONO": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 SUMBERJAMBE": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 SUMBERJAMBE": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 3 SUMBERJAMBE": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 4 SUMBERJAMBE": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 5 SUMBERJAMBE": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 1 LEDOKOMBO": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 2 LEDOKOMBO": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  },
+  "SMPN 3 LEDOKOMBO": {
+    "pertama": 0,
+    "muda": 0,
+    "madya": 0,
+    "utama": 0,
+    "b_pertama": 0,
+    "b_muda": 0,
+    "b_madya": 0,
+    "b_utama": 0
+  }
+}

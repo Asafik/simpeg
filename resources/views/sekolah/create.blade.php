@@ -69,9 +69,9 @@
                         <!-- NPSN -->
                         <div>
                             <label class="block text-xs font-bold text-gray-700 mb-1">
-                                NPSN (8 Digit) <span class="text-red-500">*</span>
+                                NPSN <span class="text-red-500">*</span>
                             </label>
-                            <input type="text" name="npsn" value="{{ old('npsn', $sekolah->npsn) }}" required maxlength="20" placeholder="Contoh: 20524929"
+                            <input type="text" name="npsn" value="{{ old('npsn', $sekolah->npsn) }}" required maxlength="50" placeholder="Masukkan NPSN Sekolah"
                                    class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-800/20 font-mono @error('npsn') border-red-500 @enderror">
                             @error('npsn')
                                 <p class="text-[11px] text-red-500 mt-1 font-medium">{{ $message }}</p>
