@@ -313,16 +313,21 @@
                                         </td>
                                         <td class="px-4 py-3.5">
                                             <div class="flex items-center gap-1.5 text-xs">
-                                                @if($pegawai->file_sk)
-                                                    <a href="{{ asset('files/' . $pegawai->file_sk) }}" target="_blank" class="text-red-500 hover:text-red-700" title="SK Kepegawaian"><i class="fas fa-file-pdf"></i></a>
+                                                @php
+                                                    $skPath = is_array($pegawai->file_sk) ? ($pegawai->file_sk[0] ?? null) : $pegawai->file_sk;
+                                                    $serdikPath = is_array($pegawai->file_serdik) ? ($pegawai->file_serdik[0] ?? null) : $pegawai->file_serdik;
+                                                    $ijazahPath = is_array($pegawai->file_ijazah) ? ($pegawai->file_ijazah[0] ?? null) : $pegawai->file_ijazah;
+                                                @endphp
+                                                @if($skPath)
+                                                    <a href="{{ asset('files/' . $skPath) }}" target="_blank" class="text-red-500 hover:text-red-700" title="SK Kepegawaian"><i class="fas fa-file-pdf"></i></a>
                                                 @endif
-                                                @if($pegawai->file_serdik)
-                                                    <a href="{{ asset('files/' . $pegawai->file_serdik) }}" target="_blank" class="text-emerald-600 hover:text-emerald-800" title="Sertifikat Pendidik"><i class="fas fa-file-pdf"></i></a>
+                                                @if($serdikPath)
+                                                    <a href="{{ asset('files/' . $serdikPath) }}" target="_blank" class="text-emerald-600 hover:text-emerald-800" title="Sertifikat Pendidik"><i class="fas fa-file-pdf"></i></a>
                                                 @endif
-                                                @if($pegawai->file_ijazah)
-                                                    <a href="{{ asset('files/' . $pegawai->file_ijazah) }}" target="_blank" class="text-blue-600 hover:text-blue-800" title="Ijazah Terakhir"><i class="fas fa-file-pdf"></i></a>
+                                                @if($ijazahPath)
+                                                    <a href="{{ asset('files/' . $ijazahPath) }}" target="_blank" class="text-blue-600 hover:text-blue-800" title="Ijazah Terakhir"><i class="fas fa-file-pdf"></i></a>
                                                 @endif
-                                                @if(!$pegawai->file_sk && !$pegawai->file_serdik && !$pegawai->file_ijazah)
+                                                @if(!$skPath && !$serdikPath && !$ijazahPath)
                                                     <span class="text-gray-300 text-[10px] italic">Tidak ada</span>
                                                 @endif
                                             </div>

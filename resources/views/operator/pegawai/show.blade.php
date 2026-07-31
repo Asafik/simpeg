@@ -173,19 +173,23 @@
                 <i class="fas fa-file-pdf text-rose-600"></i>
                 Berkas Dokumen Terlampir
             </h3>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            @php
+                $skPath = is_array($pegawai->file_sk) ? ($pegawai->file_sk[0] ?? null) : $pegawai->file_sk;
+                $serdikPath = is_array($pegawai->file_serdik) ? ($pegawai->file_serdik[0] ?? null) : $pegawai->file_serdik;
+                $ijazahPath = is_array($pegawai->file_ijazah) ? ($pegawai->file_ijazah[0] ?? null) : $pegawai->file_ijazah;
+            @endphp
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                 <!-- File SK -->
                 <div class="p-4 rounded-xl border border-gray-100 bg-gray-50 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <i class="fas fa-file-pdf text-rose-500 text-xl"></i>
                         <div>
                             <p class="font-bold text-gray-800">SK Kepegawaian</p>
-                            <p class="text-[10px] text-gray-400">{{ $pegawai->file_sk ? 'Ter-upload' : 'Belum diunggah' }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $skPath ? 'Ter-upload' : 'Belum diunggah' }}</p>
                         </div>
                     </div>
-                    @if($pegawai->file_sk)
-                        <a href="{{ asset('files/' . $pegawai->file_sk) }}" target="_blank" class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-3 py-1.5 rounded-lg border border-rose-200 transition">Lihat</a>
+                    @if($skPath)
+                        <a href="{{ asset('files/' . $skPath) }}" target="_blank" class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-3 py-1.5 rounded-lg border border-rose-200 transition">Lihat</a>
                     @endif
                 </div>
 
@@ -195,11 +199,11 @@
                         <i class="fas fa-file-pdf text-emerald-600 text-xl"></i>
                         <div>
                             <p class="font-bold text-gray-800">Sertifikat Pendidik</p>
-                            <p class="text-[10px] text-gray-400">{{ $pegawai->file_serdik ? 'Ter-upload' : 'Belum diunggah' }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $serdikPath ? 'Ter-upload' : 'Belum diunggah' }}</p>
                         </div>
                     </div>
-                    @if($pegawai->file_serdik)
-                        <a href="{{ asset('files/' . $pegawai->file_serdik) }}" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg border border-emerald-200 transition">Lihat</a>
+                    @if($serdikPath)
+                        <a href="{{ asset('files/' . $serdikPath) }}" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg border border-emerald-200 transition">Lihat</a>
                     @endif
                 </div>
 
@@ -209,11 +213,11 @@
                         <i class="fas fa-file-pdf text-blue-600 text-xl"></i>
                         <div>
                             <p class="font-bold text-gray-800">Ijazah Terakhir</p>
-                            <p class="text-[10px] text-gray-400">{{ $pegawai->file_ijazah ? 'Ter-upload' : 'Belum diunggah' }}</p>
+                            <p class="text-[10px] text-gray-400">{{ $ijazahPath ? 'Ter-upload' : 'Belum diunggah' }}</p>
                         </div>
                     </div>
-                    @if($pegawai->file_ijazah)
-                        <a href="{{ asset('files/' . $pegawai->file_ijazah) }}" target="_blank" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-lg border border-blue-200 transition">Lihat</a>
+                    @if($ijazahPath)
+                        <a href="{{ asset('files/' . $ijazahPath) }}" target="_blank" class="bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold px-3 py-1.5 rounded-lg border border-blue-200 transition">Lihat</a>
                     @endif
                 </div>
             </div>

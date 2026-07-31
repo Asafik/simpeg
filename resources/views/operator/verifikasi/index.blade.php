@@ -133,14 +133,19 @@
                         <div class="bg-gray-50 rounded-lg p-3 text-xs space-y-2 border border-gray-100">
                             <p class="text-[10px] uppercase font-bold text-gray-400">Status Kelengkapan Dokumen:</p>
                             
+                            @php
+                                $skPath = is_array($pegawai->file_sk) ? ($pegawai->file_sk[0] ?? null) : $pegawai->file_sk;
+                                $serdikPath = is_array($pegawai->file_serdik) ? ($pegawai->file_serdik[0] ?? null) : $pegawai->file_serdik;
+                                $ijazahPath = is_array($pegawai->file_ijazah) ? ($pegawai->file_ijazah[0] ?? null) : $pegawai->file_ijazah;
+                            @endphp
                             <div class="space-y-1.5 text-xs">
                                 <div class="flex items-center justify-between">
                                     <span class="flex items-center gap-1.5 text-gray-700">
-                                        <i class="fas fa-file-pdf {{ $pegawai->file_sk ? 'text-red-500' : 'text-gray-300' }}"></i>
+                                        <i class="fas fa-file-pdf {{ $skPath ? 'text-red-500' : 'text-gray-300' }}"></i>
                                         SK Kepegawaian
                                     </span>
-                                    @if($pegawai->file_sk)
-                                        <a href="{{ asset('files/' . $pegawai->file_sk) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
+                                    @if($skPath)
+                                        <a href="{{ asset('files/' . $skPath) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
                                     @else
                                         <span class="text-rose-500 text-[10px] font-semibold">Belum Diunggah</span>
                                     @endif
@@ -148,11 +153,11 @@
 
                                 <div class="flex items-center justify-between">
                                     <span class="flex items-center gap-1.5 text-gray-700">
-                                        <i class="fas fa-file-pdf {{ $pegawai->file_serdik ? 'text-emerald-600' : 'text-gray-300' }}"></i>
+                                        <i class="fas fa-file-pdf {{ $serdikPath ? 'text-emerald-600' : 'text-gray-300' }}"></i>
                                         Sertifikat Pendidik (Serdik)
                                     </span>
-                                    @if($pegawai->file_serdik)
-                                        <a href="{{ asset('files/' . $pegawai->file_serdik) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
+                                    @if($serdikPath)
+                                        <a href="{{ asset('files/' . $serdikPath) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
                                     @else
                                         <span class="text-gray-400 text-[10px]">Belum Diunggah</span>
                                     @endif
@@ -160,11 +165,11 @@
 
                                 <div class="flex items-center justify-between">
                                     <span class="flex items-center gap-1.5 text-gray-700">
-                                        <i class="fas fa-file-pdf {{ $pegawai->file_ijazah ? 'text-blue-600' : 'text-gray-300' }}"></i>
+                                        <i class="fas fa-file-pdf {{ $ijazahPath ? 'text-blue-600' : 'text-gray-300' }}"></i>
                                         Ijazah Terakhir
                                     </span>
-                                    @if($pegawai->file_ijazah)
-                                        <a href="{{ asset('files/' . $pegawai->file_ijazah) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
+                                    @if($ijazahPath)
+                                        <a href="{{ asset('files/' . $ijazahPath) }}" target="_blank" class="text-blue-800 font-bold hover:underline">Lihat PDF</a>
                                     @else
                                         <span class="text-gray-400 text-[10px]">Belum Diunggah</span>
                                     @endif
