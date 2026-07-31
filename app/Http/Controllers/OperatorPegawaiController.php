@@ -29,7 +29,7 @@ class OperatorPegawaiController extends Controller
 
         $query = Pegawai::query();
         if ($sekolahId) {
-            $query->where('sekolah_id', $sekolahId)->with('sekolah')->latest();
+            $query->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $sekolahId))->with('sekolahs')->latest();
         } else {
             $query->whereRaw('1 = 0');
         }
@@ -96,7 +96,7 @@ class OperatorPegawaiController extends Controller
             'file_ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $validated['sekolah_id'] = $sekolahId;
+        unset($validated['sekolah_id']);
 
         // Upload files
         if ($request->hasFile('file_sk')) {
@@ -109,7 +109,10 @@ class OperatorPegawaiController extends Controller
             $validated['file_ijazah'] = $request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public');
         }
 
-        Pegawai::create($validated);
+        $pegawai = Pegawai::create($validated);
+        if ($sekolahId) {
+            $pegawai->sekolahs()->attach($sekolahId, ['is_primary' => true]);
+        }
 
         return redirect()->route('operator.pegawai.index')->with('success', 'Data pegawai berhasil ditambahkan.');
     }
@@ -120,7 +123,7 @@ class OperatorPegawaiController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $pegawai = Pegawai::where('sekolah_id', $user->sekolah_id)->with('sekolah')->findOrFail($id);
+        $pegawai = Pegawai::whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id))->with('sekolahs')->findOrFail($id);
 
         return view('operator.pegawai.show', compact('pegawai'));
     }
@@ -131,7 +134,7 @@ class OperatorPegawaiController extends Controller
     public function edit($id)
     {
         $user = Auth::user();
-        $pegawai = Pegawai::where('sekolah_id', $user->sekolah_id)->findOrFail($id);
+        $pegawai = Pegawai::whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id))->findOrFail($id);
         $sekolah = Sekolah::find($user->sekolah_id);
 
         return view('operator.pegawai.edit', compact('pegawai', 'sekolah'));
@@ -143,7 +146,7 @@ class OperatorPegawaiController extends Controller
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        $pegawai = Pegawai::where('sekolah_id', $user->sekolah_id)->findOrFail($id);
+        $pegawai = Pegawai::whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id))->findOrFail($id);
 
         $validated = $request->validate([
             'nip_nik' => 'nullable|string|max:30',
@@ -172,7 +175,7 @@ class OperatorPegawaiController extends Controller
             'file_ijazah' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
         ]);
 
-        $validated['sekolah_id'] = $user->sekolah_id;
+        unset($validated['sekolah_id']);
 
         if ($request->hasFile('file_sk')) {
             if ($pegawai->file_sk) Storage::disk('public')->delete($pegawai->file_sk);
@@ -188,6 +191,9 @@ class OperatorPegawaiController extends Controller
         }
 
         $pegawai->update($validated);
+        if ($user->sekolah_id) {
+            $pegawai->sekolahs()->sync([$user->sekolah_id => ['is_primary' => true]]);
+        }
 
         return redirect()->route('operator.pegawai.index')->with('success', 'Data pegawai berhasil diperbarui.');
     }
@@ -198,7 +204,7 @@ class OperatorPegawaiController extends Controller
     public function destroy($id)
     {
         $user = Auth::user();
-        $pegawai = Pegawai::where('sekolah_id', $user->sekolah_id)->findOrFail($id);
+        $pegawai = Pegawai::whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id))->findOrFail($id);
 
         if ($pegawai->file_sk) Storage::disk('public')->delete($pegawai->file_sk);
         if ($pegawai->file_serdik) Storage::disk('public')->delete($pegawai->file_serdik);
@@ -220,7 +226,7 @@ class OperatorPegawaiController extends Controller
         }
 
         $user = Auth::user();
-        $pegawais = Pegawai::whereIn('id', $ids)->where('sekolah_id', $user->sekolah_id)->get();
+        $pegawais = Pegawai::whereIn('id', $ids)->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id))->get();
         $deletedCount = 0;
 
         foreach ($pegawais as $pegawai) {

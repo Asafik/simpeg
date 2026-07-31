@@ -29,7 +29,7 @@ class OperatorSekolahController extends Controller
         ];
 
         if ($sekolahId) {
-            $pegawaiQuery = Pegawai::where('sekolah_id', $sekolahId);
+            $pegawaiQuery = Pegawai::whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $sekolahId));
             $stats['totalPegawai'] = (clone $pegawaiQuery)->count();
             $stats['pns'] = (clone $pegawaiQuery)->where('status_kepegawaian', 'PNS')->count();
             $stats['pppk'] = (clone $pegawaiQuery)->where('status_kepegawaian', 'like', 'PPPK%')->count();

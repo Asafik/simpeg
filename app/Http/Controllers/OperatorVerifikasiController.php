@@ -23,7 +23,7 @@ class OperatorVerifikasiController extends Controller
 
         $query = Pegawai::query();
         if ($sekolahId) {
-            $query->where('sekolah_id', $sekolahId)->with('sekolah')->latest();
+            $query->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $sekolahId))->with('sekolahs')->latest();
         } else {
             $query->whereRaw('1 = 0');
         }
@@ -35,7 +35,7 @@ class OperatorVerifikasiController extends Controller
         $pegawais = $query->paginate(12)->withQueryString();
 
         // Calculate statistics for operator's school
-        $baseQuery = Pegawai::where('sekolah_id', $sekolahId);
+        $baseQuery = Pegawai::whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $sekolahId));
         $totalPegawai = (clone $baseQuery)->count();
         $countMenunggu = (clone $baseQuery)->where('status_verifikasi', 'Menunggu')->count();
         $countDisetujui = (clone $baseQuery)->where('status_verifikasi', 'Disetujui')->count();
@@ -65,7 +65,7 @@ class OperatorVerifikasiController extends Controller
             return back()->with('error', 'Akun Anda belum terhubung ke Satuan Pendidikan manapun.');
         }
 
-        $pegawai = Pegawai::where('sekolah_id', $sekolahId)->findOrFail($id);
+        $pegawai = Pegawai::whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $sekolahId))->findOrFail($id);
 
         $request->validate([
             'file_sk' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',

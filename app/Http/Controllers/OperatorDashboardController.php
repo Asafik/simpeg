@@ -23,7 +23,7 @@ class OperatorDashboardController extends Controller
 
         $pegawaiQuery = Pegawai::query();
         if ($user && $user->sekolah_id) {
-            $pegawaiQuery->where('sekolah_id', $user->sekolah_id);
+            $pegawaiQuery->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id));
         } else {
             // Fallback if operator is not linked to any school yet
             $pegawaiQuery->whereRaw('1 = 0');
@@ -35,7 +35,7 @@ class OperatorDashboardController extends Controller
         $totalPppkPw = (clone $pegawaiQuery)->where('status_kepegawaian', 'PPPK PW')->count();
         $totalNonAsn = (clone $pegawaiQuery)->where('status_kepegawaian', 'Non-ASN')->count();
 
-        $recentPegawais = (clone $pegawaiQuery)->with('sekolah')->latest()->take(10)->get();
+        $recentPegawais = (clone $pegawaiQuery)->with('sekolahs')->latest()->take(10)->get();
 
         return view('operator.dashboard', compact(
             'user',
