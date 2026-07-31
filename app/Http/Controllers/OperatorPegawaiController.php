@@ -99,14 +99,21 @@ class OperatorPegawaiController extends Controller
         unset($validated['sekolah_id']);
 
         // Upload files
+        $hasUpload = false;
         if ($request->hasFile('file_sk')) {
-            $validated['file_sk'] = $request->file('file_sk')->store('berkas_pegawai/sk', 'public');
+            $validated['file_sk'] = [$request->file('file_sk')->store('berkas_pegawai/sk', 'public')];
+            $hasUpload = true;
         }
         if ($request->hasFile('file_serdik')) {
-            $validated['file_serdik'] = $request->file('file_serdik')->store('berkas_pegawai/serdik', 'public');
+            $validated['file_serdik'] = [$request->file('file_serdik')->store('berkas_pegawai/serdik', 'public')];
+            $hasUpload = true;
         }
         if ($request->hasFile('file_ijazah')) {
-            $validated['file_ijazah'] = $request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public');
+            $validated['file_ijazah'] = [$request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public')];
+            $hasUpload = true;
+        }
+        if ($hasUpload) {
+            $validated['status_verifikasi'] = 'MENUNGGU';
         }
 
         $pegawai = Pegawai::create($validated);
@@ -177,17 +184,25 @@ class OperatorPegawaiController extends Controller
 
         unset($validated['sekolah_id']);
 
+        $hasUpload = false;
         if ($request->hasFile('file_sk')) {
-            if ($pegawai->file_sk) Storage::disk('public')->delete($pegawai->file_sk);
-            $validated['file_sk'] = $request->file('file_sk')->store('berkas_pegawai/sk', 'public');
+            if (!empty($pegawai->file_sk)) Storage::disk('public')->delete($pegawai->file_sk);
+            $validated['file_sk'] = [$request->file('file_sk')->store('berkas_pegawai/sk', 'public')];
+            $hasUpload = true;
         }
         if ($request->hasFile('file_serdik')) {
-            if ($pegawai->file_serdik) Storage::disk('public')->delete($pegawai->file_serdik);
-            $validated['file_serdik'] = $request->file('file_serdik')->store('berkas_pegawai/serdik', 'public');
+            if (!empty($pegawai->file_serdik)) Storage::disk('public')->delete($pegawai->file_serdik);
+            $validated['file_serdik'] = [$request->file('file_serdik')->store('berkas_pegawai/serdik', 'public')];
+            $hasUpload = true;
         }
         if ($request->hasFile('file_ijazah')) {
-            if ($pegawai->file_ijazah) Storage::disk('public')->delete($pegawai->file_ijazah);
-            $validated['file_ijazah'] = $request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public');
+            if (!empty($pegawai->file_ijazah)) Storage::disk('public')->delete($pegawai->file_ijazah);
+            $validated['file_ijazah'] = [$request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public')];
+            $hasUpload = true;
+        }
+        if ($hasUpload) {
+            $validated['status_verifikasi'] = 'MENUNGGU';
+            $validated['catatan_verifikasi'] = null;
         }
 
         $pegawai->update($validated);

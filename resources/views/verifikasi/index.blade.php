@@ -241,31 +241,40 @@
                                     </td>
                                     <!-- Kelengkapan Berkas -->
                                     <td class="px-6 py-4">
+                                        @php
+                                            $skCount = count($pegawai->file_sk ?? []);
+                                            $serdikCount = count($pegawai->file_serdik ?? []);
+                                            $ijazahCount = count($pegawai->file_ijazah ?? []);
+                                        @endphp
                                         <div class="flex items-center gap-1.5 text-[11px]">
-                                            <span class="px-2 py-0.5 rounded font-bold {{ !empty($pegawai->file_sk) ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-pointer hover:bg-emerald-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
-                                                @if(!empty($pegawai->file_sk) && is_array($pegawai->file_sk)) onclick='openFileModal("SK Kepegawaian - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_sk))' @endif>
-                                                <i class="fas fa-file-pdf mr-0.5"></i> SK: {{ !empty($pegawai->file_sk) && is_array($pegawai->file_sk) ? count($pegawai->file_sk) . ' File' : 'Kosong' }}
+                                            <span class="px-2 py-0.5 rounded font-bold {{ $skCount > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 cursor-pointer hover:bg-emerald-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
+                                                @if($skCount > 0) onclick='openFileModal("SK Kepegawaian - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_sk))' @endif>
+                                                <i class="fas fa-file-pdf mr-0.5"></i> SK: {{ $skCount > 0 ? $skCount . ' File' : 'Kosong' }}
                                             </span>
-                                            <span class="px-2 py-0.5 rounded font-bold {{ !empty($pegawai->file_serdik) ? 'bg-blue-50 text-blue-700 border border-blue-200 cursor-pointer hover:bg-blue-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
-                                                @if(!empty($pegawai->file_serdik) && is_array($pegawai->file_serdik)) onclick='openFileModal("Sertifikat Pendidik - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_serdik))' @endif>
-                                                <i class="fas fa-certificate mr-0.5"></i> Serdik: {{ !empty($pegawai->file_serdik) && is_array($pegawai->file_serdik) ? count($pegawai->file_serdik) . ' File' : 'Kosong' }}
+                                            <span class="px-2 py-0.5 rounded font-bold {{ $serdikCount > 0 ? 'bg-blue-50 text-blue-700 border border-blue-200 cursor-pointer hover:bg-blue-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
+                                                @if($serdikCount > 0) onclick='openFileModal("Sertifikat Pendidik - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_serdik))' @endif>
+                                                <i class="fas fa-certificate mr-0.5"></i> Serdik: {{ $serdikCount > 0 ? $serdikCount . ' File' : 'Kosong' }}
                                             </span>
-                                            <span class="px-2 py-0.5 rounded font-bold {{ !empty($pegawai->file_ijazah) ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 cursor-pointer hover:bg-indigo-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
-                                                @if(!empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah)) onclick='openFileModal("Ijazah - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_ijazah))' @endif>
-                                                <i class="fas fa-graduation-cap mr-0.5"></i> Ijazah: {{ !empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah) ? count($pegawai->file_ijazah) . ' File' : 'Kosong' }}
+                                            <span class="px-2 py-0.5 rounded font-bold {{ $ijazahCount > 0 ? 'bg-indigo-50 text-indigo-700 border border-indigo-200 cursor-pointer hover:bg-indigo-100 transition shadow-sm' : 'bg-gray-100 text-gray-400' }}"
+                                                @if($ijazahCount > 0) onclick='openFileModal("Ijazah - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_ijazah))' @endif>
+                                                <i class="fas fa-graduation-cap mr-0.5"></i> Ijazah: {{ $ijazahCount > 0 ? $ijazahCount . ' File' : 'Kosong' }}
                                             </span>
                                         </div>
                                     </td>
                                     <!-- Status Berkas -->
                                     <td class="px-6 py-4">
                                         @php
-                                            $st = $pegawai->status_verifikasi ?? 'DRAFT';
+                                            $st = strtoupper($pegawai->status_verifikasi ?? '');
+                                            $hasUploadedFiles = ($skCount > 0 || $serdikCount > 0 || $ijazahCount > 0);
+                                            if (($st === '' || $st === 'DRAFT' || $st === 'BELUM UPLOAD') && $hasUploadedFiles) {
+                                                $st = 'MENUNGGU';
+                                            }
                                         @endphp
-                                        @if($st === 'DISETUJUI')
+                                        @if($st === 'DISETUJUI' || $st === 'VALID')
                                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                                                 <i class="fas fa-circle-check text-emerald-600"></i> Disetujui &amp; Valid
                                             </span>
-                                        @elseif($st === 'REVISI')
+                                        @elseif($st === 'REVISI' || $st === 'DITOLAK')
                                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
                                                 <i class="fas fa-triangle-exclamation text-rose-600"></i> Revisi (Verifikasi Dinas)
                                             </span>

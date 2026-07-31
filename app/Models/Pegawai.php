@@ -50,12 +50,64 @@ class Pegawai extends Model
         'is_serdik' => 'boolean',
         'tanggal_lahir' => 'date',
         'tgl_verifikasi' => 'datetime',
-        'file_sk' => 'array',
-        'file_serdik' => 'array',
-        'file_ijazah' => 'array',
     ];
 
     protected $appends = ['usia', 'initials', 'profile_picture_url'];
+
+    /**
+     * Helper to safely parse file attributes into an array of file paths.
+     */
+    private function parseFileAttribute($value): array
+    {
+        if (empty($value)) {
+            return [];
+        }
+
+        if (is_array($value)) {
+            return array_values(array_filter($value));
+        }
+
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                return array_values(array_filter($decoded));
+            }
+            $trimmed = trim($value);
+            return $trimmed !== '' ? [$trimmed] : [];
+        }
+
+        return [];
+    }
+
+    public function getFileSkAttribute($value): array
+    {
+        return $this->parseFileAttribute($value);
+    }
+
+    public function getFileSerdikAttribute($value): array
+    {
+        return $this->parseFileAttribute($value);
+    }
+
+    public function getFileIjazahAttribute($value): array
+    {
+        return $this->parseFileAttribute($value);
+    }
+
+    public function setFileSkAttribute($value): void
+    {
+        $this->attributes['file_sk'] = is_null($value) ? null : json_encode($this->parseFileAttribute($value));
+    }
+
+    public function setFileSerdikAttribute($value): void
+    {
+        $this->attributes['file_serdik'] = is_null($value) ? null : json_encode($this->parseFileAttribute($value));
+    }
+
+    public function setFileIjazahAttribute($value): void
+    {
+        $this->attributes['file_ijazah'] = is_null($value) ? null : json_encode($this->parseFileAttribute($value));
+    }
 
     /**
      * Many-to-Many: Pegawai bisa bertugas di banyak sekolah.

@@ -76,26 +76,26 @@ class OperatorVerifikasiController extends Controller
         $updated = false;
 
         if ($request->hasFile('file_sk')) {
-            if ($pegawai->file_sk) Storage::disk('public')->delete($pegawai->file_sk);
-            $pegawai->file_sk = $request->file('file_sk')->store('berkas_pegawai/sk', 'public');
+            if (!empty($pegawai->file_sk)) Storage::disk('public')->delete($pegawai->file_sk);
+            $pegawai->file_sk = [$request->file('file_sk')->store('berkas_pegawai/sk', 'public')];
             $updated = true;
         }
 
         if ($request->hasFile('file_serdik')) {
-            if ($pegawai->file_serdik) Storage::disk('public')->delete($pegawai->file_serdik);
-            $pegawai->file_serdik = $request->file('file_serdik')->store('berkas_pegawai/serdik', 'public');
+            if (!empty($pegawai->file_serdik)) Storage::disk('public')->delete($pegawai->file_serdik);
+            $pegawai->file_serdik = [$request->file('file_serdik')->store('berkas_pegawai/serdik', 'public')];
             $updated = true;
         }
 
         if ($request->hasFile('file_ijazah')) {
-            if ($pegawai->file_ijazah) Storage::disk('public')->delete($pegawai->file_ijazah);
-            $pegawai->file_ijazah = $request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public');
+            if (!empty($pegawai->file_ijazah)) Storage::disk('public')->delete($pegawai->file_ijazah);
+            $pegawai->file_ijazah = [$request->file('file_ijazah')->store('berkas_pegawai/ijazah', 'public')];
             $updated = true;
         }
 
         if ($updated) {
-            // Reset status to Menunggu and clear previous rejection note for re-verification
-            $pegawai->status_verifikasi = 'Menunggu';
+            // Reset status to MENUNGGU and clear previous rejection note for re-verification
+            $pegawai->status_verifikasi = 'MENUNGGU';
             $pegawai->catatan_verifikasi = null;
             $pegawai->save();
 

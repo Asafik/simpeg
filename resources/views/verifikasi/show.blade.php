@@ -150,7 +150,7 @@
                                     <p class="font-bold text-gray-900 text-xs">1. SK Kepegawaian (SK Jabatan/Pengangkatan)</p>
                                     <p class="text-[11px] text-gray-400 mt-0.5">
                                         Status File: 
-                                        @if($pegawai->file_sk)
+                                        @if(count($pegawai->file_sk) > 0)
                                             <span class="font-bold text-emerald-600">Tersedia (PDF / Gambar)</span>
                                         @else
                                             <span class="font-bold text-gray-400">Belum Diunggah</span>
@@ -159,7 +159,7 @@
                                 </div>
                             </div>
                             <div>
-                                @if(!empty($pegawai->file_sk) && is_array($pegawai->file_sk) && count($pegawai->file_sk) > 0)
+                                @if(count($pegawai->file_sk) > 0)
                                     <button type="button" onclick='openFileModal("SK Kepegawaian - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_sk))' class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
                                         <i class="fas fa-images"></i> Lihat {{ count($pegawai->file_sk) }} Berkas
                                     </button>
@@ -179,7 +179,7 @@
                                     <p class="font-bold text-gray-900 text-xs">2. Sertifikat Pendidik (Serdik)</p>
                                     <p class="text-[11px] text-gray-400 mt-0.5">
                                         Status File: 
-                                        @if($pegawai->file_serdik)
+                                        @if(count($pegawai->file_serdik) > 0)
                                             <span class="font-bold text-emerald-600">Tersedia (PDF / Gambar)</span>
                                         @else
                                             <span class="font-bold text-gray-400">Belum Diunggah</span>
@@ -188,7 +188,7 @@
                                 </div>
                             </div>
                             <div>
-                                @if(!empty($pegawai->file_serdik) && is_array($pegawai->file_serdik) && count($pegawai->file_serdik) > 0)
+                                @if(count($pegawai->file_serdik) > 0)
                                     <button type="button" onclick='openFileModal("Sertifikat Pendidik - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_serdik))' class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
                                         <i class="fas fa-images"></i> Lihat {{ count($pegawai->file_serdik) }} Berkas
                                     </button>
@@ -208,7 +208,7 @@
                                     <p class="font-bold text-gray-900 text-xs">3. Ijazah Pendidikan Terakhir</p>
                                     <p class="text-[11px] text-gray-400 mt-0.5">
                                         Status File: 
-                                        @if($pegawai->file_ijazah)
+                                        @if(count($pegawai->file_ijazah) > 0)
                                             <span class="font-bold text-emerald-600">Tersedia (PDF / Gambar)</span>
                                         @else
                                             <span class="font-bold text-gray-400">Belum Diunggah</span>
@@ -217,7 +217,7 @@
                                 </div>
                             </div>
                             <div>
-                                @if(!empty($pegawai->file_ijazah) && is_array($pegawai->file_ijazah) && count($pegawai->file_ijazah) > 0)
+                                @if(count($pegawai->file_ijazah) > 0)
                                     <button type="button" onclick='openFileModal("Ijazah Terakhir - {{ addslashes($pegawai->nama_lengkap) }}", @json($pegawai->file_ijazah))' class="px-3.5 py-1.5 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
                                         <i class="fas fa-images"></i> Lihat {{ count($pegawai->file_ijazah) }} Berkas
                                     </button>
