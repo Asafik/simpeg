@@ -866,17 +866,37 @@
                 
                 if (files && files.length > 0) {
                     files.forEach(file => {
-                        const url = '{{ asset("files") }}/' + file;
-                        container.innerHTML += `
-                            <div class="group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all">
-                                <a href="${url}" target="_blank" class="block">
-                                    <img src="${url}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 bg-gray-100">
-                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <span class="text-white text-[10px] font-bold bg-blue-600/80 px-3 py-1.5 rounded-full backdrop-blur-sm shadow-lg"><i class="fas fa-external-link-alt mr-1"></i> Buka Penuh</span>
+                        const cleanFile = String(file).replace(/^["']|["']$/g, '').replace(/\\/g, '/');
+                        const url = '{{ asset("files") }}/' + cleanFile;
+                        const ext = cleanFile.split('.').pop().toLowerCase();
+                        
+                        if (ext === 'pdf') {
+                            container.innerHTML += `
+                                <div class="group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all bg-slate-50 flex flex-col items-center justify-center p-4 min-h-[220px]">
+                                    <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xl font-bold mb-2 shadow-sm">
+                                        <i class="fas fa-file-pdf"></i>
                                     </div>
-                                </a>
-                            </div>
-                        `;
+                                    <p class="text-xs font-bold text-gray-800 text-center mb-1 truncate max-w-full px-2" title="${cleanFile.split('/').pop()}">${cleanFile.split('/').pop()}</p>
+                                    <p class="text-[10px] text-gray-400 font-medium mb-3">Dokumen Berkas PDF</p>
+                                    <div class="flex items-center gap-2 w-full mt-auto">
+                                        <a href="${url}" target="_blank" class="flex-1 py-2 px-3 bg-blue-800 hover:bg-blue-900 text-white rounded-lg text-xs font-bold text-center transition flex items-center justify-center gap-1.5 shadow-sm">
+                                            <i class="fas fa-external-link-alt text-[10px]"></i> Buka / Pratinjau PDF
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            container.innerHTML += `
+                                <div class="group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all">
+                                    <a href="${url}" target="_blank" class="block">
+                                        <img src="${url}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300 bg-gray-100">
+                                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <span class="text-white text-[10px] font-bold bg-blue-600/80 px-3 py-1.5 rounded-full backdrop-blur-sm shadow-lg"><i class="fas fa-external-link-alt mr-1"></i> Buka Penuh</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            `;
+                        }
                     });
                 } else {
                     container.innerHTML = '<div class="col-span-full text-center text-xs text-gray-400 py-8 italic">Tidak ada berkas</div>';
