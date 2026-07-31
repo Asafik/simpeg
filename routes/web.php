@@ -24,8 +24,10 @@ Route::get('/landing', [LandingController::class, 'index'])->name('landing');
 
 // Secure File Serving Route (Bypasses Hostinger physical /storage 403 block)
 $fileServerHandler = function ($path) {
-    $path = str_replace('..', '', $path);
-    $cleanPath = preg_replace('#^(storage/|public/|app/public/|app/)#', '', ltrim($path, '/'));
+    $path = urldecode($path);
+    $path = str_replace(['..', '"', "'"], '', $path);
+    $cleanPath = preg_replace('#[\\\\/]+#', '/', $path);
+    $cleanPath = preg_replace('#^(storage/|public/|app/public/|app/)#', '', ltrim($cleanPath, '/'));
 
     $possiblePaths = [
         storage_path('app/public/' . $cleanPath),

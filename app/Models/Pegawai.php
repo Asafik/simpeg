@@ -55,7 +55,22 @@ class Pegawai extends Model
     protected $appends = ['usia', 'initials', 'profile_picture_url'];
 
     /**
-     * Helper to safely parse file attributes into an array of file paths.
+     * Helper to clean single file path string (remove quotes, extra slashes, brackets).
+     */
+    private function cleanFilePath($path): string
+    {
+        if (!is_string($path)) {
+            return '';
+        }
+        // Remove quotes, brackets, NULL bytes, whitespace
+        $clean = trim($path, " \t\n\r\0\x0B\"'[]");
+        // Normalize multiple slashes and backslashes into single slash
+        $clean = preg_replace('#[\\\\/]+#', '/', $clean);
+        return trim($clean, '/');
+    }
+
+    /**
+     * Helper to safely parse file attributes into an array of clean file paths.
      */
     private function parseFileAttribute($value): array
     {
@@ -63,20 +78,30 @@ class Pegawai extends Model
             return [];
         }
 
-        if (is_array($value)) {
-            return array_values(array_filter($value));
-        }
+        $items = [];
 
-        if (is_string($value)) {
+        if (is_array($value)) {
+            $items = $value;
+        } elseif (is_string($value)) {
             $decoded = json_decode($value, true);
             if (is_array($decoded)) {
-                return array_values(array_filter($decoded));
+                $items = $decoded;
+            } elseif (is_string($decoded)) {
+                $items = [$decoded];
+            } else {
+                $items = [$value];
             }
-            $trimmed = trim($value);
-            return $trimmed !== '' ? [$trimmed] : [];
         }
 
-        return [];
+        $result = [];
+        foreach ($items as $item) {
+            $cleaned = $this->cleanFilePath($item);
+            if ($cleaned !== '') {
+                $result[] = $cleaned;
+            }
+        }
+
+        return array_values($result);
     }
 
     public function getFileSkAttribute($value): array
