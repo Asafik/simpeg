@@ -17,6 +17,12 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+
+        // Redirect Operator Sekolah to dedicated Operator Dashboard
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            return redirect()->route('operator.dashboard');
+        }
+
         $pegawaiQuery = Pegawai::query();
         $sekolahQuery = Sekolah::query();
 
@@ -48,28 +54,52 @@ class DashboardController extends Controller
         $totalPlt = (clone $sekolahQuery)->where('status_kepala_sekolah', 'Plt')->count();
         $totalPlh = (clone $sekolahQuery)->where('status_kepala_sekolah', 'Plh')->count();
 
-        // Scope operator count by role
+        // Chart 1 & Chart 2 Stats based on user role
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
             $totalOperator = User::where('role', 'OPERATOR_SEKOLAH')->where('sekolah_id', $user->sekolah_id ?? -1)->count();
+
+            // Chart 1 for Operator: Status Kepegawaian Sekolah Operator
+            $chart1Title = "Komposisi Kepegawaian (Sekolah Anda)";
+            $chart1Sub = "Distribusi status kepegawaian internal di sekolah tempat Anda bertugas.";
+            $chart1DatasetLabel = "Jumlah Pegawai";
+            $kecamatanLabels = ['PNS', 'PPPK', 'PPPK PW', 'Non-ASN'];
+            $kecamatanData = [$totalPns, $totalPppk, $totalPppkPw, $totalNonAsn];
+
+            // Chart 2 for Operator: Sertifikasi Pendidik (Serdik)
+            $totalSerdik = (clone $pegawaiQuery)->where('is_serdik', true)->count();
+            $totalNonSerdik = (clone $pegawaiQuery)->where(function($q) {
+                $q->where('is_serdik', false)->orWhereNull('is_serdik');
+            })->count();
+
+            $chart2Title = "Sertifikasi Pendidik (Serdik)";
+            $chart2Sub = "Perbandingan Pendidik yang Sudah & Belum Memiliki Serdik.";
+            $statusKepsekLabels = ['Sudah Serdik', 'Belum Serdik'];
+            $statusKepsekData = [$totalSerdik, $totalNonSerdik];
         } else {
             $totalOperator = User::where('role', 'OPERATOR_SEKOLAH')->count();
+
+            // Chart 1 for Admin: Top 7 Kecamatan by Total Schools
+            $chart1Title = "Persebaran Satuan Pendidikan Terbanyak (Per Kecamatan)";
+            $chart1Sub = "Top 7 Kecamatan dengan jumlah sekolah terbanyak di database real.";
+            $chart1DatasetLabel = "Jumlah Sekolah";
+
+            $kecamatanStats = Sekolah::select('kecamatan', DB::raw('count(*) as total'))
+                ->whereNotNull('kecamatan')
+                ->where('kecamatan', '!=', '')
+                ->groupBy('kecamatan')
+                ->orderByDesc('total')
+                ->limit(7)
+                ->get();
+
+            $kecamatanLabels = $kecamatanStats->pluck('kecamatan')->toArray();
+            $kecamatanData = $kecamatanStats->pluck('total')->toArray();
+
+            // Chart 2 for Admin: Status Kepala Sekolah Breakdown
+            $chart2Title = "Status Kepala Sekolah";
+            $chart2Sub = "Perbandingan status Kepala Sekolah Definitif vs Plt/Plh.";
+            $statusKepsekLabels = ['Definitif', 'Plt', 'Plh'];
+            $statusKepsekData = [$totalDefinitif, $totalPlt, $totalPlh];
         }
-
-        // Chart 1: Top 7 Kecamatan by Total Schools
-        $kecamatanStats = Sekolah::select('kecamatan', DB::raw('count(*) as total'))
-            ->whereNotNull('kecamatan')
-            ->where('kecamatan', '!=', '')
-            ->groupBy('kecamatan')
-            ->orderByDesc('total')
-            ->limit(7)
-            ->get();
-
-        $kecamatanLabels = $kecamatanStats->pluck('kecamatan')->toArray();
-        $kecamatanData = $kecamatanStats->pluck('total')->toArray();
-
-        // Chart 2: Status Kepala Sekolah Breakdown
-        $statusKepsekLabels = ['Definitif', 'Plt', 'Plh'];
-        $statusKepsekData = [$totalDefinitif, $totalPlt, $totalPlh];
 
         // Recent Sekolahs & Recent Pegawais List
         $recentSekolahs = (clone $sekolahQuery)->withCount('pegawais')->with('users')->latest()->take(6)->get();
@@ -91,6 +121,11 @@ class DashboardController extends Controller
             'totalPlt',
             'totalPlh',
             'totalOperator',
+            'chart1Title',
+            'chart1Sub',
+            'chart1DatasetLabel',
+            'chart2Title',
+            'chart2Sub',
             'kecamatanLabels',
             'kecamatanData',
             'statusKepsekLabels',

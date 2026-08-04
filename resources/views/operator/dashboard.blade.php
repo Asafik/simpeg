@@ -3,8 +3,6 @@
 @section('title', 'SIMPEG-SP - Dashboard Operator Sekolah')
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
 
     <!-- ===== HERO BLUE WELCOME BANNER (Hope UI Design - Operator Palette) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-slate-900 text-white px-6 md:px-10 pt-8 md:pt-10 pb-20 md:pb-24 shadow-lg shadow-blue-950/20 overflow-hidden">

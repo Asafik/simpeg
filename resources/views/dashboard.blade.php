@@ -49,194 +49,221 @@
 
     <!-- ===== MAIN CONTENT BODY (With padding & overlapping stat cards) ===== -->
     <div class="px-4 md:px-8 pb-8 flex-1">
-        <!-- ===== OVERLAPPING SUMMARY CARDS (Exact Match to Hope UI Card Style) ===== -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 -mt-12 md:-mt-14 mb-6 relative z-20">
-            <!-- Card 1: Total Satuan Pendidikan -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-blue-800 flex items-center justify-center text-blue-800 font-bold bg-blue-900/10 flex-shrink-0">
-                        <i class="fas fa-school text-base"></i>
+        @if(Auth::user() && method_exists(Auth::user(), 'isOperatorSekolah') && Auth::user()->isOperatorSekolah())
+            <!-- ===== OPERATOR SUMMARY CARDS (4 CARDS: PEGAWAI INTERNAL SEKOLAH) ===== -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 -mt-12 md:-mt-14 mb-6 relative z-20">
+                <!-- Card 1: Total Pegawai Sekolah -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-blue-800 flex items-center justify-center text-blue-800 font-bold bg-blue-50 flex-shrink-0">
+                            <i class="fas fa-users text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Total Pegawai</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPegawai) }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">Satuan Pendidikan</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSekolah) }}</p>
-                    </div>
+                    <a href="{{ route('pegawai.index') }}" class="p-1 hover:text-blue-800 transition">
+                        <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                    </a>
                 </div>
-                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+
+                <!-- Card 2: Pegawai PNS -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-emerald-500 flex items-center justify-center text-emerald-600 font-bold bg-emerald-50 flex-shrink-0">
+                            <i class="fas fa-user-shield text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Pegawai PNS</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPns) }}</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                </div>
+
+                <!-- Card 3: Pegawai PPPK & PW -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-purple-500 flex items-center justify-center text-purple-600 font-bold bg-purple-50 flex-shrink-0">
+                            <i class="fas fa-user-check text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">PPPK & PW</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPppk + $totalPppkPw) }}</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                </div>
+
+                <!-- Card 4: Pegawai Non-ASN -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50 flex-shrink-0">
+                            <i class="fas fa-user-clock text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Non-ASN / Honorer</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalNonAsn) }}</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                </div>
+            </div>
+        @else
+            <!-- ===== ADMIN DINAS SUMMARY CARDS (5 CARDS) ===== -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 -mt-12 md:-mt-14 mb-6 relative z-20">
+                <!-- Card 1: Total Satuan Pendidikan -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-blue-800 flex items-center justify-center text-blue-800 font-bold bg-blue-900/10 flex-shrink-0">
+                            <i class="fas fa-school text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Satuan Pendidikan</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSekolah) }}</p>
+                        </div>
+                    </div>
                     <a href="{{ route('sekolah.index') }}" class="p-1 hover:text-blue-700 transition">
                         <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                     </a>
-                @else
+                </div>
+
+                <!-- Card 2: Kepala Sekolah Definitif -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-emerald-500 flex items-center justify-center text-emerald-600 font-bold bg-emerald-50/50 flex-shrink-0">
+                            <i class="fas fa-user-check text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Kepsek Definitif</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalDefinitif) }}</p>
+                        </div>
+                    </div>
                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                @endif
-            </div>
-
-            <!-- Card 2: Kepala Sekolah Definitif -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-emerald-500 flex items-center justify-center text-emerald-600 font-bold bg-emerald-50/50 flex-shrink-0">
-                        <i class="fas fa-user-check text-base"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">Kepsek Definitif</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalDefinitif) }}</p>
-                    </div>
                 </div>
-                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-            </div>
 
-            <!-- Card 3: Kepsek Plt / Plh -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0">
-                        <i class="fas fa-user-clock text-base"></i>
+                <!-- Card 3: Kepsek Plt / Plh -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0">
+                            <i class="fas fa-user-clock text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Kepsek Plt / Plh</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPlt + $totalPlh) }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">Kepsek Plt / Plh</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPlt + $totalPlh) }}</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-            </div>
-
-            <!-- Card 4: Akun Operator Sekolah -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-indigo-500 flex items-center justify-center text-indigo-600 font-bold bg-indigo-50/50 flex-shrink-0">
-                        <i class="fas fa-id-badge text-base"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">Akun Operator</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalOperator) }}</p>
-                    </div>
-                </div>
-                <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-            </div>
-
-            <!-- Card 5: Total Pegawai -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-purple-600 flex items-center justify-center text-purple-600 font-bold bg-purple-50/50 flex-shrink-0">
-                        <i class="fas fa-users text-base"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">Total Pegawai</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPegawai) }}</p>
-                    </div>
-                </div>
-                <a href="{{ route('pegawai.index') }}" class="p-1 hover:text-purple-700 transition">
                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- ===== TINGKATAN / JENJANG SUMMARY CARDS & MULTI-SEKOLAH (5 CARDS PAS) ===== -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-6 relative z-20">
-            <!-- Card TK -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-pink-500 flex items-center justify-center text-pink-600 font-bold bg-pink-50/50 flex-shrink-0">
-                        <i class="fas fa-child text-base"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">TK (Taman Kanak-Kanak)</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalTK) }}</p>
-                    </div>
                 </div>
-                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+
+                <!-- Card 4: Akun Operator Sekolah -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-indigo-500 flex items-center justify-center text-indigo-600 font-bold bg-indigo-50/50 flex-shrink-0">
+                            <i class="fas fa-id-badge text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Akun Operator</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalOperator) }}</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                </div>
+
+                <!-- Card 5: Total Pegawai -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-purple-600 flex items-center justify-center text-purple-600 font-bold bg-purple-50/50 flex-shrink-0">
+                            <i class="fas fa-users text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">Total Pegawai</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalPegawai) }}</p>
+                        </div>
+                    </div>
+                    <a href="{{ route('pegawai.index') }}" class="p-1 hover:text-purple-700 transition">
+                        <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ===== TINGKATAN / JENJANG SUMMARY CARDS FOR ADMIN DINAS ===== -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 relative z-20">
+                <!-- Card TK -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-pink-500 flex items-center justify-center text-pink-600 font-bold bg-pink-50/50 flex-shrink-0">
+                            <i class="fas fa-child text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">TK (Taman Kanak-Kanak)</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalTK) }}</p>
+                        </div>
+                    </div>
                     <a href="{{ route('sekolah.index', ['jenjang' => 'TK']) }}" class="p-1 hover:text-pink-700 transition">
                         <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                     </a>
-                @else
-                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                @endif
-            </div>
-
-            <!-- Card SD -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-sky-500 flex items-center justify-center text-sky-600 font-bold bg-sky-50/50 flex-shrink-0">
-                        <i class="fas fa-book-open text-base"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">SD (Sekolah Dasar)</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSD) }}</p>
-                    </div>
                 </div>
-                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+
+                <!-- Card SD -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-sky-500 flex items-center justify-center text-sky-600 font-bold bg-sky-50/50 flex-shrink-0">
+                            <i class="fas fa-book-open text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">SD (Sekolah Dasar)</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSD) }}</p>
+                        </div>
+                    </div>
                     <a href="{{ route('sekolah.index', ['jenjang' => 'SD']) }}" class="p-1 hover:text-sky-700 transition">
                         <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                     </a>
-                @else
-                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                @endif
-            </div>
-
-            <!-- Card SMP -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-violet-500 flex items-center justify-center text-violet-600 font-bold bg-violet-50/50 flex-shrink-0">
-                        <i class="fas fa-graduation-cap text-base"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">SMP (Menengah Pertama)</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSMP) }}</p>
-                    </div>
                 </div>
-                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+
+                <!-- Card SMP -->
+                <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-violet-500 flex items-center justify-center text-violet-600 font-bold bg-violet-50/50 flex-shrink-0">
+                            <i class="fas fa-graduation-cap text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium">SMP (Menengah Pertama)</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSMP) }}</p>
+                        </div>
+                    </div>
                     <a href="{{ route('sekolah.index', ['jenjang' => 'SMP']) }}" class="p-1 hover:text-violet-700 transition">
                         <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                     </a>
-                @else
-                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                @endif
+                </div>
+
+                <!-- Card Multi-Sekolah (> 1 Sekolah) -->
+                <a href="{{ route('pegawai.index', ['multi_sekolah' => '1']) }}" class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3 hover:border-amber-300 hover:shadow-amber-100 transition group cursor-pointer" title="Klik untuk lihat daftar Pegawai yang Bertugas di > 1 Sekolah">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0 group-hover:scale-105 transition">
+                            <i class="fas fa-layer-group text-base"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 font-medium group-hover:text-amber-800 transition">Multi-Sekolah (&gt;1)</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-amber-700 mt-0.5">{{ number_format($totalMultiSekolah) }}</p>
+                        </div>
+                    </div>
+                    <div class="p-1 text-gray-300 group-hover:text-amber-600 transition">
+                        <i class="fas fa-chevron-right text-[10px]"></i>
+                    </div>
+                </a>
             </div>
+        @endif
 
-            <!-- Card SMA -->
-            <div class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-orange-500 flex items-center justify-center text-orange-600 font-bold bg-orange-50/50 flex-shrink-0">
-                        <i class="fas fa-building-columns text-base"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium">SMA (Menengah Atas)</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSMA) }}</p>
-                    </div>
-                </div>
-                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
-                    <a href="{{ route('sekolah.index', ['jenjang' => 'SMA']) }}" class="p-1 hover:text-orange-700 transition">
-                        <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                    </a>
-                @else
-                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                @endif
-            </div>
-
-            <!-- Card Multi-Sekolah (> 1 Sekolah) -->
-            <a href="{{ route('pegawai.index', ['multi_sekolah' => '1']) }}" class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3 hover:border-amber-300 hover:shadow-amber-100 transition group cursor-pointer" title="Klik untuk lihat daftar Pegawai yang Bertugas di > 1 Sekolah">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0 group-hover:scale-105 transition">
-                        <i class="fas fa-layer-group text-base"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-400 font-medium group-hover:text-amber-800 transition">Multi-Sekolah (&gt;1)</p>
-                        <p class="text-xl md:text-2xl font-extrabold text-amber-700 mt-0.5">{{ number_format($totalMultiSekolah) }}</p>
-                    </div>
-                </div>
-                <div class="p-1 text-gray-300 group-hover:text-amber-600 transition">
-                    <i class="fas fa-chevron-right text-[10px]"></i>
-                </div>
-            </a>
-        </div>
-
-        <!-- ===== CHARTS ROW (DISTRIBUSI KECAMATAN & STATUS KEPALA SEKOLAH) ===== -->
+        <!-- ===== CHARTS ROW (DISTRIBUSI KECAMATAN / STATUS KEPEGAWAIAN & STATUS KEPALA SEKOLAH / SERDIK) ===== -->
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
-            <!-- Chart 1: Top Kecamatan Satuan Pendidikan (2 Cols) -->
+            <!-- Chart 1: Bar Chart (2 Cols) -->
             <div class="xl:col-span-2 bg-white rounded-xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
                 <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <div>
-                        <h3 class="text-base font-bold text-gray-800">Persebaran Satuan Pendidikan Terbanyak (Per Kecamatan)</h3>
-                        <p class="text-xs text-gray-400 mt-0.5">Top 7 Kecamatan dengan jumlah sekolah terbanyak di database real.</p>
+                        <h3 class="text-base font-bold text-gray-800">{{ $chart1Title ?? 'Persebaran Satuan Pendidikan Terbanyak (Per Kecamatan)' }}</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">{{ $chart1Sub ?? 'Top 7 Kecamatan dengan jumlah sekolah terbanyak di database real.' }}</p>
                     </div>
                     @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
                         <a href="{{ route('sekolah.index') }}" class="text-xs font-semibold text-blue-800 hover:text-blue-950 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 transition">
@@ -249,14 +276,14 @@
                 </div>
             </div>
 
-            <!-- Chart 2: Doughnut Status Kepala Sekolah (1 Col) -->
+            <!-- Chart 2: Doughnut Chart (1 Col) -->
             <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm flex flex-col justify-between">
                 <div>
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="font-bold text-gray-800 text-sm">Status Kepala Sekolah</h3>
+                        <h3 class="font-bold text-gray-800 text-sm">{{ $chart2Title ?? 'Status Kepala Sekolah' }}</h3>
                         <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Real Data</span>
                     </div>
-                    <p class="text-xs text-gray-400 mb-4">Perbandingan status Kepala Sekolah Definitif vs Plt/Plh.</p>
+                    <p class="text-xs text-gray-400 mb-4">{{ $chart2Sub ?? 'Perbandingan status Kepala Sekolah Definitif vs Plt/Plh.' }}</p>
                 </div>
                 
                 <div class="chart-container relative my-auto" style="height: 190px;">
@@ -264,14 +291,12 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-gray-100 text-xs">
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-                        <span class="text-gray-600">Definitif ({{ $totalDefinitif }})</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-                        <span class="text-gray-600">Plt ({{ $totalPlt }})</span>
-                    </div>
+                    @foreach($statusKepsekLabels as $idx => $label)
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full {{ $idx === 0 ? 'bg-emerald-500' : ($idx === 1 ? 'bg-rose-500' : 'bg-amber-500') }}"></div>
+                            <span class="text-gray-600">{{ $label }} ({{ $statusKepsekData[$idx] ?? 0 }})</span>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -355,7 +380,7 @@
 @push('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Chart 1: Bar Chart Top Kecamatan
+        // Chart 1: Bar Chart
         const ctxKec = document.getElementById('kecamatanChart')?.getContext('2d');
         if (ctxKec) {
             new Chart(ctxKec, {
@@ -363,7 +388,7 @@
                 data: {
                     labels: {!! json_encode($kecamatanLabels) !!},
                     datasets: [{
-                        label: 'Jumlah Sekolah',
+                        label: {!! json_encode($chart1DatasetLabel ?? 'Jumlah Data') !!},
                         data: {!! json_encode($kecamatanData) !!},
                         backgroundColor: '#1e3a8a',
                         borderRadius: 8,

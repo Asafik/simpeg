@@ -3,8 +3,6 @@
 @section('title', 'Verifikasi & Unggah Berkas - ' . ($sekolah->nama_sekolah ?? 'Operator Sekolah'))
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
 
     <!-- ===== HERO BLUE BANNER (Hope UI Design - Operator Palette) ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-slate-900 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">
@@ -206,10 +204,38 @@
             @endforelse
         </div>
 
-        <!-- Pagination -->
-        <div class="pt-4">
-            {{ $pegawais->links() }}
-        </div>
+        <!-- Pagination (Matches Custom SIMPEG-SP UI Styling) -->
+        @if(isset($pegawais) && method_exists($pegawais, 'hasPages') && $pegawais->hasPages())
+            <div class="mt-6 p-4 bg-white rounded-xl border border-gray-100 flex flex-col lg:flex-row items-center justify-between gap-3.5 shadow-sm text-center lg:text-left">
+                <span class="text-xs text-gray-500 font-medium">
+                    Halaman <span class="font-bold text-gray-800">{{ $pegawais->currentPage() }}</span> dari <span class="font-bold text-gray-800">{{ $pegawais->lastPage() }}</span> (Menampilkan {{ $pegawais->firstItem() }} - {{ $pegawais->lastItem() }} dari {{ $pegawais->total() }} Data Verifikasi)
+                </span>
+                <div class="flex items-center justify-center gap-1">
+                    {{-- Previous Page Link --}}
+                    @if ($pegawais->onFirstPage())
+                        <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-left"></i></span>
+                    @else
+                        <a href="{{ $pegawais->previousPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-800 bg-white transition"><i class="fas fa-chevron-left"></i></a>
+                    @endif
+
+                    {{-- Pagination Elements --}}
+                    @foreach ($pegawais->getUrlRange(max(1, $pegawais->currentPage() - 2), min($pegawais->lastPage(), $pegawais->currentPage() + 2)) as $page => $url)
+                        @if ($page == $pegawais->currentPage())
+                            <span class="px-3 py-1.5 text-xs bg-blue-800 text-white font-bold rounded-lg shadow-sm">{{ $page }}</span>
+                        @else
+                            <a href="{{ $url }}" class="px-3 py-1.5 text-xs text-gray-600 hover:bg-blue-50 hover:text-blue-800 bg-white rounded-lg transition font-medium border border-gray-200">{{ $page }}</a>
+                        @endif
+                    @endforeach
+
+                    {{-- Next Page Link --}}
+                    @if ($pegawais->hasMorePages())
+                        <a href="{{ $pegawais->nextPageUrl() }}" class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-800 bg-white transition"><i class="fas fa-chevron-right"></i></a>
+                    @else
+                        <span class="px-3 py-1.5 text-xs border border-gray-200 rounded-lg text-gray-300 cursor-not-allowed bg-white"><i class="fas fa-chevron-right"></i></span>
+                    @endif
+                </div>
+            </div>
+        @endif
     </div>
 
     <!-- MODAL UNGGAH BERKAS OPERATOR -->

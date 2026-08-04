@@ -84,28 +84,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // === SETTING ACCORDION SUBMENU TOGGLE (WITH SMOOTH SLIDE ANIMATION) ===
-    const settingMenuBtn = document.getElementById('settingMenuBtn') || document.getElementById('settingSubmenuToggleBtn');
-    const settingSubmenu = document.getElementById('settingSubmenu') || document.getElementById('settingSubmenuList');
-    const settingArrow = document.getElementById('settingArrow') || document.getElementById('settingSubmenuArrow');
-
-    if (settingMenuBtn && settingSubmenu) {
-        settingMenuBtn.addEventListener('click', function(e) {
+    const settingButtons = document.querySelectorAll('#settingMenuBtn, #settingSubmenuToggleBtn');
+    settingButtons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const isExpanded = settingSubmenu.classList.contains('accordion-expanded') || settingSubmenu.classList.contains('open-submenu');
-            
-            if (isExpanded) {
-                settingSubmenu.classList.remove('accordion-expanded', 'open-submenu');
-                if (settingArrow) {
-                    settingArrow.classList.remove('rotate-90');
-                }
-            } else {
-                settingSubmenu.classList.add('accordion-expanded');
-                if (settingArrow) {
-                    settingArrow.classList.add('rotate-90');
+            const parent = btn.closest('.relative') || btn.parentElement;
+            const submenu = (parent ? parent.querySelector('#settingSubmenu, #settingSubmenuList, .sidebar-accordion-submenu') : null) 
+                            || document.getElementById('settingSubmenu') 
+                            || document.getElementById('settingSubmenuList');
+            const arrow = btn.querySelector('#settingArrow, #settingSubmenuArrow') || document.getElementById('settingArrow');
+
+            if (submenu) {
+                const isExpanded = submenu.classList.contains('accordion-expanded') || submenu.classList.contains('open-submenu');
+                if (isExpanded) {
+                    submenu.classList.remove('accordion-expanded', 'open-submenu');
+                    if (arrow) arrow.classList.remove('rotate-90');
+                } else {
+                    submenu.classList.add('accordion-expanded');
+                    if (arrow) arrow.classList.add('rotate-90');
                 }
             }
         });
-    }
+    });
 
     // === USER PROFILE DROPDOWN TOGGLE ===
     const userDropdownBtn = document.getElementById('userDropdownBtn');
