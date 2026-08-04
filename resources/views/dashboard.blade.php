@@ -26,13 +26,24 @@
                     Halo, {{ Auth::user()->name ?? 'Administrator Dinas' }}! 👋
                 </h2>
                 <p class="text-blue-100 text-xs md:text-sm font-normal leading-relaxed opacity-90">
-                    Selamat datang di GTK. Pantau persebaran <strong>{{ number_format($totalSekolah) }} Satuan Pendidikan</strong>, data Kepala Sekolah, serta status akun Operator Sekolah secara real-time.
+                    @if(Auth::user() && method_exists(Auth::user(), 'isOperatorSekolah') && Auth::user()->isOperatorSekolah())
+                        Selamat datang di GTK. Pantau &amp; kelola data Pegawai (PTK) sekolah Anda secara real-time.
+                    @else
+                        Selamat datang di GTK. Pantau persebaran <strong>{{ number_format($totalSekolah) }} Satuan Pendidikan</strong>, data Kepala Sekolah, serta status akun Operator Sekolah secara real-time.
+                    @endif
                 </p>
             </div>
-            <a href="{{ route('sekolah.index') }}" class="bg-white text-blue-950 hover:bg-blue-50 text-xs font-bold px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 transition transform hover:-translate-y-0.5">
-                <i class="fas fa-school text-xs"></i>
-                <span>Kelola Sekolah</span>
-            </a>
+            @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                <a href="{{ route('sekolah.index') }}" class="bg-white text-blue-950 hover:bg-blue-50 text-xs font-bold px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 transition transform hover:-translate-y-0.5">
+                    <i class="fas fa-school text-xs"></i>
+                    <span>Kelola Sekolah</span>
+                </a>
+            @else
+                <a href="{{ route('pegawai.index') }}" class="bg-white text-blue-950 hover:bg-blue-50 text-xs font-bold px-4 py-2.5 rounded-lg shadow-md flex items-center gap-2 transition transform hover:-translate-y-0.5">
+                    <i class="fas fa-users text-xs"></i>
+                    <span>Kelola Data Pegawai</span>
+                </a>
+            @endif
         </div>
     </div>
 
@@ -51,9 +62,13 @@
                         <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSekolah) }}</p>
                     </div>
                 </div>
-                <a href="{{ route('sekolah.index') }}" class="p-1 hover:text-blue-700 transition">
+                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                    <a href="{{ route('sekolah.index') }}" class="p-1 hover:text-blue-700 transition">
+                        <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                    </a>
+                @else
                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                </a>
+                @endif
             </div>
 
             <!-- Card 2: Kepala Sekolah Definitif -->
@@ -128,9 +143,13 @@
                         <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalTK) }}</p>
                     </div>
                 </div>
-                <a href="{{ route('sekolah.index', ['jenjang' => 'TK']) }}" class="p-1 hover:text-pink-700 transition">
+                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                    <a href="{{ route('sekolah.index', ['jenjang' => 'TK']) }}" class="p-1 hover:text-pink-700 transition">
+                        <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                    </a>
+                @else
                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                </a>
+                @endif
             </div>
 
             <!-- Card SD -->
@@ -144,9 +163,13 @@
                         <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSD) }}</p>
                     </div>
                 </div>
-                <a href="{{ route('sekolah.index', ['jenjang' => 'SD']) }}" class="p-1 hover:text-sky-700 transition">
+                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                    <a href="{{ route('sekolah.index', ['jenjang' => 'SD']) }}" class="p-1 hover:text-sky-700 transition">
+                        <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                    </a>
+                @else
                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                </a>
+                @endif
             </div>
 
             <!-- Card SMP -->
@@ -160,9 +183,13 @@
                         <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSMP) }}</p>
                     </div>
                 </div>
-                <a href="{{ route('sekolah.index', ['jenjang' => 'SMP']) }}" class="p-1 hover:text-violet-700 transition">
+                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                    <a href="{{ route('sekolah.index', ['jenjang' => 'SMP']) }}" class="p-1 hover:text-violet-700 transition">
+                        <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                    </a>
+                @else
                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                </a>
+                @endif
             </div>
 
             <!-- Card SMA -->
@@ -176,13 +203,17 @@
                         <p class="text-xl md:text-2xl font-extrabold text-gray-900 mt-0.5">{{ number_format($totalSMA) }}</p>
                     </div>
                 </div>
-                <a href="{{ route('sekolah.index', ['jenjang' => 'SMA']) }}" class="p-1 hover:text-orange-700 transition">
+                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                    <a href="{{ route('sekolah.index', ['jenjang' => 'SMA']) }}" class="p-1 hover:text-orange-700 transition">
+                        <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                    </a>
+                @else
                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
-                </a>
+                @endif
             </div>
 
             <!-- Card Multi-Sekolah (> 1 Sekolah) -->
-            <a href="{{ route('pegawai.index', ['multi_sekolah' => '1']) }}" class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3 hover:border-amber-300 hover:shadow-amber-100 transition group cursor-pointer" title="Klik untuk lihat daftar 176 Pegawai yang Bertugas di > 1 Sekolah">
+            <a href="{{ route('pegawai.index', ['multi_sekolah' => '1']) }}" class="stat-card bg-white rounded-xl p-4 md:p-5 border border-gray-100 shadow-xl shadow-gray-200/50 flex items-center justify-between gap-3 hover:border-amber-300 hover:shadow-amber-100 transition group cursor-pointer" title="Klik untuk lihat daftar Pegawai yang Bertugas di > 1 Sekolah">
                 <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-600 font-bold bg-amber-50/50 flex-shrink-0 group-hover:scale-105 transition">
                         <i class="fas fa-layer-group text-base"></i>
@@ -207,9 +238,11 @@
                         <h3 class="text-base font-bold text-gray-800">Persebaran Satuan Pendidikan Terbanyak (Per Kecamatan)</h3>
                         <p class="text-xs text-gray-400 mt-0.5">Top 7 Kecamatan dengan jumlah sekolah terbanyak di database real.</p>
                     </div>
-                    <a href="{{ route('sekolah.index') }}" class="text-xs font-semibold text-blue-800 hover:text-blue-950 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 transition">
-                        Lihat Semua <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
+                    @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                        <a href="{{ route('sekolah.index') }}" class="text-xs font-semibold text-blue-800 hover:text-blue-950 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 transition">
+                            Lihat Semua <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    @endif
                 </div>
                 <div class="chart-container relative" style="height: 250px;">
                     <canvas id="kecamatanChart"></canvas>
@@ -253,9 +286,11 @@
                     </h3>
                     <p class="text-xs text-gray-400 mt-0.5">Menampilkan sekolah yang baru dimasukkan / terdaftar di sistem SIMPEG-SP.</p>
                 </div>
-                <a href="{{ route('sekolah.index') }}" class="text-xs font-bold text-blue-900 hover:text-blue-950 flex items-center gap-1">
-                    Kelola Semua Sekolah <i class="fas fa-chevron-right text-[10px]"></i>
-                </a>
+                @if(Auth::user() && method_exists(Auth::user(), 'isAdminDinas') && Auth::user()->isAdminDinas())
+                    <a href="{{ route('sekolah.index') }}" class="text-xs font-bold text-blue-900 hover:text-blue-950 flex items-center gap-1">
+                        Kelola Semua Sekolah <i class="fas fa-chevron-right text-[10px]"></i>
+                    </a>
+                @endif
             </div>
 
             <!-- Table -->
