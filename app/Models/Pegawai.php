@@ -122,7 +122,7 @@ class Pegawai extends Model
     public function getProfilePictureUrlAttribute(): ?string
     {
         if ($this->photo_profile) {
-            return asset('storage/' . $this->photo_profile);
+            return asset('files/' . $this->photo_profile);
         }
         return null;
     }

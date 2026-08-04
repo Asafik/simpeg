@@ -3,7 +3,7 @@ name: Deploy Laravel via FTP (Hostinger)
 on:
   push:
     branches:
-      - prod
+      - production
 
 jobs:
   ftp-deploy:

@@ -375,7 +375,7 @@
                 
                 if (files && files.length > 0) {
                     files.forEach(file => {
-                        const url = '{{ asset("storage") }}/' + file;
+                        const url = '{{ asset("files") }}/' + file;
                         container.innerHTML += `
                             <div class="group relative rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-all">
                                 <a href="${url}" target="_blank" class="block">

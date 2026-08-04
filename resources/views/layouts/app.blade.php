@@ -66,6 +66,79 @@
     <link rel="stylesheet" href="{{ asset('assets/css/tables.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/dropdown.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datepicker.css') }}">
+
+    <!-- Select2 CSS CDN & Custom Hope UI Styling -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        select.select2-hidden-accessible {
+            display: none !important;
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* Select2 Tailwind & Hope UI Styling Fixes */
+        .select2-container--default .select2-selection--single {
+            background-color: #f9fafb !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 0.5rem !important;
+            height: 38px !important;
+            display: flex !important;
+            align-items: center !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .select2-container--default.select2-container--open .select2-selection--single,
+        .select2-container--default.select2-container--focus .select2-selection--single {
+            border-color: #1e3a8a !important;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1) !important;
+            outline: none !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #1f2937 !important;
+            font-weight: 600 !important;
+            font-size: 0.75rem !important;
+            padding-left: 0.75rem !important;
+            padding-right: 1.5rem !important;
+            line-height: normal !important;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px !important;
+            right: 8px !important;
+        }
+        .select2-dropdown {
+            border: 1px solid #e5e7eb !important;
+            border-radius: 0.75rem !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+            font-size: 0.75rem !important;
+            overflow: hidden !important;
+            z-index: 9999 !important;
+        }
+        .select2-search--dropdown {
+            padding: 8px !important;
+        }
+        .select2-search__field {
+            border: 1px solid #d1d5db !important;
+            border-radius: 0.5rem !important;
+            padding: 6px 10px !important;
+            font-size: 0.75rem !important;
+            outline: none !important;
+        }
+        .select2-search__field:focus {
+            border-color: #1e3a8a !important;
+            box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1) !important;
+        }
+        .select2-results__option {
+            padding: 8px 12px !important;
+            font-size: 0.75rem !important;
+            font-weight: 500 !important;
+        }
+        .select2-results__option--highlighted[aria-selected] {
+            background-color: #1e3a8a !important;
+            color: #ffffff !important;
+        }
+    </style>
     @stack('styles')
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased font-sans">
@@ -100,15 +173,32 @@
         @endunless
     </main>
 
+    <!-- jQuery & Select2 JS CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <!-- Main System JS in public/ -->
-    <script src="{{ asset('app.js') }}"></script>
+    <script src="{{ asset('app.js') }}?v={{ @filemtime(public_path('app.js')) }}"></script>
 
     <!-- Component JS Assets in public/assets/js/ -->
-    <script src="{{ asset('assets/js/charts.js') }}"></script>
-    <script src="{{ asset('assets/js/calendar.js') }}"></script>
-    <script src="{{ asset('assets/js/dropdown.js') }}"></script>
-    <script src="{{ asset('assets/js/datepicker.js') }}"></script>
-    <script src="{{ asset('assets/js/tables.js') }}"></script>
+    <script src="{{ asset('assets/js/charts.js') }}?v={{ @filemtime(public_path('assets/js/charts.js')) }}"></script>
+    <script src="{{ asset('assets/js/calendar.js') }}?v={{ @filemtime(public_path('assets/js/calendar.js')) }}"></script>
+    <script src="{{ asset('assets/js/dropdown.js') }}?v={{ @filemtime(public_path('assets/js/dropdown.js')) }}"></script>
+    <script src="{{ asset('assets/js/datepicker.js') }}?v={{ @filemtime(public_path('assets/js/datepicker.js')) }}"></script>
+    <script src="{{ asset('assets/js/tables.js') }}?v={{ @filemtime(public_path('assets/js/tables.js')) }}"></script>
+    <script>
+        $(document).ready(function() {
+            function initSelect2() {
+                $('.select2').each(function() {
+                    $(this).select2({
+                        width: '100%',
+                        dropdownParent: $(this).parent()
+                    });
+                });
+            }
+            initSelect2();
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

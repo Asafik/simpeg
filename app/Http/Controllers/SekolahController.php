@@ -17,6 +17,11 @@ class SekolahController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth()->user();
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            return redirect()->route('operator.sekolah.index');
+        }
+
         // Robust parameter extractor to handle duplicate or empty query string values cleanly
         $getParam = function ($key) use ($request) {
             $val = $request->query($key);

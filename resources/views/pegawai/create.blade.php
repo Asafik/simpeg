@@ -210,7 +210,7 @@
                     <!-- Jenis Kelamin -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Jenis Kelamin</label>
-                        <select name="jenis_kelamin" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="jenis_kelamin" class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="">-- Pilih Jenis Kelamin --</option>
                             <option value="Laki-Laki" {{ old('jenis_kelamin', $pegawai->jenis_kelamin ?? '') == 'Laki-Laki' ? 'selected' : '' }}>Laki-Laki</option>
                             <option value="Perempuan" {{ old('jenis_kelamin', $pegawai->jenis_kelamin ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
@@ -220,7 +220,7 @@
                     <!-- Agama -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Agama</label>
-                        <select name="agama" class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="agama" class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="">-- Pilih Agama --</option>
                             @foreach(['Islam', 'Kristen', 'Katolik', 'Hindu', 'Budha', 'Khonghucu', 'Lainnya'] as $ag)
                                 <option value="{{ $ag }}" {{ old('agama', $pegawai->agama ?? '') == $ag ? 'selected' : '' }}>{{ $ag }}</option>
@@ -240,7 +240,7 @@
                     <!-- Status Kepegawaian -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Status Kepegawaian <span class="text-red-500">*</span></label>
-                        <select name="status_kepegawaian" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="status_kepegawaian" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="PNS" {{ old('status_kepegawaian', $pegawai->status_kepegawaian ?? '') == 'PNS' ? 'selected' : '' }}>PNS</option>
                             <option value="PPPK" {{ old('status_kepegawaian', $pegawai->status_kepegawaian ?? '') == 'PPPK' ? 'selected' : '' }}>PPPK</option>
                             <option value="PPPK PW" {{ old('status_kepegawaian', $pegawai->status_kepegawaian ?? '') == 'PPPK PW' ? 'selected' : '' }}>PPPK PW (Paruh Waktu)</option>
@@ -344,7 +344,7 @@
                     <!-- Status Serdik -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Status Sertifikasi (Serdik) <span class="text-red-500">*</span></label>
-                        <select name="is_serdik" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="is_serdik" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="1" {{ old('is_serdik', isset($pegawai) && $pegawai->is_serdik ? '1' : '0') == '1' ? 'selected' : '' }}>SERDIK (Bersertifikasi)</option>
                             <option value="0" {{ old('is_serdik', isset($pegawai) && $pegawai->is_serdik ? '1' : '0') == '0' ? 'selected' : '' }}>NON SERDIK</option>
                         </select>
@@ -402,7 +402,7 @@
                     <!-- Tingkat Pendidikan -->
                     <div>
                         <label class="block text-xs font-semibold text-gray-700 mb-1">Tingkat Pendidikan <span class="text-red-500">*</span></label>
-                        <select name="tingkat_pendidikan" required class="w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
+                        <select name="tingkat_pendidikan" required class="select2 w-full bg-gray-50 border border-gray-200 text-xs text-gray-800 rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-blue-800/20 focus:outline-none">
                             <option value="SMA/K" {{ old('tingkat_pendidikan', $pegawai->tingkat_pendidikan ?? '') == 'SMA/K' ? 'selected' : '' }}>SMA / Sederajat</option>
                             <option value="D3" {{ old('tingkat_pendidikan', $pegawai->tingkat_pendidikan ?? '') == 'D3' ? 'selected' : '' }}>Diploma 3 (D3)</option>
                             <option value="S1/D4" {{ old('tingkat_pendidikan', $pegawai->tingkat_pendidikan ?? 'S1/D4') == 'S1/D4' ? 'selected' : '' }}>Strata 1 (S1) / D4</option>
@@ -454,7 +454,7 @@
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_sk as $idx => $path)
-                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                            <a href="{{ asset('files/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
                                                 File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif
@@ -510,7 +510,7 @@
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_serdik as $idx => $path)
-                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                            <a href="{{ asset('files/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
                                                 File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif
@@ -566,7 +566,7 @@
                                     </div>
                                     <div class="flex flex-wrap gap-1">
                                         @foreach($pegawai->file_ijazah as $idx => $path)
-                                            <a href="{{ asset('storage/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
+                                            <a href="{{ asset('files/' . $path) }}" target="_blank" onclick="event.stopPropagation()" class="text-[10px] font-bold text-blue-600 hover:underline flex-shrink-0">
                                                 File {{ $idx+1 }} <i class="fas fa-external-link-alt text-[9px]"></i>
                                             </a>
                                             @if(!$loop->last) <span class="text-gray-300">|</span> @endif
@@ -830,17 +830,34 @@
             const removeInput = document.getElementById('remove_photo_profile_input');
             
             if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImg.src = e.target.result;
-                    previewImg.classList.remove('hidden');
-                    previewInitials.classList.remove('flex');
-                    previewInitials.classList.add('hidden');
+                const file = input.files[0];
+                if (removeInput) removeInput.value = '0';
+                if (removeBtn) {
                     removeBtn.classList.remove('hidden');
                     removeBtn.classList.add('inline-block');
-                    if (removeInput) removeInput.value = '0';
                 }
-                reader.readAsDataURL(input.files[0]);
+
+                if (file.type === 'application/pdf') {
+                    if (previewImg) previewImg.classList.add('hidden');
+                    if (previewInitials) {
+                        previewInitials.classList.remove('hidden');
+                        previewInitials.classList.add('flex');
+                        previewInitials.innerHTML = '<i class="fas fa-file-pdf text-rose-300 text-2xl"></i>';
+                    }
+                } else {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (previewImg) {
+                            previewImg.src = e.target.result;
+                            previewImg.classList.remove('hidden');
+                        }
+                        if (previewInitials) {
+                            previewInitials.classList.remove('flex');
+                            previewInitials.classList.add('hidden');
+                        }
+                    }
+                    reader.readAsDataURL(file);
+                }
             }
         };
 

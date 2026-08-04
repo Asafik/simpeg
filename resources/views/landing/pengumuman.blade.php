@@ -76,7 +76,7 @@
                         <div class="pt-3 border-t border-gray-100 flex items-center justify-between">
                             <span class="text-[10px] text-gray-400 font-medium"><i class="fas fa-user-circle mr-1"></i> {{ $item->penulis_nama ?? 'Dinas Pendidikan' }}</span>
                             @if($item->lampiran_file)
-                                <a href="{{ asset('storage/' . $item->lampiran_file) }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 hover:underline">
+                                <a href="{{ asset('files/' . $item->lampiran_file) }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-800 hover:underline">
                                     <span>Unduh Lampiran</span>
                                     <i class="fas fa-download text-[10px]"></i>
                                 </a>

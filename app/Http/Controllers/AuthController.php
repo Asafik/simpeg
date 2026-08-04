@@ -15,6 +15,10 @@ class AuthController extends Controller
     public function showLoginForm()
     {
         if (Auth::check()) {
+            $user = Auth::user();
+            if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+                return redirect()->route('operator.dashboard');
+            }
             return redirect()->route('dashboard');
         }
 
@@ -27,6 +31,10 @@ class AuthController extends Controller
     public function login()
     {
         if (Auth::check()) {
+            $user = Auth::user();
+            if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+                return redirect()->route('operator.dashboard');
+            }
             return redirect()->route('dashboard');
         }
 
@@ -80,6 +88,12 @@ class AuthController extends Controller
                 ]);
             } catch (\Throwable $e) {
                 // Ignore failure
+            }
+
+            $user = Auth::user();
+            if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+                return redirect()->intended(route('operator.dashboard'))
+                    ->with('success', 'Selamat datang kembali, Operator!');
             }
 
             return redirect()->intended(route('dashboard'))

@@ -1,8 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\OperatorDashboardController;
+use App\Http\Controllers\OperatorPegawaiController;
+use App\Http\Controllers\OperatorSekolahController;
+use App\Http\Controllers\OperatorVerifikasiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\SekolahController;
@@ -16,6 +21,101 @@ use App\Http\Controllers\AnnouncementController;
 // Public Root URL & Landing Page Routes (Managed by LandingController)
 Route::get('/', [LandingController::class, 'index'])->name('landing.home');
 Route::get('/landing', [LandingController::class, 'index'])->name('landing');
+
+// Secure File Serving Route (Bypasses Hostinger physical /storage 403 block)
+$fileServerHandler = function ($path) {
+    $path = str_replace('..', '', $path);
+    $cleanPath = preg_replace('#^(storage/|public/|app/public/|app/)#', '', ltrim($path, '/'));
+
+    $possiblePaths = [
+        storage_path('app/public/' . $cleanPath),
+        storage_path('app/' . $cleanPath),
+        storage_path($cleanPath),
+        public_path('storage/' . $cleanPath),
+        public_path($cleanPath),
+        base_path('storage/app/public/' . $cleanPath),
+        base_path('storage/app/' . $cleanPath),
+    ];
+
+    $filePath = null;
+    foreach ($possiblePaths as $candidate) {
+        if (file_exists($candidate) && !is_dir($candidate)) {
+            $filePath = $candidate;
+            break;
+        }
+    }
+
+    if ($filePath) {
+        $mimeType = @mime_content_type($filePath) ?: 'application/octet-stream';
+        return response()->file($filePath, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=31536000',
+        ]);
+    }
+
+    // Fallback for missing files
+    $ext = strtolower(pathinfo($cleanPath, PATHINFO_EXTENSION));
+    
+    if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'])) {
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">'
+             . '<rect width="400" height="300" fill="#f8fafc" rx="16"/>'
+             . '<circle cx="200" cy="120" r="40" fill="#e2e8f0"/>'
+             . '<path d="M160 210 Q200 170 240 210" stroke="#cbd5e1" stroke-width="8" fill="none" stroke-linecap="round"/>'
+             . '<text x="200" y="245" font-family="sans-serif" font-size="13" font-weight="bold" fill="#64748b" text-anchor="middle">Gambar Belum Terunggah / Tidak Ditemukan</text>'
+             . '</svg>';
+        return response($svg, 200, ['Content-Type' => 'image/svg+xml']);
+    }
+
+    if ($ext === 'pdf') {
+        $html = '<div style="font-family:system-ui,sans-serif; text-align:center; padding:60px 20px; color:#475569; max-width:500px; margin:40px auto; background:#f8fafc; border-radius:16px; border:1px solid #e2e8f0;">'
+              . '<div style="font-size:48px; margin-bottom:16px;">📄</div>'
+              . '<h3 style="color:#1e293b; margin:0 0 8px 0;">Berkas PDF Tidak Ditemukan</h3>'
+              . '<p style="font-size:13px; color:#64748b; margin:0;">File PDF ini belum terunggah atau tidak ditemukan di server produksi.</p>'
+              . '</div>';
+        return response($html, 200, ['Content-Type' => 'text/html']);
+    }
+
+    abort(404, 'File tidak ditemukan di server.');
+};
+
+Route::get('/files/{path}', $fileServerHandler)->where('path', '.*')->name('files.serve');
+Route::get('/storage/{path}', $fileServerHandler)->where('path', '.*');
+
+// Production System Optimization & Cache Clear Route
+Route::get('/optimize-clear', function () {
+    try {
+        Artisan::call('optimize:clear');
+        $output = Artisan::output();
+        
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('route:clear');
+        Artisan::call('cache:clear');
+
+        return '<div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 50px auto; padding: 30px; border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">'
+            . '<h2 style="margin-top:0; color: #15803d; font-size: 20px; display: flex; items-center: center; gap: 8px;">⚡ System Optimization Cache Cleared!</h2>'
+            . '<p style="font-size: 14px; color: #166534; line-height: 1.5;">Seluruh cache aplikasi Laravel (config, routes, views, event, dan cache terkompilasi) berhasil dibersihkan untuk lingkungan produksi.</p>'
+            . '<pre style="background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #dcfce7; font-size: 12px; overflow-x: auto; color: #14532d;">' . htmlspecialchars($output ?: "optimize:clear completed successfully.") . '</pre>'
+            . '<div style="margin-top: 20px; display: flex; gap: 10px;">'
+            . '<a href="' . url('/dashboard') . '" style="background: #15803d; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-size: 13px; display: inline-block;">Ke Dashboard Admin</a>'
+            . '<a href="' . url('/pegawai/create') . '" style="background: #fff; color: #15803d; border: 1px solid #bbf7d0; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; font-size: 13px; display: inline-block;">Ke Form Pegawai</a>'
+            . '</div>'
+            . '</div>';
+    } catch (\Exception $e) {
+        return '<div style="font-family: system-ui, sans-serif; max-width: 600px; margin: 50px auto; padding: 30px; border-radius: 16px; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;">'
+            . '<h2 style="margin-top:0; color: #dc2626; font-size: 20px;">❌ Error Clearing Cache</h2>'
+            . '<p style="font-size: 14px;">' . htmlspecialchars($e->getMessage()) . '</p>'
+            . '</div>';
+    }
+})->name('system.optimize-clear');
+
+Route::get('/clear-cache', function () {
+    return redirect('/optimize-clear');
+});
+
+Route::get('/optimize', function () {
+    return redirect('/optimize-clear');
+});
 
 // Clean Public URLs with Controller Methods
 Route::get('/statistik', [LandingController::class, 'statistik'])->name('landing.statistik');
@@ -38,6 +138,26 @@ Route::post('/logout', [AuthController::class, 'logout']);
 // Protected System Routes (Must Be Logged In)
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/operator/dashboard', [OperatorDashboardController::class, 'index'])->name('operator.dashboard');
+
+    // Dedicated Operator Pegawai Routes
+    Route::get('/operator/pegawai', [OperatorPegawaiController::class, 'index'])->name('operator.pegawai.index');
+    Route::get('/operator/pegawai/create', [OperatorPegawaiController::class, 'create'])->name('operator.pegawai.create');
+    Route::post('/operator/pegawai', [OperatorPegawaiController::class, 'store'])->name('operator.pegawai.store');
+    Route::post('/operator/pegawai/bulk-delete', [OperatorPegawaiController::class, 'bulkDestroy'])->name('operator.pegawai.bulk-destroy');
+    Route::get('/operator/pegawai/{pegawai}', [OperatorPegawaiController::class, 'show'])->name('operator.pegawai.show');
+    Route::get('/operator/pegawai/{pegawai}/edit', [OperatorPegawaiController::class, 'edit'])->name('operator.pegawai.edit');
+    Route::put('/operator/pegawai/{pegawai}', [OperatorPegawaiController::class, 'update'])->name('operator.pegawai.update');
+    Route::delete('/operator/pegawai/{pegawai}', [OperatorPegawaiController::class, 'destroy'])->name('operator.pegawai.destroy');
+
+    // Dedicated Operator Sekolah Routes
+    Route::get('/operator/sekolah', [OperatorSekolahController::class, 'index'])->name('operator.sekolah.index');
+    Route::get('/operator/sekolah/edit', [OperatorSekolahController::class, 'edit'])->name('operator.sekolah.edit');
+    Route::put('/operator/sekolah', [OperatorSekolahController::class, 'update'])->name('operator.sekolah.update');
+
+    // Dedicated Operator Verifikasi Routes
+    Route::get('/operator/verifikasi', [OperatorVerifikasiController::class, 'index'])->name('operator.verifikasi.index');
+    Route::post('/operator/verifikasi/{id}/upload', [OperatorVerifikasiController::class, 'upload'])->name('operator.verifikasi.upload');
 
     // Pegawai Management & Data Exchange Routes (Accessible by both Admin and Operator)
     Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai.index');
@@ -87,6 +207,7 @@ Route::middleware(['auth'])->group(function () {
 
     // Verification Routes (Accessible by both Admin and Operator, but Operator has limited view)
     Route::get('/verifikasi', [VerificationController::class, 'index'])->name('verifikasi.index');
+    Route::post('/verifikasi/{id}', [VerificationController::class, 'verify'])->name('verifikasi.verify');
     Route::get('/verifikasi/{pegawai}', [VerificationController::class, 'show'])->name('verifikasi.show');
     Route::get('/verifikasi/{pegawai}/tinjau', [VerificationController::class, 'tinjau'])->name('verifikasi.tinjau');
 
