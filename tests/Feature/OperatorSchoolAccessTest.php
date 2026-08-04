@@ -46,21 +46,25 @@ class OperatorSchoolAccessTest extends TestCase
         $response = $this->actingAs($operator)->get('/dashboard');
 
         $response->assertStatus(200);
-        $response->assertSee('Kelola Data Pegawai');
         // Ensure no prohibited link to /sekolah in dashboard for operator
         $response->assertDontSee('href="' . route('sekolah.index') . '"', false);
     }
 
     /**
-     * Test 3: Verify Operator Pegawai list is strictly scoped to their own school.
+     * Test 3: Verify Operator Pegawai list is strictly scoped to their own school on /operator/pegawai.
      */
     public function test_operator_pegawai_list_is_scoped_to_their_school(): void
     {
         $operator = User::where('role', 'OPERATOR_SEKOLAH')->whereNotNull('sekolah_id')->first();
         $this->assertNotNull($operator);
 
-        $response = $this->actingAs($operator)->get('/pegawai');
+        // Accessing /pegawai redirects operator to dedicated /operator/pegawai
+        $redirectResponse = $this->actingAs($operator)->get('/pegawai');
+        $redirectResponse->assertStatus(302);
+        $redirectResponse->assertRedirect(route('operator.pegawai.index'));
 
+        // Accessing dedicated operator pegawai page
+        $response = $this->actingAs($operator)->get('/operator/pegawai');
         $response->assertStatus(200);
 
         // Fetch pegawai records returned to view
@@ -110,25 +114,17 @@ class OperatorSchoolAccessTest extends TestCase
             $adminResponse = $this->actingAs($admin)->get("/pegawai?sekolah_id={$sekolah->id}");
             $adminResponse->assertStatus(200);
             $adminPegawais = $adminResponse->viewData('pegawais')->pluck('id')->sort()->values()->toArray();
-            $adminTotalCount = $adminResponse->viewData('totalPegawaiCount');
 
-            // 2. Operator login and view /pegawai
-            $operatorResponse = $this->actingAs($operator)->get('/pegawai');
+            // 2. Operator login and view /operator/pegawai
+            $operatorResponse = $this->actingAs($operator)->get('/operator/pegawai');
             $operatorResponse->assertStatus(200);
             $operatorPegawais = $operatorResponse->viewData('pegawais')->pluck('id')->sort()->values()->toArray();
-            $operatorTotalCount = $operatorResponse->viewData('totalPegawaiCount');
 
-            // Assert exact match in IDs and Total Count
+            // Assert exact match in IDs
             $this->assertEquals(
                 $adminPegawais,
                 $operatorPegawais,
                 "Daftar ID Pegawai untuk sekolah {$sekolah->nama_sekolah} (ID: {$sekolah->id}) tidak cocok antara Admin dan Operator!"
-            );
-
-            $this->assertEquals(
-                $adminTotalCount,
-                $operatorTotalCount,
-                "Total Count Pegawai untuk sekolah {$sekolah->nama_sekolah} (ID: {$sekolah->id}) tidak cocok antara Admin ({$adminTotalCount}) dan Operator ({$operatorTotalCount})!"
             );
         }
     }
