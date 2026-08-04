@@ -21,9 +21,10 @@ class DashboardController extends Controller
         $sekolahQuery = Sekolah::query();
 
         // Scope queries if logged in as Operator Sekolah
-        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $user->sekolah_id) {
-            $pegawaiQuery->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id));
-            $sekolahQuery->where('id', $user->sekolah_id);
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            $sekolahId = $user->sekolah_id ?? -1;
+            $pegawaiQuery->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $sekolahId));
+            $sekolahQuery->where('id', $sekolahId);
         }
 
         // Summary Card Stats
@@ -49,7 +50,7 @@ class DashboardController extends Controller
 
         // Scope operator count by role
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
-            $totalOperator = User::where('role', 'OPERATOR_SEKOLAH')->where('sekolah_id', $user->sekolah_id)->count();
+            $totalOperator = User::where('role', 'OPERATOR_SEKOLAH')->where('sekolah_id', $user->sekolah_id ?? -1)->count();
         } else {
             $totalOperator = User::where('role', 'OPERATOR_SEKOLAH')->count();
         }

@@ -28,8 +28,8 @@ class PegawaiController extends Controller
                 $query = Pegawai::with('sekolahs')->latest();
 
                 // Operator sekolah restriction if user logged in
-                if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $user->sekolah_id) {
-                    $filters['sekolah_id'] = $user->sekolah_id;
+                if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+                    $filters['sekolah_id'] = $user->sekolah_id ?? -1;
                 }
 
                 if (method_exists(Pegawai::class, 'scopeFilterKriteria')) {
@@ -38,22 +38,17 @@ class PegawaiController extends Controller
 
                 $pegawais = $query->paginate(15)->withQueryString();
 
-                // Scope counts by user role
-                if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah() && $user->sekolah_id) {
-                    $sekolahId = $user->sekolah_id;
-                    $scopeQuery = fn($q) => $q->whereHas('sekolahs', fn($sq) => $sq->where('sekolahs.id', $sekolahId));
-                    $totalPegawaiCount = Pegawai::where($scopeQuery)->count();
-                    $totalPnsCount     = Pegawai::where($scopeQuery)->where('status_kepegawaian', 'PNS')->count();
-                    $totalPppkCount    = Pegawai::where($scopeQuery)->whereIn('status_kepegawaian', ['PPPK', 'PPPK PW'])->count();
-                    $totalSerdikCount  = Pegawai::where($scopeQuery)->where('is_serdik', true)->count();
-                    $totalMultiSekolahCount = Pegawai::where($scopeQuery)->has('sekolahs', '>', 1)->count();
-                } else {
-                    $totalPegawaiCount = Pegawai::count();
-                    $totalPnsCount     = Pegawai::where('status_kepegawaian', 'PNS')->count();
-                    $totalPppkCount    = Pegawai::whereIn('status_kepegawaian', ['PPPK', 'PPPK PW'])->count();
-                    $totalSerdikCount  = Pegawai::where('is_serdik', true)->count();
-                    $totalMultiSekolahCount = Pegawai::has('sekolahs', '>', 1)->count();
+                // Scope summary metric counts by sekolah_id (if filtered by Admin or set for Operator)
+                $baseCountQuery = Pegawai::query();
+                if (!empty($filters['sekolah_id'])) {
+                    $baseCountQuery->whereHas('sekolahs', fn($sq) => $sq->where('sekolahs.id', $filters['sekolah_id']));
                 }
+
+                $totalPegawaiCount      = (clone $baseCountQuery)->count();
+                $totalPnsCount          = (clone $baseCountQuery)->where('status_kepegawaian', 'PNS')->count();
+                $totalPppkCount         = (clone $baseCountQuery)->whereIn('status_kepegawaian', ['PPPK', 'PPPK PW'])->count();
+                $totalSerdikCount       = (clone $baseCountQuery)->where('is_serdik', true)->count();
+                $totalMultiSekolahCount = (clone $baseCountQuery)->has('sekolahs', '>', 1)->count();
 
                 $sekolahs = ($user && method_exists($user, 'isAdminDinas') && $user->isAdminDinas())
                     ? Sekolah::orderBy('nama_sekolah')->get()
@@ -210,16 +205,18 @@ class PegawaiController extends Controller
 
     public function show($id)
     {
-        try {
-            if (class_exists(Pegawai::class) && is_numeric($id)) {
-                $pegawai = Pegawai::with('sekolahs')->find($id);
-                if ($pegawai) {
-                    $sekolahs = Sekolah::orderBy('nama_sekolah')->get();
-                    return view('pegawai.show', compact('pegawai', 'sekolahs'));
+        $user = Auth::user();
+        if (is_numeric($id)) {
+            $pegawai = Pegawai::with('sekolahs')->find($id);
+            if ($pegawai) {
+                if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+                    if (!$pegawai->sekolahs->contains('id', $user->sekolah_id)) {
+                        abort(403, 'Anda tidak memiliki akses untuk melihat data pegawai sekolah lain.');
+                    }
                 }
+                $sekolahs = Sekolah::orderBy('nama_sekolah')->get();
+                return view('pegawai.show', compact('pegawai', 'sekolahs'));
             }
-        } catch (\Throwable $e) {
-            // Fallback
         }
 
         return view('pegawai.show');
@@ -229,6 +226,13 @@ class PegawaiController extends Controller
     {
         $pegawai = Pegawai::with('sekolahs')->findOrFail($id);
         $user = Auth::user();
+
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            if (!$pegawai->sekolahs->contains('id', $user->sekolah_id)) {
+                abort(403, 'Anda tidak memiliki akses untuk mengedit data pegawai sekolah lain.');
+            }
+        }
+
         $sekolahs = ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah())
             ? Sekolah::where('id', $user->sekolah_id)->get()
             : Sekolah::orderBy('nama_sekolah')->get();

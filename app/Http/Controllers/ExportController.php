@@ -16,8 +16,8 @@ class ExportController extends Controller
 
         $query = Pegawai::with('sekolahs')->latest();
 
-        if ($user->isOperatorSekolah() && $user->sekolah_id) {
-            $filters['sekolah_id'] = $user->sekolah_id;
+        if ($user->isOperatorSekolah()) {
+            $filters['sekolah_id'] = $user->sekolah_id ?? -1;
         }
 
         $query->filterKriteria($filters);
@@ -85,8 +85,8 @@ class ExportController extends Controller
 
         $query = Pegawai::with('sekolahs')->latest();
 
-        if ($user->isOperatorSekolah() && $user->sekolah_id) {
-            $filters['sekolah_id'] = $user->sekolah_id;
+        if ($user->isOperatorSekolah()) {
+            $filters['sekolah_id'] = $user->sekolah_id ?? -1;
         }
 
         $query->filterKriteria($filters);

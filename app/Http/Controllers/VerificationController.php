@@ -20,7 +20,8 @@ class VerificationController extends Controller
 
         // Scope query for Operator Sekolah
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
-            $query->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $user->sekolah_id));
+            $sekolahId = $user->sekolah_id ?? -1;
+            $query->whereHas('sekolahs', fn($q) => $q->where('sekolahs.id', $sekolahId));
         }
 
         // Search Filter (NIP, NIK, Nama Pegawai, Nama Sekolah)
@@ -52,7 +53,7 @@ class VerificationController extends Controller
 
         // Calculate Summary Metrics based on role
         if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
-            $sekolahId = $user->sekolah_id;
+            $sekolahId = $user->sekolah_id ?? -1;
             $scopeFn = fn($q) => $q->whereHas('sekolahs', fn($sq) => $sq->where('sekolahs.id', $sekolahId));
             $totalCount = Pegawai::where($scopeFn)->count();
             $menungguCount = Pegawai::where($scopeFn)->whereIn('status_verifikasi', ['MENUNGGU', 'DRAFT'])->count();
