@@ -17,6 +17,12 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+
+        // Redirect Operator Sekolah to dedicated Operator Dashboard
+        if ($user && method_exists($user, 'isOperatorSekolah') && $user->isOperatorSekolah()) {
+            return redirect()->route('operator.dashboard');
+        }
+
         $pegawaiQuery = Pegawai::query();
         $sekolahQuery = Sekolah::query();
 

@@ -3,8 +3,6 @@
 @section('title', 'Edit Profil Sekolah - ' . ($sekolah->nama_sekolah ?? 'Operator Sekolah'))
 
 @section('content')
-    <!-- Include Sidebar Per-Page -->
-    @include('layouts.sidebar')
 
     <!-- ===== HERO BLUE BANNER ===== -->
     <div class="relative bg-gradient-to-r from-blue-950 via-blue-900 to-slate-900 text-white px-6 md:px-10 pt-8 md:pt-10 pb-16 md:pb-20 shadow-lg shadow-blue-950/20 overflow-hidden">

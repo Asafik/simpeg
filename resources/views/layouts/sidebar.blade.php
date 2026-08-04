@@ -10,28 +10,35 @@
         <i class="fas fa-chevron-left text-[10px] transition-transform duration-300" id="sidebarToggleIcon"></i>
     </button>
 
+    @php
+        $isOperator = Auth::check() && method_exists(Auth::user(), 'isOperatorSekolah') && Auth::user()->isOperatorSekolah();
+        $dashUrl = $isOperator ? route('operator.dashboard') : route('dashboard');
+        $pegawaiUrl = $isOperator ? route('operator.pegawai.index') : url('/pegawai');
+        $verifikasiUrl = $isOperator ? route('operator.verifikasi.index') : url('/verifikasi');
+    @endphp
+
     <!-- Brand -->
     <div class="px-6 py-6 border-b border-gray-100 flex-shrink-0">
-        <div class="flex items-center gap-3 brand-container">
+        <a href="{{ $dashUrl }}" class="flex items-center gap-3 brand-container hover:opacity-90 transition">
             <img src="{{ asset('logo/logo.svg') }}" alt="SIMPEG-SP Logo" class="w-10 h-10 object-contain flex-shrink-0">
             <div class="sidebar-text transition-opacity duration-200">
                 <h1 class="font-bold text-lg leading-tight text-gray-900">GTK</h1>
                 <p class="text-[10px] uppercase tracking-wider text-gray-400 font-medium">Dinas Pendidikan</p>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Navigation -->
     <nav class="flex-1 px-4 py-6 overflow-y-auto">
         <p class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold px-3 mb-4 sidebar-text">Main Menu</p>
-        <a href="{{ route('dashboard') }}"
-            class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('dashboard*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition"
+        <a href="{{ $dashUrl }}"
+            class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ (Request::is('dashboard*') || Request::is('operator/dashboard*')) ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition"
             title="Dashboard">
             <i class="fas fa-chart-pie w-5 text-center flex-shrink-0"></i>
             <span class="font-medium text-sm sidebar-text">Dashboard</span>
         </a>
-        <a href="{{ url('/pegawai') }}"
-            class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('pegawai*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition"
+        <a href="{{ $pegawaiUrl }}"
+            class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ (Request::is('pegawai*') || Request::is('operator/pegawai*')) ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition"
             title="Data Pegawai">
             <i class="fas fa-users w-5 text-center flex-shrink-0"></i>
             <span class="font-medium text-sm sidebar-text">Data Pegawai</span>
@@ -43,9 +50,16 @@
                 <i class="fas fa-school w-5 text-center flex-shrink-0"></i>
                 <span class="font-medium text-sm sidebar-text">Kelola Sekolah</span>
             </a>
+        @elseif($isOperator)
+            <a href="{{ route('operator.sekolah.index') }}"
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('operator/sekolah*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition"
+                title="Profil Sekolah">
+                <i class="fas fa-school w-5 text-center flex-shrink-0"></i>
+                <span class="font-medium text-sm sidebar-text">Profil Sekolah</span>
+            </a>
         @endif
-        <a href="{{ url('/verifikasi') }}"
-            class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ Request::is('verifikasi*') ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition"
+        <a href="{{ $verifikasiUrl }}"
+            class="flex items-center gap-3 px-4 py-2.5 rounded-lg {{ (Request::is('verifikasi*') || Request::is('operator/verifikasi*')) ? 'bg-blue-800 text-white shadow-md shadow-blue-900/30' : 'text-gray-600 hover:bg-gray-50 hover:text-blue-800' }} mb-1 transition"
             title="Verifikasi Data">
             <i class="fas fa-check-circle w-5 text-center flex-shrink-0"></i>
             <span class="font-medium text-sm sidebar-text">Verifikasi Data</span>
